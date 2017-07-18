@@ -10,6 +10,12 @@
       "email": "tls@2quakers.net"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/tsorelle/tops"
+    }
+  ],
   "require": {
     "twoquakers/tops" : "dev-master",
     "phpunit/phpunit": "6.1.3"
