@@ -1,0 +1,60 @@
+<h2>Sub View Model Test</h2>
+<div class="row" id="subpage-view-container" style="display: none">
+    <h3>Main Panel</h3>
+    <div class="col-md-6">
+    <div>
+        <button data-bind="click:onShowModalForm" >Show Modal Form</button>
+    </div>
+    <div>
+        <button data-bind="click:onShowProgressWaiter" >Show Progress Waiter</button>
+    </div>
+    <div>
+        <button data-bind="click:onShowSpinWaiter" >Show Spin Waiter</button>
+    </div>
+    <div>
+        <button data-bind="click:onShowWaiter" >Show Waiter</button>
+    </div>
+    <div>
+        <button data-bind="click:onShowError" >Show Error</button>
+    </div>
+
+    <div>
+        <button data-bind="click:onService" >Run Service</button>
+    </div>
+    <div data-bind="visible:messagePanel() == 'button'">
+        <button data-bind="click:onShowForm">Show form component</button>
+    </div>
+    <div data-bind="visible:messageButtonVisible">
+        <button data-bind="click:onShowMessageComponent">Show message component</button>
+    </div>
+    <div data-bind="visible:messagePanel() == 'form'">
+        <input data-bind="value:messageText" /><button data-bind="click:onSendMessage">Send message</button>
+    </div>
+
+    <modal-confirm params="id:'confirm-save-modal',headerText: 'Please confirm SAVE', bodyText: 'Do you want to save changes?', confirmClick: save"></modal-confirm>
+
+    <div class="modal" id="test-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Test Modal</h4>
+                </div>
+                <div class="modal-body">
+                    <p>This is a test view model</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" data-dismiss="modal">Close</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bind="click:onSaveChanges">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+    <div class="col-md-6">
+        <h3>Components Panel</h3>
+        <div id="test-message-container"><sub-message></sub-message></div>
+    </div>
+</div>

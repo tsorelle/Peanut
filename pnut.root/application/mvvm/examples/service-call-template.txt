@@ -1,0 +1,35 @@
+// example with seperate response handler function
+        let me = this;
+        let request = {};
+        me.application.hideServiceMessages();
+        me.application.showWaiter('Message here...');
+        me.services.executeService('directory.ServiceName', request, handleServiceReponseTemplate)
+            .always(function () {
+                me.application.hideWaiter();
+            });
+
+        private handleServiceResponseTemplate = (serviceResponse: IServiceResponse) => {
+            var me = this;
+            if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+                if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+                        let response = serviceResponse.Value;
+                        alert(response.message);
+
+                    }
+            }
+        };
+
+
+// single statement example
+            me.application.hideServiceMessages();
+            me.application.showWaiter('Message here...');
+            me.peanut.executeService('directory.ServiceName',request,
+                function (serviceResponse: Peanut.IServiceResponse) {
+                    if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+                        let response = serviceResponse.Value;
+                        alert(response.message);
+
+                    }
+                }                ).always(function() {
+                    me.application.hideWaiter();
+                });

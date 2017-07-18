@@ -1,0 +1,38 @@
+        var me = this;
+        var request = null;
+
+        me.application.hideServiceMessages();
+        me.application.showWaiter('Message here...');
+
+        // fake
+        var response = null;
+        me.handleServiceResponseTemplate(response);
+        me.application.hideWaiter();
+
+        me.peanut.executeService('directory.ServiceName',request, me.handleServiceResponseTemplate)
+            .always(function() {
+                me.application.hideWaiter();
+            });
+
+        private handleServiceResponseTemplate = (serviceResponse: IServiceResponse) => {
+            var me = this;
+            if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+
+
+            }
+        };
+
+
+// single statement example
+            me.application.hideServiceMessages();
+            me.application.showWaiter('Message here...');
+            me.peanut.executeService('directory.ServiceName',request,
+                    function(serviceResponse: IServiceResponse) {
+                        if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+
+
+                        }
+                    }
+                ).always(function() {
+                    me.application.hideWaiter();
+                });

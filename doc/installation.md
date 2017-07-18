@@ -1,0 +1,9 @@
+- Get tops library:
+    - Update or install composer.
+        - Delete composer.lock if it exists
+        - run: php composer.phar install (or update)
+- Install sys config file
+    - Edit /doc/settings.ini (see comments)
+    - Copy to /vendor/twoquakers/tops/tops/sys
+    - Run unit test: vendor/twoquakers/tops/tops/tests/TPathTest.php to check that path settings are accurate for your installation. 
+- Update application/config/settings.ini as needed (see comments.)        

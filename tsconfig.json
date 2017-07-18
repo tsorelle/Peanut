@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "inlineSourceMap": true
+  },
+  "include"  : [
+    "pnut.root/modules/pnut/core/**/*",
+    "pnut.root/modules/pnut/components/**/*",
+    "pnut.root/modules/pnut/packages/**/*",
+    "pnut.root/application/mvvm/vm/**/*",
+    "pnut.root/application/mvvm/components/**/*"
+  ]
+}

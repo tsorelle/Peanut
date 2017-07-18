@@ -1,0 +1,14 @@
+<div id="service-message-block">
+<div id="error-messages"  data-bind="visible:errorMessages().length" class="alert alert-danger" role="alert">
+<button class="close" aria-label="Close" data-bind="click: clearErrorMessages"><span aria-hidden="true">&times;</span></button>
+<ul data-bind="foreach: errorMessages"><li><span data-bind="text: text"></span></li></ul></div>
+
+<div id="warning-messages" data-bind="visible:warningMessages().length" class="alert alert-warning" role="alert">
+<button class="close" aria-label="Close" data-bind="click: clearWarningMessages"><span aria-hidden="true">&times;</span></button>
+<ul data-bind="foreach: warningMessages"><li><span data-bind="text: text"></span></li></ul></div>
+
+<div id="info-message"  data-bind="visible:infoMessages().length" class="alert alert-success" role="alert">
+<button class="close" aria-label="Close" data-bind="click: clearInfoMessages"><span aria-hidden="true">&times;</span></button>
+<ul data-bind="foreach: infoMessages"><li><span data-bind="text: text"></span></li></ul></div>
+</div>
+

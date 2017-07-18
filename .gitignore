@@ -1,0 +1,4 @@
+# Created by .ignore support plugin (hsz.mobi)
+tests/temp
+doc/local
+pnut.root/assets/js/libraries/**/*

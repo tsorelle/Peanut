@@ -1,0 +1,13 @@
+<?php
+
+ namespace Application\Aftm\services;
+
+ use Application\Tops\services\TServiceCommand;
+
+ class ServiceNameCommand  extends TServiceCommand
+ {
+     protected function run()
+     {
+
+     }
+ }

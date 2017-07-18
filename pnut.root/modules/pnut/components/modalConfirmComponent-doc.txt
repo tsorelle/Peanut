@@ -1,0 +1,27 @@
+Documentation for modal-confirm component
+ Example markup:
+
+  <modal-confirm params="id:'confirm-save-modal',headerText: 'Please confirm SAVE', bodyText: confirmText, confirmClick: save"></modal-confirm>
+  <modal-confirm params="id:'confirm-delete-modal',headerText: 'Please confirm', bodyText: confirmText, confirmClick: confirm"></modal-confirm>
+
+ Text parameters (bodyText, headerText) can be either a string (in quotes) or an observable (no quotes)
+
+ Example handling
+   showSaveModal = () => {
+        jQuery("#confirm-save-modal").modal('show');
+    };
+
+    save = () => {
+       jQuery("#confirm-save-modal").modal('hide');
+            alert('you saved');
+     };
+
+ Example initialization
+
+  init(applicationPath: string, successFunction?: () => void) {
+     me.application.initialize(applicationPath,
+         function() {
+             me.application.loadComponent('modal-confirm', successFunction);
+         }
+     );
+  }
