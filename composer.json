@@ -1,0 +1,17 @@
+{
+  "name": "twoquakers/peanut",
+  "version" : "3.0",
+  "description": "Framework for KnockoutJS based applets in CMS systems",
+  "minimum-stability": "stable",
+  "license": "GPL-3.0+",
+  "authors": [
+    {
+      "name": "Terry SoRelle",
+      "email": "tls@2quakers.net"
+    }
+  ],
+  "require": {
+    "twoquakers/tops" : "dev-master",
+    "phpunit/phpunit": "6.1.3"
+  }
+}
