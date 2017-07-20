@@ -70,6 +70,10 @@ class Bootstrap
         $appNamespace = self::toPsr4Namespace($appNamespace);
         $loader->addPsr4($appNamespace,$appLocation);
 
+        foreach ($settings->autoloadItems as $namespace => $srcRoot) {
+            $loader->addPsr4($namespace . '\\', $srcRoot);
+        }
+
         session_start();
         TPath::Initialize($fileRoot);
         \Tops\sys\TSession::Initialize();
@@ -126,6 +130,7 @@ class Bootstrap
         $result->uiExtension = empty($settings['uiExtension']) ? 'Bootstrap' : $settings['uiExtension'];
         $result->srcLocation = $srcLocation;
         $result->topsLocation = empty($ini['locations']['tops']) ? "$srcLocation/tops" : $ini['locations']['tops'];
+        $result->autoloadItems=empty($ini['autoload']) ? array() : $ini['autoload'];
         if (empty($settings['loggingMode'])) {
             $result->loggingMode = $optimize ? 'none' : 'verbose';
         } else {
