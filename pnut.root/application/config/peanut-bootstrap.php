@@ -51,6 +51,9 @@ class Bootstrap
             }
             $fileRoot .= '/';
         }
+        else if (substr($fileRoot,-1) != '/') {
+            $fileRoot .= '/';
+        }
 
         $settings = self::getSettings();
         $topsRoot = $settings->topsLocation;
@@ -71,7 +74,8 @@ class Bootstrap
         $loader->addPsr4($appNamespace,$appLocation);
 
         foreach ($settings->autoloadItems as $namespace => $srcRoot) {
-            $loader->addPsr4($namespace . '\\', $srcRoot);
+            $srcRoot = str_replace('[pnut-src]',$settings->srcLocation,$srcRoot);
+            $loader->addPsr4($namespace . '\\', $fileRoot.$srcRoot);
         }
 
         session_start();
