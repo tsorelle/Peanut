@@ -78,9 +78,14 @@ class Bootstrap
             $loader->addPsr4($namespace . '\\', $fileRoot.$srcRoot);
         }
 
-        session_start();
         TPath::Initialize($fileRoot);
-        \Tops\sys\TSession::Initialize();
+
+        // note: these lines needed for Tops security token handling.
+        // however on some CMS systems (e.g. Concrete5) it interferes with the CMS'
+        // session handling.  Call \Tops\sys\TSession::Initialize() after the session has been started.
+        // usually in module startup code.
+        // session_start();
+        // \Tops\sys\TSession::Initialize();
 
         return $settings;
     }

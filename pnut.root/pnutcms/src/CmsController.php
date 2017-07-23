@@ -58,6 +58,8 @@ class CmsController
         require_once($fileRoot.'application/config/peanut-bootstrap.php');
 
         $settings = \Peanut\Bootstrap::initialize();
+        session_start();
+        \Tops\sys\TSession::Initialize();
 
         $siteRoot = str_ireplace('index.php', '', $_SERVER['PHP_SELF']);
 
