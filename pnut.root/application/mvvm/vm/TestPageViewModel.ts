@@ -3,15 +3,15 @@
  */
 
 // required for all view models:
-/// <reference path="../../../modules/pnut/core/ViewModelBase.ts" />
+/// <reference path='../../../modules/pnut/core/ViewModelBase.ts' />
 /// <reference path='../../../modules/typings/knockout/knockout.d.ts' />
 
 // used for these test routines.
-///<reference path="../../../modules/pnut/core/WaitMessage.ts"/>
-///<reference path="../components/testFormComponent.ts"/>
-///<reference path="../components/messageConstructorComponent.ts"/>
-///<reference path="../../../modules/typings/lodash/index.d.ts"/>
-///<reference path="../../../assets/js/libraries/TestLib.ts"/>
+/// <reference path='../../../modules/pnut/core/WaitMessage.ts'/>
+/// <reference path='../components/testFormComponent.ts'/>
+/// <reference path='../components/messageConstructorComponent.ts'/>
+/// <reference path='../../../modules/typings/lodash/index.d.ts'/>
+/// <reference path='../../../application/assets/js/libraries/TestLib.ts'/>
 
 // Module
 namespace Bookstore {
@@ -40,14 +40,16 @@ namespace Bookstore {
             me.application.registerComponents('intro-message,@pnut/modal-confirm', () => {
                 me.application.loadComponents('message-constructor',() => {
                     me.application.loadResources([
-                        // 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js',
-                        '/assets/js/libraries/TestLib.js'], () => {
-                        /*
+                        'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js',
+                        '/application/assets/js/libraries/TestLib.js'], () => {
                             let test = _.head(['one','two','three']);
                             if (test === 'one') {
-                                console.log('Lodash installed')
+                                console.log('Lodash installed');
                             }
-*/
+                            else {
+                                console.log('Lodash error');
+                            }
+
                             Testing.Test.sayHello();
 
                             let cvm = new messageConstructorComponent('Smoke Test Buttons:');

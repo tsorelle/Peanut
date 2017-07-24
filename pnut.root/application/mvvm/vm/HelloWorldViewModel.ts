@@ -1,7 +1,7 @@
 /**
  * Created by Terry on 5/9/2017.
  */
-/// <reference path="../../../modules/pnut/core/ViewModelBase.ts" />
+/// <reference path='../../../modules/pnut/core/ViewModelBase.ts' />
 /// <reference path='../../../modules/typings/knockout/knockout.d.ts' />
 
 namespace Peanut {
