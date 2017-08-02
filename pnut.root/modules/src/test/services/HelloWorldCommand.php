@@ -6,7 +6,7 @@
  * Time: 5:02 PM
  */
 
-namespace Bookstore\services;
+namespace PeanutTest\services;
 
 
 class HelloWorldCommand extends \Tops\services\TServiceCommand

@@ -75,6 +75,7 @@ class Bootstrap
 
         foreach ($settings->autoloadItems as $namespace => $srcRoot) {
             $srcRoot = str_replace('[pnut-src]',$settings->srcLocation,$srcRoot);
+            $srcRoot = str_replace('[app-src]',$fileRoot.'application/src',$srcRoot);
             $loader->addPsr4($namespace . '\\', $fileRoot.$srcRoot);
         }
 

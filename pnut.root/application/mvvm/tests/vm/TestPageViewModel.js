@@ -1,3 +1,6 @@
+/**
+ * Created by Terry on 5/7/2017.
+ */
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -8,8 +11,19 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+// required for all view models:
+/// <reference path='../../../../modules/pnut/core/ViewModelBase.ts' />
+/// <reference path='../../../../modules/typings/knockout/knockout.d.ts' />
+// used for these test routines.
+/// <reference path='../../../../modules/pnut/core/WaitMessage.ts'/>
+/// <reference path='../components/testFormComponent.ts'/>
+/// <reference path='../components/messageConstructorComponent.ts'/>
+/// <reference path='../../../../modules/typings/lodash/index.d.ts'/>
+/// <reference path='../../../../application/assets/js/libraries/TestLib.ts'/>
+// Module
 var Peanut;
 (function (Peanut) {
+    // view model
     var TestPageViewModel = (function (_super) {
         __extends(TestPageViewModel, _super);
         function TestPageViewModel() {
@@ -32,7 +46,8 @@ var Peanut;
                 var request = { "tester": 'Terry SoRelle' };
                 me.application.hideServiceMessages();
                 me.application.showWaiter('Testing service...');
-                me.services.executeService('HelloWorld', request, function (serviceResponse) {
+                // me.services.executeService('admin.HelloWorld', request,
+                me.services.executeService('PeanutTest::HelloWorld', request, function (serviceResponse) {
                     me.application.hideWaiter();
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         var response = serviceResponse.Value;
@@ -42,19 +57,30 @@ var Peanut;
                     me.application.hideWaiter();
                 });
             };
+            /**
+             * Demonstrates load component on demand and use of a vm factory function.
+             * The factory function my be defined seperately or in-line as is doe here.
+             */
             _this.onShowForm = function () {
                 console.log('Show form component');
                 var me = _this;
-                _this.application.attachComponent('tests/test-form', function (returnFuncton) {
+                _this.application.attachComponent(
+                // component name
+                'tests/test-form', 
+                // vm factory function
+                function (returnFuncton) {
                     console.log('accachComponent - returnFunction');
                     _this.application.loadResources('tests/testFormComponent.js', function () {
                         console.log('instatiate testForm component');
                         me.testForm = new Peanut.testFormComponent();
                         me.testForm.setMessage('Watch this space.');
                         me.messagePanel('form');
+                        // return instance via the final function.
                         returnFuncton(me.testForm);
                     });
-                });
+                }
+                // finalFunction parameter not needed here
+                );
             };
             _this.onSendMessage = function () {
                 _this.testForm.setMessage(_this.messageText());
@@ -65,8 +91,14 @@ var Peanut;
             };
             return _this;
         }
+        // call this funtions at end of page
         TestPageViewModel.prototype.init = function (successFunction) {
             var me = this;
+            // setup messaging and other application initializations
+            // for components inside the default secton (<div id='testpage-view-container>)
+            // Call load component to load and register. Before calling showDefaultSection()
+            // final block must bind any view models (main or component) and call the success function.
+            // me.application.registerComponentPrototype('@pnut/modal-confirm', () => {
             me.application.registerComponents('tests/intro-message,@pnut/modal-confirm', function () {
                 me.application.loadComponents('tests/message-constructor', function () {
                     me.application.loadResources([
@@ -86,6 +118,8 @@ var Peanut;
                     });
                 });
             });
+            //});
+            // });
         };
         TestPageViewModel.prototype.onGetItem = function () {
             var me = this;
@@ -113,6 +147,13 @@ var Peanut;
                 me.application.hideWaiter();
             });
         };
+        // person: KnockoutObservable<any> = ko.observable();
+        // Declarations
+        // Examples:
+        //  templateList: KnockoutObservableArray = ko.observableArray([]);
+        //  currentPage: KnockoutObservableString = ko.observable("");
+        // Methods
+        // test() { alert("hello"); }
         TestPageViewModel.prototype.onAddMessageClick = function () {
             var me = this;
             var msg = me.messageText();
@@ -141,6 +182,7 @@ var Peanut;
                 }
                 else {
                     Peanut.WaitMessage.setMessage('Counting ' + count);
+                    // Peanut.WaitMessage.setProgress(count,true);
                 }
                 count += 1;
             }, 100);
@@ -182,4 +224,3 @@ var Peanut;
     }(Peanut.ViewModelBase));
     Peanut.TestPageViewModel = TestPageViewModel;
 })(Peanut || (Peanut = {}));
-//# sourceMappingURL=TestPageViewModel.js.map

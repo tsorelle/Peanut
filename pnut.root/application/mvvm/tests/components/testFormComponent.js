@@ -1,3 +1,6 @@
+/**
+ * Created by Terry on 5/25/2017.
+ */
 var Peanut;
 (function (Peanut) {
     var testFormComponent = (function () {
@@ -13,4 +16,3 @@ var Peanut;
     }());
     Peanut.testFormComponent = testFormComponent;
 })(Peanut || (Peanut = {}));
-//# sourceMappingURL=testFormComponent.js.map

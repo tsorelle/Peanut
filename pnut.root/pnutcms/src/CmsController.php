@@ -102,6 +102,7 @@ class CmsController
                     }
                 }
                 else {
+
                     $this->vmName = $vmInfo->vmName;
                     $this->contentFile = $fileRoot.$vmInfo->view;
                 }

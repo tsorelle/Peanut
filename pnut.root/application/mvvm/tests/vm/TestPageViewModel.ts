@@ -3,15 +3,15 @@
  */
 
 // required for all view models:
-/// <reference path="../../../../wp-content/plugins/peanut/pnut/core/ViewModelBase.ts" />
-/// <reference path='../../../../wp-content/plugins/peanut/typings/knockout/knockout.d.ts' />
+/// <reference path='../../../../modules/pnut/core/ViewModelBase.ts' />
+/// <reference path='../../../../modules/typings/knockout/knockout.d.ts' />
 
 // used for these test routines.
-///<reference path="../../../..//wp-content/plugins/peanut/pnut/core/WaitMessage.ts"/>
-///<reference path="../components/testFormComponent.ts"/>
-///<reference path="../components/messageConstructorComponent.ts"/>
-///<reference path="../../../../wp-content/plugins/peanut/typings/lodash/index.d.ts"/>
-///<reference path="../../../../application/assets/js/libraries/TestLib.ts"/>
+/// <reference path='../../../../modules/pnut/core/WaitMessage.ts'/>
+/// <reference path='../components/testFormComponent.ts'/>
+/// <reference path='../components/messageConstructorComponent.ts'/>
+/// <reference path='../../../../modules/typings/lodash/index.d.ts'/>
+/// <reference path='../../../../application/assets/js/libraries/TestLib.ts'/>
 
 // Module
 namespace Peanut {
@@ -195,7 +195,7 @@ namespace Peanut {
             me.application.hideServiceMessages();
             me.application.showWaiter('Testing service...');
             // me.services.executeService('admin.HelloWorld', request,
-            me.services.executeService('HelloWorld', request,
+            me.services.executeService('PeanutTest::HelloWorld', request,
                 function (serviceResponse: Peanut.IServiceResponse) {
                     me.application.hideWaiter();
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
