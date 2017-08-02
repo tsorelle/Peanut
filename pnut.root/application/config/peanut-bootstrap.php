@@ -68,10 +68,6 @@ class Bootstrap
                 $loader->addPsr4($namespace.'\\', $srcRoot);
             }
         }
-        $appLocation = $fileRoot.TConfiguration::getValue('application','locations');
-        $appNamespace = TConfiguration::getValue('applicationNamespace','services');
-        $appNamespace = self::toPsr4Namespace($appNamespace);
-        $loader->addPsr4($appNamespace,$appLocation);
 
         foreach ($settings->autoloadItems as $namespace => $srcRoot) {
             $srcRoot = str_replace('[pnut-src]',$settings->srcLocation,$srcRoot);
