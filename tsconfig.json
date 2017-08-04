@@ -2,7 +2,7 @@
   "compilerOptions": {
     "removeComments": true,
     "preserveConstEnums": true,
-    "inlineSourceMap": true
+    "sourceMap": true
   },
   "include"  : [
     "pnut.root/modules/pnut/core/**/*",
