@@ -23,7 +23,7 @@ var __extends = (this && this.__extends) || (function () {
 // Module
 var Peanut;
 (function (Peanut) {
-    // view model
+    // TestPage view model
     var TestPageViewModel = (function (_super) {
         __extends(TestPageViewModel, _super);
         function TestPageViewModel() {

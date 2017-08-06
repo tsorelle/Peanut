@@ -15,7 +15,7 @@
 
 // Module
 namespace Peanut {
-    // view model
+    // TestPage view model
     export class TestPageViewModel  extends Peanut.ViewModelBase {
         messageText = ko.observable('');
 
