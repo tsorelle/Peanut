@@ -59,6 +59,7 @@ class Bootstrap
         $topsRoot = $settings->topsLocation;
         $loader = Autoloader::getInstance();
         $loader->addPsr4('Tops',$fileRoot.$topsRoot);
+        $loader->addPsr4('Peanut',$fileRoot.$settings->peanutSrcLocation);
         $packages = TViewModelManager::getPackageList();
         if (!empty($packages)) {
             $packagePath = TViewModelManager::getPackagePath();
@@ -136,6 +137,7 @@ class Bootstrap
         $result->uiExtension = empty($settings['uiExtension']) ? 'Bootstrap' : $settings['uiExtension'];
         $result->srcLocation = $srcLocation;
         $result->topsLocation = empty($ini['locations']['tops']) ? "$srcLocation/tops" : $ini['locations']['tops'];
+        $result->peanutSrcLocation = "$srcLocation/peanut";
         $result->autoloadItems=empty($ini['autoload']) ? array() : $ini['autoload'];
         if (empty($settings['loggingMode'])) {
             $result->loggingMode = $optimize ? 'none' : 'verbose';

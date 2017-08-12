@@ -189,9 +189,9 @@ var Peanut;
             return result;
         };
         ;
+        ServiceBroker.instance = null;
         return ServiceBroker;
     }());
-    ServiceBroker.instance = null;
     Peanut.ServiceBroker = ServiceBroker;
     /**
      * Use for testing. Normally IServiceResponse is returned from a service

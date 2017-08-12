@@ -51,11 +51,11 @@ var Peanut;
                 WaitMessage.visible = false;
             }
         };
+        WaitMessage.waitDialog = null;
+        WaitMessage.waiterType = 'spin-waiter';
+        WaitMessage.templates = Array();
+        WaitMessage.visible = false;
         return WaitMessage;
     }());
-    WaitMessage.waitDialog = null;
-    WaitMessage.waiterType = 'spin-waiter';
-    WaitMessage.templates = Array();
-    WaitMessage.visible = false;
     Peanut.WaitMessage = WaitMessage;
 })(Peanut || (Peanut = {})); // end namespace

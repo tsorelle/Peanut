@@ -14,10 +14,10 @@ var Peanut;
     var Config = (function () {
         function Config() {
         }
+        Config.loaded = false;
+        Config.values = {};
         return Config;
     }());
-    Config.loaded = false;
-    Config.values = {};
     Peanut.Config = Config;
     var ui = (function () {
         function ui() {
@@ -166,8 +166,8 @@ var Peanut;
             PeanutLoader.checkConfig();
             jQuery.get(htmlSource + "?v=" + Peanut.Config.values.applicationVersionNumber, successFunction);
         };
+        PeanutLoader.loaded = [];
         return PeanutLoader;
     }());
-    PeanutLoader.loaded = [];
     Peanut.PeanutLoader = PeanutLoader;
 })(Peanut || (Peanut = {})); // end namespace
