@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/pnut.root/application/src" isTestSource="false" packagePrefix="Bookstore" />
       <sourceFolder url="file://$MODULE_DIR$/pnut.root/modules/src/tops" isTestSource="false" packagePrefix="Tops" />
       <sourceFolder url="file://$MODULE_DIR$/pnut.root/application/config" isTestSource="false" packagePrefix="Peanut" />
+      <sourceFolder url="file://$MODULE_DIR$/pnut.root/modules/src/peanut" isTestSource="false" packagePrefix="Peanut" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />

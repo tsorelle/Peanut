@@ -43,7 +43,7 @@ $loader = $settings->optimize ?  '../..'.$settings->peanutRootPath.'dist/loader.
     <div class="row">
         <div class="col-md-12">
             <h1>Peanut Package Installer</h1>
-            <div id="installpackages-view-container">
+            <div id="installpackages-view-container" style="display: none;">
                 <div data-bind="visible:activePage()=='packageList'">
                     <table class="table">
                         <thead>
