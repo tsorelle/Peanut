@@ -5,10 +5,6 @@
  * Date: 5/13/2017
  * Time: 6:57 AM
  */
-
-
-
-$fileRoot = realpath(__DIR__.'../../../');
+$fileRoot = realpath(__DIR__.'../../../pnut.root');
 $fileRoot =  str_replace('\\','/',$fileRoot).'/';
-// require_once $fileRoot. 'vendor/autoload.php';
 \Tops\sys\TPath::Initialize($fileRoot);

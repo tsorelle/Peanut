@@ -7,6 +7,8 @@
       <sourceFolder url="file://$MODULE_DIR$/pnut.root/modules/src/tops" isTestSource="false" packagePrefix="Tops" />
       <sourceFolder url="file://$MODULE_DIR$/pnut.root/application/config" isTestSource="false" packagePrefix="Peanut" />
       <sourceFolder url="file://$MODULE_DIR$/pnut.root/modules/src/peanut" isTestSource="false" packagePrefix="Peanut" />
+      <sourceFolder url="file://$MODULE_DIR$/pnut.root/modules/src/test" isTestSource="true" packagePrefix="PeanutTest" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/lib" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
@@ -35,7 +37,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/resource-operations" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/version" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/twoquakers/tops" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -71,7 +72,6 @@
           <root url="file://$MODULE_DIR$/vendor/sebastian/resource-operations" />
           <root url="file://$MODULE_DIR$/vendor/sebastian/version" />
           <root url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
-          <root url="file://$MODULE_DIR$/vendor/twoquakers/tops" />
           <root url="file://$MODULE_DIR$/vendor/webmozart/assert" />
         </CLASSES>
         <SOURCES>
@@ -103,7 +103,6 @@
           <root url="file://$MODULE_DIR$/vendor/sebastian/resource-operations" />
           <root url="file://$MODULE_DIR$/vendor/sebastian/version" />
           <root url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
-          <root url="file://$MODULE_DIR$/vendor/twoquakers/tops" />
           <root url="file://$MODULE_DIR$/vendor/webmozart/assert" />
         </SOURCES>
       </library>

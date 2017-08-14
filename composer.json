@@ -10,14 +10,14 @@
       "email": "tls@2quakers.net"
     }
   ],
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/tsorelle/tops"
+  "autoload": {
+    "psr-4": {
+      "Tops\\" : "pnut.root/modules/src/tops",
+      "Peanut\\" : "pnut.root/modules/src/peanut",
+      "Peanut\\testing\\" : "tests/lib"
     }
-  ],
+  },
   "require": {
-    "twoquakers/tops" : "dev-master",
     "phpunit/phpunit": "6.1.3"
   }
 }
