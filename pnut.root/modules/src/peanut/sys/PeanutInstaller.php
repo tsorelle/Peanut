@@ -104,6 +104,6 @@ abstract class PeanutInstaller
         file_put_contents($configFile,join("\n",$output));
     }
 
-    abstract protected function getNativeDbConfiguration();
+    abstract public function getNativeDbConfiguration();
 
 }

@@ -13,7 +13,7 @@ use Peanut\sys\PeanutInstaller;
 
 class FakePeanutInstaller extends PeanutInstaller
 {
-    protected function getNativeDbConfiguration()
+    public function getNativeDbConfiguration()
     {
         return $this->makeDbParameters('database','username','password');
     }
