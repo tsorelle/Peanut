@@ -15,8 +15,8 @@ abstract class PeanutInstaller
 {
     public static function GetInstaller()
     {
-        if (TObjectContainer::HasDefinition('peanut-installer')) {
-            return TObjectContainer::Get('peanut-installer');
+        if (TObjectContainer::HasDefinition('peanut.installer')) {
+            return TObjectContainer::Get('peanut.installer');
         }
         return new DefaultPeanutInstaller();
     }
@@ -38,8 +38,8 @@ abstract class PeanutInstaller
         return $result;
     }
 
-    private function addDbConfigSection($section,$parameters,array $output) {
-        $output = "[$section]";
+    private function addDbConfigSection($section,$parameters,array &$output) {
+        $output[] = "[$section]";
         foreach ($parameters as $name => $value) {
             $output[] = "$name='$value'";
         }
@@ -72,6 +72,7 @@ abstract class PeanutInstaller
                         $currentSection = $line;
                         if ($line=="[$databaseId]") {
                             $this->addDbConfigSection($databaseId,$parameters,$output);
+                            $output[] = '';
                             $dbSectionFound = true;
                         }
                         break;
@@ -90,16 +91,17 @@ abstract class PeanutInstaller
         else {
             $output = array(
                 '[settings]',
-                'default=$databaseId',
+                "default=$databaseId",
                 '; PDO error modes: ERRMODE_SILENT = 0; ERRMODE_WARNING = 1; ERRMODE_EXCEPTION = 2;',
-                '; errormode=2',
-                '');
+                '; errormode=2');
         }
         if (!$dbSectionFound) {
+            $output[] = '';
             $this->addDbConfigSection($databaseId,$parameters,$output);
         }
 
-        file_put_contents($configFile,join('\n',$output));
+        $content = join("\n",$output);
+        file_put_contents($configFile,join("\n",$output));
     }
 
     abstract protected function getNativeDbConfiguration();
