@@ -30,7 +30,7 @@ abstract class PeanutInstaller
         $result = array(
             'database' => $database,
             'user' => $user,
-            'pdw' => $pwd
+            'pwd' => $pwd
         );
         if ($server != 'localhost' && !empty($server)) {
             $result['server'] = $server;
