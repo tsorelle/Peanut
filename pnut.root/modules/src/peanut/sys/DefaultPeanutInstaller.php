@@ -12,8 +12,4 @@ namespace Peanut\sys;
 class DefaultPeanutInstaller extends PeanutInstaller
 {
 
-    protected function getNativeDbConfiguration()
-    {
-        return null;
-    }
 }
