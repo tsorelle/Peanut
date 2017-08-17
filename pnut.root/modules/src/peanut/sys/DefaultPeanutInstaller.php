@@ -12,4 +12,9 @@ namespace Peanut\sys;
 class DefaultPeanutInstaller extends PeanutInstaller
 {
 
+
+    public function doCustomSetup()
+    {
+        // TODO: Implement doCustomSetup() method.
+    }
 }

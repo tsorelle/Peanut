@@ -19,6 +19,7 @@ class GetPackageListCommand extends TServiceCommand
         $result->status = $installed ? 'Installed' : 'Ready to install';
     }
 
+
     protected function run()
     {
         $result = array();
@@ -27,6 +28,7 @@ class GetPackageListCommand extends TServiceCommand
         foreach ($packages as $package) {
             if ($package != '..' && $package != '.') {
                 $flag = "$packageDir/$package/intalled.txt";
+                $peanutInsallationLog = "$packageDir/$package/intalled.txt";
                 $pkgInfo = new \stdClass();
                 $pkgInfo->name = $package;
                 $pkgInfo->status = file_exists($flag) ? 'Installed' : 'Ready to install';

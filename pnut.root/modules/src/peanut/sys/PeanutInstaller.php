@@ -13,6 +13,7 @@ use Tops\sys\TPath;
 
 abstract class PeanutInstaller
 {
+
     public static function GetInstaller()
     {
         if (TObjectContainer::HasDefinition('peanut.installer')) {
@@ -20,6 +21,9 @@ abstract class PeanutInstaller
         }
         return new DefaultPeanutInstaller();
     }
+
+    abstract public function doCustomSetup();
+
 
 
 }
