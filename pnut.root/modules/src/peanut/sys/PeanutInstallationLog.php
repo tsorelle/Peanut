@@ -55,6 +55,19 @@ class PeanutInstallationLog
         }
     }
 
+    public function logStart($package) {
+        $this->addLogEntry($package,self::InstallationStartedMessage);
+    }
+
+    public function logCompletion($package) {
+        $this->addLogEntry($package,self::InstallationCompletedMessage);
+    }
+
+    public function logFailure($package,$failMessage) {
+        $this->addLogEntry($package,$failMessage);
+        $this->addLogEntry($package,self::InstallationFailedMessage);
+    }
+
     public function installationCompleted($package)
     {
         $result = false;
@@ -80,7 +93,7 @@ class PeanutInstallationLog
     {
         $entry = new \stdClass();
         $entry->time = $time;
-        $entry->message = $message;
+        $entry->message = trim($message);
         return $entry;
     }
 

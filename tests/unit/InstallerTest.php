@@ -28,7 +28,6 @@ class InstallerTest extends TestCase
             $time->modify("+1 seconds");
             $logLines[] = $time->format("Y-m-d H:i:s") . "::$line";
         }
-        // file_put_contents(__DIR__.'/files/peanut-installation.log',join("\n",$$logLines));
         return $logLines;
     }
 
@@ -199,18 +198,20 @@ class InstallerTest extends TestCase
         $this->assertEquals($expected, $lineCount);
         for ($i = 0; $i < $lineCount; $i++) {
             $expectedLine = $testLog[$i];
-            $actualLine = $content[$i];
+            $actualLine = trim($content[$i]);
             $expectedParts = explode('::', $expectedLine);
-            $actualParts = explode('::', $expectedLine);
-            for ($j = 0; $j < 3; $j++) {
-                $this->assertEquals($expectedParts[$j], $actualParts[$j]);
+            $actualParts = explode('::', $actualLine);
+            for ($j = 1; $j < 3; $j++) {
+                $expected = $expectedParts[$j];
+                $actual = $actualParts[$j];
+                $this->assertEquals($expected,$actual );
             }
 
             $expected = $logger->createEntry($expectedParts[2], 'datetime');
             $actual = $logger->createEntry($actualParts[2], 'datetime');
-            $this->assertEquals($expected->message, $actual->message);
-            $this->assertEquals($expected->time, 'datetime');
-            $this->assertEquals($actual->time, 'datetime');
+            $this->assertEquals($expected->message, $actual->message,"failed on line $i");
+            $this->assertEquals($expected->time, 'datetime',"failed on line $i");
+            $this->assertEquals($actual->time, 'datetime',"failed on line $i");
         }
     }
 
