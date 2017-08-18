@@ -30,145 +30,168 @@ class InstallerTest extends TestCase
         }
         return $logLines;
     }
+    
+    private function getVersions() {
+        $result = new \stdClass();
+        $peanutRoot = realpath(__DIR__.'/../../pnut.root/modules/pnut');
+        $settings = parse_ini_file($peanutRoot.'/peanut.ini');
+        $result->peanut = $settings['version'];
+        $settings = parse_ini_file($peanutRoot.'/packages/qnut/package.ini');
+        $result->qnut = $settings['version'];
+        return $result;
+    }
 
     private function createBasicTestLog() {
+        $versions = $this->getVersions();
         $testLog = $this->createTestLog(array(
-            'peanut::' . PeanutInstallationLog::InstallationStartedMessage,
-            'peanut::operation 1 started',
-            'peanut::operation 1 completed',
-            'peanut::oops I crashed',
-            'peanut::' . PeanutInstallationLog::InstallationFailedMessage,
-            'peanut::' . PeanutInstallationLog::InstallationStartedMessage,
-            'peanut::operation 1 started',
-            'peanut::operation 1 completed',
-            'peanut::' . PeanutInstallationLog::InstallationCompletedMessage,
-            'qnut::' . PeanutInstallationLog::InstallationStartedMessage,
-            'qnut::operation 1 started',
-            'qnut::operation 1 completed',
-            'qnut::' . PeanutInstallationLog::InstallationCompletedMessage,
+            'peanut::'.$versions->peanut.'::' . PeanutInstallationLog::InstallationStartedMessage,
+            'peanut::'.$versions->peanut.'::operation 1 started',
+            'peanut::'.$versions->peanut.'::operation 1 completed',
+            'peanut::'.$versions->peanut.'::oops I crashed',
+            'peanut::'.$versions->peanut.'::' . PeanutInstallationLog::InstallationFailedMessage,
+            'peanut::'.$versions->peanut.'::' . PeanutInstallationLog::InstallationStartedMessage,
+            'peanut::'.$versions->peanut.'::operation 1 started',
+            'peanut::'.$versions->peanut.'::operation 1 completed',
+            'peanut::'.$versions->peanut.'::' . PeanutInstallationLog::InstallationCompletedMessage,
+            'peanut::'.$versions->qnut.'::' . PeanutInstallationLog::InstallationStartedMessage,
+            'peanut::'.$versions->qnut.'::operation 1 started',
+            'peanut::'.$versions->qnut.'::operation 1 completed',
+            'peanut::'.$versions->qnut.'::'. PeanutInstallationLog::InstallationCompletedMessage,
         ));
         return $testLog;
     }
 
-    private function compareLogs($actualLog,$testLog,$testName) {
-        $this->assertNotEmpty($actualLog);
-        $testMessage = " Failed in $testName";
-        $expected = 2;
-        $actual = sizeof($actualLog);
-        $this->assertEquals($expected,$actual,'Size of log does not match input. '.$testMessage);
 
-        $expected = 9;
-        $actual = sizeof($actualLog['peanut']);
-        $this->assertEquals($expected,$actual,'Size of peanut log does not match input.'.$testMessage);
-
-        $expected = 4;
-        $actual = sizeof($actualLog['qnut']);
-        $this->assertEquals($expected,$actual,'Size of qnut log does not match input.'.$testMessage);
-
-        $actual = $actualLog['peanut'][0]->message;
-        $expected = PeanutInstallationLog::InstallationStartedMessage;
-        $this->assertEquals($expected,$actual,$testMessage);
-
-        $actual = $actualLog['peanut'][4]->message;
-        $expected = PeanutInstallationLog::InstallationFailedMessage;
-        $this->assertEquals($expected,$actual,$testMessage);
-
-        $actual = $actualLog['peanut'][5]->message;
-        $expected = PeanutInstallationLog::InstallationStartedMessage;
-        $this->assertEquals($expected,$actual,$testMessage);
-
-        $actual = $actualLog['peanut'][8]->message;
-        $expected = PeanutInstallationLog::InstallationCompletedMessage;
-        $this->assertEquals($expected,$actual,$testMessage);
-
-        $actual = $actualLog['qnut'][0]->message;
-        $expected = PeanutInstallationLog::InstallationStartedMessage;
-        $this->assertEquals($expected,$actual,$testMessage);
-
-        $actual = $actualLog['qnut'][3]->message;
-        $expected = PeanutInstallationLog::InstallationCompletedMessage;
-        $this->assertEquals($expected,$actual,$testMessage);
-    }
-    
-    public function testCreateLogs()
-    {
+    public function testGetStatus() {
         $testLog = $this->createBasicTestLog();
-        $logger = new PeanutInstallationLog();
-        $logger->createLogs($testLog);
-        $archive = $logger->getArchive();
-        $this->compareLogs($archive,$testLog,'testCreateLogs');
+
+        $installer = \Peanut\sys\PeanutInstaller::GetInstaller();
+        $archive = PeanutInstallationLog::convertLogContent($testLog);
+        $actual = $installer->findInstallationStatus('peanut',$archive);
+        $this->assertTrue($actual !== false);
+        $this->assertNotEmpty($actual->version);
+
+        $end = sizeof($archive['peanut']);
+        for ($i=0;$i<$end;$i++) {
+            $entry = $archive['peanut'][$i];
+            if ($entry->message === PeanutInstallationLog::InstallationCompletedMessage) {
+                $entry->message = PeanutInstallationLog::InstallationFailedMessage;
+                $archive['peanut'][$i] = $entry;
+            }
+        }
+
+        $actual = $installer->findInstallationStatus('peanut',$archive);
+        $this->assertTrue($actual === false);
     }
 
-    public function testCompletion() {
-        $testLog = $this->createBasicTestLog();
-        $lastIndx = sizeof($testLog) - 1;
-        $lastLine = $testLog[$lastIndx];
-        $parts = explode('::',$lastLine);
-        $parts[2] = PeanutInstallationLog::InstallationFailedMessage;
-        $testLog[$lastIndx] = join('::',$parts);
-        $logger = new PeanutInstallationLog();
-        $logger->createLogs($testLog);
-        $actual = $logger->installationCompleted('peanut');
-        $this->assertTrue($actual !== false,"Peanut installation completed at $actual");
-        $actual = $logger->installationCompleted('qnut');
-        $this->assertFalse($actual,"Qnut installation completed at $actual");
-
-    }
 
     public function testLogMessages()
     {
-        $testLog = $this->createBasicTestLog();
         $logger = new PeanutInstallationLog();
-        $logger->createLogs();
-        foreach ($testLog as $line) {
-            $parts = explode('::',$line);
-            $logger->addLogEntry($parts[1],$parts[2]);
+
+        $logger->setArchive(array());
+        $logger->startSession('peanut');
+        for ($i = 1; $i<5; $i++) {
+            $logger->addLogEntry("Message $i");
         }
+        $logger->endSession();
+
         $log = $logger->getLog();
-        $this->assertNotEmpty($log);
-        $this->compareLogs($log,$testLog,'testLogMessages');
+        $this->assertTrue(sizeof($log) == 1);
+        $this->assertTrue(array_key_exists('peanut',$log));
+        $log = $log['peanut'];
+        $this->assertEquals(PeanutInstallationLog::InstallationStartedMessage, $log[0]->message);
+        for($i=1;$i<5;$i++) {
+            $this->assertEquals("Message $i",$log[$i]->message);
+        }
+        $this->assertEquals(PeanutInstallationLog::InstallationCompletedMessage, $log[5]->message);
+    }
+
+    function getSessionRecords($testLog)
+    {
+        $result = array();
+        foreach ($testLog as $line) {
+            $parts = explode('::', $line);
+            switch ($parts[3]) {
+                case PeanutInstallationLog::InstallationStartedMessage :
+                    $result = array($line);
+                    break;
+                case PeanutInstallationLog::InstallationFailedMessage :
+                    $result = array();
+                    break;
+                case PeanutInstallationLog::InstallationCompletedMessage :
+                    $result[] = $line;
+                    return ($result);
+                default :
+                    $result[] = $line;
+                    break;
+            }
+        }
+        return array();
+    }
+
+
+
+    function filterTestLog($testLog,$package='peanut')
+    {
+        $result = array();
+        foreach ($testLog as $line) {
+            $parts = explode('::', $line);
+            if ($parts[1] == $package) {
+                $result[] = $line;
+            }
+        }
+        return $result;
+    }
+
+
+    private function addEntriesFromTestLog(PeanutInstallationLog $logger,$testLog)
+    {
+        foreach ($testLog as $line) {
+            $parts = explode('::', $line);
+            if ($parts[3] != PeanutInstallationLog::InstallationStartedMessage &&
+                $parts[3] != PeanutInstallationLog::InstallationCompletedMessage
+            ) {
+                $logger->addLogEntry($parts[3]);
+            }
+        }
     }
 
     public function testFlattenLog() {
         $testLog = $this->createBasicTestLog();
-        $logger = new PeanutInstallationLog();
-        $logger->createLogs();
-        foreach ($testLog as $line) {
-            $parts = explode('::', $line);
-            $logger->addLogEntry($parts[1], $parts[2]);
-        }
-        $content = $logger->flattenLog();
-        $this->compareLogFiles($testLog, $content, $logger);
-    }
+        $testLog = $this->filterTestLog($testLog);
+        $sessionLog = $this->getSessionRecords($testLog);
 
-    /**
-     * @param $logger PeanutInstallationLog
-     * @param $testLog
-     * @param $logDir
-     * @param $logFile
-     * @return array|bool
-     */
-    private function writeTestLog($logger, $testLog, $logDir) {
-        $logFile=$logDir.'/'.PeanutInstallationLog::LogFileName;
-        if (file_exists($logFile)) {
-            unlink($logFile);
-        }
-        $logger->openLogFile($logDir);
-        foreach ($testLog as $line) {
-            $parts = explode('::',$line);
-            $logger->addLogEntry($parts[1],$parts[2]);
-        }
-        $logger->save();
-        return $logFile;
+        $logger = new PeanutInstallationLog();
+        $logger->setArchive(array());
+        $logger->startSession('peanut');
+        $this->addEntriesFromTestLog($logger, $sessionLog);
+        $logger->endSession();
+        $content = $logger->flattenLog();
+        $this->compareLogFiles($sessionLog, $content);
     }
 
     public function testWriteLog() {
         $logger = new PeanutInstallationLog();
-        $testLog = $this->createBasicTestLog();
         $logDir = __DIR__.'/files';
-        $logFile = $this->writeTestLog($logger,$testLog,$logDir);
+        $logFile = $logDir.'/'.PeanutInstallationLog::LogFileName;
+        if (file_exists($logFile)) {
+            unlink($logFile);
+        }
+        $logger->setArchive(array());
+        $logger->startSession('peanut',$logDir);
+        for ($i = 1; $i<5; $i++) {
+            $logger->addLogEntry("Message $i");
+        }
+        $logger->endSession();
+
+        $log = $logger->getLogFlat();
         $savedLog = file($logFile);
-        $this->compareLogFiles($testLog,$savedLog,$logger);
+        $expected = sizeof($log);
+        $this->assertEquals($expected,sizeof($savedLog));
+        for ($i=0;$i<$expected;$i++) {
+            $this->assertEquals($log[$i], trim($savedLog[$i]));
+        }
         unlink($logFile);
     }
 
@@ -176,22 +199,30 @@ class InstallerTest extends TestCase
         $logger = new PeanutInstallationLog();
         $testLog = $this->createBasicTestLog();
         $logDir = __DIR__.'/files';
-        $logFile = $this->writeTestLog($logger,$testLog, $logDir);
-        $log = $logger->getLog();
+        $logFile = $logDir.'/'.PeanutInstallationLog::LogFileName;
+        if (file_exists($logFile)) {
+            unlink($logFile);
+        }
+        file_put_contents($logFile, join("\n",$testLog));
 
-        $logger->openLogFile($logDir);
-        $archive = $logger->getArchive();
-
-        $this->compareLogs($archive,$log,'testReadlog');
+        $logger->startSession('peanut',$logDir);
+        $archive = $logger->getArchiveFlat();
+        $expected = sizeof($testLog);
+        $this->assertEquals($expected,sizeof($archive));
+        for ($i=0;$i<$expected;$i++) {
+            $this->assertEquals(trim($testLog[$i]), trim($archive[$i]));
+        }
         unlink($logFile);
     }
 
+
+    
     /**
      * @param $testLog
      * @param $content
      * @param $logger
      */
-    protected function compareLogFiles($testLog, $content, $logger)
+    public function compareLogFiles($testLog, $content)
     {
         $expected = sizeof($testLog);
         $lineCount = sizeof($content);
@@ -206,12 +237,6 @@ class InstallerTest extends TestCase
                 $actual = $actualParts[$j];
                 $this->assertEquals($expected,$actual );
             }
-
-            $expected = $logger->createEntry($expectedParts[2], 'datetime');
-            $actual = $logger->createEntry($actualParts[2], 'datetime');
-            $this->assertEquals($expected->message, $actual->message,"failed on line $i");
-            $this->assertEquals($expected->time, 'datetime',"failed on line $i");
-            $this->assertEquals($actual->time, 'datetime',"failed on line $i");
         }
     }
 

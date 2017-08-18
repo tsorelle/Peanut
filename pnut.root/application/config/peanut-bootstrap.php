@@ -96,6 +96,7 @@ class Bootstrap
         $root = join('/', $parts) . '/';
 
         $ini = parse_ini_file(__DIR__ . '/settings.ini', true);
+
         $settings = $ini['peanut'];
         $result = new \stdClass();
         $modulePath = (empty($settings['modulePath']) ? 'modules' : $settings['modulePath']);

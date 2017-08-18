@@ -17,93 +17,125 @@ class PeanutInstallationLog
      */
     private $filePath;
     private $log = array();
-    private $archive = array();
+    private $archive;
+    private $session;
 
     const InstallationCompletedMessage = 'installation completed';
     const InstallationFailedMessage = 'installation failed';
     const InstallationStartedMessage = 'installation started';
     const LogFileName = 'peanut-installation.log';
 
-    public function openLogFile($location = null)
+    public function getSession() {
+        if (!isset($this->session)) {
+            throw new \Exception('Installation session was not initialized with startSession()');
+        }
+        return $this->session;
+    }
+
+    public function readLogFile($filePath = null)
     {
-        if ($location==null) {
-            $location = TPath::getFileRoot() . '/install';
+        $result = array();
+        if ($filePath==null) {
+            $filePath = $this->getFilePath();
         }
 
-        $this->filePath = $location.'/'.self::LogFileName;
-
-        if (file_exists($this->filePath)) {
-            $lines = file($this->filePath);
-            $this->createLogs($lines);
-        }
-    }
-
-    public function createLogs($lines=array())
-    {
-        $this->log = array();
-        foreach ($lines as $line) {
-            if (!empty($line)) {
-                // time:package:message
-                $parts = explode('::', $line);
-                if (sizeof($parts) == 3) {
-                    $time = $parts[0];
-                    $package = $parts[1];
-                    $message = $parts[2];
-                    $this->archive[$package][] = $this->createEntry($message,$time);
-                }
-            }
-        }
-    }
-
-    public function logStart($package) {
-        $this->addLogEntry($package,self::InstallationStartedMessage);
-    }
-
-    public function logCompletion($package) {
-        $this->addLogEntry($package,self::InstallationCompletedMessage);
-    }
-
-    public function logFailure($package,$failMessage) {
-        $this->addLogEntry($package,$failMessage);
-        $this->addLogEntry($package,self::InstallationFailedMessage);
-    }
-
-    public function installationCompleted($package)
-    {
-        $result = false;
-        $packageEntries = $this->archive[$package];
-        foreach ($packageEntries as $entry) {
-            if ($entry->message === self::InstallationStartedMessage || $entry->message === self::InstallationFailedMessage) {
-                $result = false;
-            } else if ($entry->message === self::InstallationCompletedMessage) {
-                $result = $entry->time;
-            }
+        if (file_exists($filePath)) {
+            $lines = file($filePath);
+            $result = self::convertLogContent($lines);
         }
         return $result;
     }
 
-    public function addLogEntry($package, $message) {
-        $time = date("Y-m-d H:i:s");
-        $this->log[$package][] = $this->createEntry($message,$time);
-
-
+    public static function convertLogContent($lines) {
+        $result = array();
+        $lineNo = 0;
+        foreach ($lines as $line) {
+            $lineNo++;
+            $line = trim($line);
+            if (empty($line)) {
+                continue;
+            }
+            // Format -  time::package::version::message
+            $parts = explode('::', $line);
+            if (sizeof($parts) != 4) {
+                throw new \Exception("Invalid log file. Error on line $lineNo");
+            }
+            $time = $parts[0];
+            $package = $parts[1];
+            $version = $parts[2];
+            $message = $parts[3];
+            $result[$package][] = self::createEntry($package, $version, $message, $time);
+        }
+        return $result;
     }
 
-    public function createEntry($message, $time = null)
+    private function getFilePath() {
+        if (!isset($this->filePath)) {
+            $this->filePath = TPath::getFileRoot() . '/install/'.self::LogFileName;
+        }
+        return $this->filePath;
+    }
+
+    public function startSession($package,$logLocation=null) {
+        if ($logLocation!=null) {
+            $this->filePath = $logLocation.'/'.self::LogFileName;
+        }
+
+        if ($package == 'peanut') {
+            $iniPath = PeanutSettings::GetPeanutRoot().'/peanut.ini';
+        }
+        else {
+            $iniPath = PeanutSettings::GetPeanutRoot()."/packages/$package/package.ini";
+        }
+        $settings = parse_ini_file(TPath::getFileRoot().$iniPath);
+        $this->session = new \stdClass();
+        $this->session->package = $package;
+        $this->session->version = $settings['version'];
+        $this->log = array();
+        if (!isset($this->archive)) {
+            $this->archive = $this->readLogFile();
+        }
+        $this->addLogEntry(self::InstallationStartedMessage);
+    }
+
+    public function endSession() {
+        $this->addLogEntry(self::InstallationCompletedMessage);
+        $this->save();
+        unset($this->session);
+    }
+
+    public function failSession($failMessage) {
+        $this->addLogEntry($failMessage);
+        $this->addLogEntry(self::InstallationFailedMessage);
+        $this->save();
+        unset($this->session);
+    }
+
+
+    public function addLogEntry($message) {
+        $time = date("Y-m-d H:i:s");
+        $this->log[$this->session->package][] = self::createEntry($this->session->package,$this->session->version, $message,$time);
+    }
+
+    public static function createEntry($package, $version, $message, $time)
     {
         $entry = new \stdClass();
         $entry->time = $time;
         $entry->message = trim($message);
+        $entry->package = $package;
+        $entry->version = $version;
         return $entry;
     }
 
-    public function flattenLog()
+    public function flattenLog($log=null)
     {
         $content = array();
-
-        foreach ($this->log as $package => $entries) {
+        if ($log == null) {
+            $log = $this->log;
+        }
+        foreach ($log as $package => $entries) {
             foreach ($entries as $entry) {
-                $content[] = "$entry->time::$package::$entry->message";
+                $content[] = "$entry->time::$package::$entry->version::$entry->message";
             }
         }
         return $content;
@@ -111,24 +143,43 @@ class PeanutInstallationLog
 
     public function save()
     {
-        $content = $this->flattenLog();
-        file_put_contents($this->filePath, join("\n",$content), FILE_APPEND);
+        // unit test will not write file.
+        if (!empty($this->filePath)) {
+            $content = $this->flattenLog();
+            file_put_contents($this->filePath, join("\n", $content), FILE_APPEND);
+        }
     }
 
     //for testing
-    public function getArchive()
+    public function getArchive($flat=true)
     {
+           return $this->archive;
+    }
+
+    public function getArchiveFlat($flat=true)
+    {
+        return $this->flattenLog($this->archive);
+    }
+
+    public function setArchive($log) {
+        if (is_array($log)) {
+            $this ->archive = self::convertLogContent($log);
+        }
+        else {
+            $this->archive = $log;
+        }
         return $this->archive;
+
     }
 
     public function getLog()
     {
         return $this->log;
     }
-
-    public function getLogs()
+    public function getLogFlat()
     {
-        return array_merge($this->archive,$this->log);
+        return $this->flattenLog();
     }
+
 
 }

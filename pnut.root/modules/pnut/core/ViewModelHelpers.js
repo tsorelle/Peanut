@@ -9,12 +9,12 @@ var Peanut;
     var editState = (function () {
         function editState() {
         }
+        editState.unchanged = 0;
+        editState.created = 1;
+        editState.updated = 2;
+        editState.deleted = 3;
         return editState;
     }());
-    editState.unchanged = 0;
-    editState.created = 1;
-    editState.updated = 2;
-    editState.deleted = 3;
     Peanut.editState = editState;
     var HttpRequestVars = (function () {
         function HttpRequestVars() {

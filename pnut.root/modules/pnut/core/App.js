@@ -284,11 +284,11 @@ var Peanut;
                 _this.infoMessages(infoArray);
             };
         }
+        MessageManager.instance = new MessageManager();
+        MessageManager.errorClass = "service-message-error";
+        MessageManager.infoClass = "service-message-information";
+        MessageManager.warningClass = "service-message-warning";
         return MessageManager;
     }());
-    MessageManager.instance = new MessageManager();
-    MessageManager.errorClass = "service-message-error";
-    MessageManager.infoClass = "service-message-information";
-    MessageManager.warningClass = "service-message-warning";
 })(Peanut || (Peanut = {}));
 //# sourceMappingURL=App.js.map
