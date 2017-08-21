@@ -17,7 +17,7 @@ $pnutcms = \Peanut\cms\CmsController::Start(__DIR__);
     <title>Peanut 2017</title>
 
     <!-- link rel="stylesheet" type="text/css"href="styles/bootstrap-3.3.7/bootstrap.min.css" / -->
-    <link rel="stylesheet" type="text/css"href="assets/themes/cerulean/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css"href="application/assets/themes/cerulean/bootstrap.min.css" />
 
     <?php
         if($pnutcms->getScriptDebug()):

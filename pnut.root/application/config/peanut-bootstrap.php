@@ -10,7 +10,7 @@ namespace Peanut;
 use Tops\sys\TConfiguration;
 use Tops\sys\TPath;
 use Tops\sys\TStrings;
-use Tops\ui\TViewModelManager;
+use Peanut\sys\ViewModelManager;
 
 class Bootstrap
 {
@@ -60,9 +60,9 @@ class Bootstrap
         $loader = Autoloader::getInstance();
         $loader->addPsr4('Tops',$fileRoot.$topsRoot);
         $loader->addPsr4('Peanut',$fileRoot.$settings->peanutSrcLocation);
-        $packages = TViewModelManager::getPackageList();
+        $packages = ViewModelManager::getPackageList();
         if (!empty($packages)) {
-            $packagePath = TViewModelManager::getPackagePath();
+            $packagePath = ViewModelManager::getPackagePath();
             foreach ($packages as $package) {
                 $namespace = TStrings::toCamelCase($package);
                 $srcRoot = $fileRoot.$packagePath."/$package/src";

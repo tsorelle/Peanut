@@ -14,7 +14,7 @@ namespace Peanut\cms;
 use Peanut\Bootstrap;
 use Tops\sys\Autoloader;
 use Tops\sys\TStrings;
-use Tops\ui\TViewModelManager;
+use Peanut\sys\ViewModelManager;
 use Tops\sys\TConfiguration;
 use Tops\sys\TPath;
 
@@ -92,7 +92,7 @@ class CmsController
                 print json_encode($response);
                 exit;
             default:
-                $vmInfo = TViewModelManager::getViewModelSettings($routePath);
+                $vmInfo = ViewModelManager::geViewModelSettings($routePath);
                 $this->vmName = '';
                 if (empty($vmInfo)) {
                     $this->contentFile = $fileRoot."/content/$routePath.php";
@@ -126,7 +126,7 @@ class CmsController
     }
 
     public function getScriptInit() {
-        return TViewModelManager::GetStartScript();
+        return ViewModelManager::GetStartScript();
     }
 
     public function getViewContainerId() {
