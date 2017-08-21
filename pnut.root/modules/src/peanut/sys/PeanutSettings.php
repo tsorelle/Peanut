@@ -8,33 +8,32 @@
 
 namespace Peanut\sys;
 
-use \Tops\sys\TPath;
+use Tops\sys\TIniSettings;
 
 class PeanutSettings
 {
+    /**
+     * @var TIniSettings
+     */
     private static $ini;
     private static function getIni() {
         if (!isset(self::$ini)) {
-            $file = TPath::getConfigPath().'settings.ini';
-            self::$ini = parse_ini_file($file,true);
+            self::$ini = TIniSettings::Create();
         }
         return self::$ini;
     }
 
     public static function GetModulePath (){
-        $settings = self::getIni();
-        $modulePath = (empty($settings['modulePath']) ? 'modules' : $settings['modulePath']);
+        $modulePath = self::getIni()->getValue('modulePath','peanut','modules');
         return $modulePath;
     }
     public static function GetPeanutRoot (){
-        $settings = self::getIni();
         $modulePath = self::GetModulePath();
-        $peanutRoot = (empty($settings['peanutRootPath']) ? "$modulePath/pnut" : $settings['peanutRootPath']);
+        $peanutRoot = self::getIni()->getValue('peanutRootPath','peanut',"$modulePath/pnut");
         return $peanutRoot;
     }
     public static function GetMvvmPath   (){
-        $settings = self::getIni();
-        $mvvmPath   = (empty($settings['mvvmPath']) ? 'application/mvvm' : $settings['mvvmPath']);
+        $mvvmPath = self::getIni()->getValue('mvvmPath','peanut','application/mvvm');
         return $mvvmPath;
     }
     public static function GetCorePath   (){
@@ -44,10 +43,20 @@ class PeanutSettings
         return $corePath;
     }
     public static function GetPackagePath(){
-        $settings = self::getIni();
         $peanutRoot = self::GetPeanutRoot();
-        $packagePath = (empty($settings['packagePath']) ? $peanutRoot . "/packages" : $settings['packagePath']);
+        $packagePath = self::getIni()->getValue('packagePath','peanut',$peanutRoot . "/packages");
         return $packagePath;
+    }
+
+    public static function GetPeanutLoaderScript() {
+        $peanutRoot = self::GetPeanutRoot();
+        $optimize = self::getIni()->getBoolean('optimize','peanut');
+        $script = $optimize ? 'dist/loader.min.js' : 'core/PeanutLoader.js';
+        return "$peanutRoot/$script";
+    }
+
+    public static function GetThemeName() {
+        return self::getIni()->getValue('theme','peanut','cerulean');
     }
 
 }

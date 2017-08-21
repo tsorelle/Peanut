@@ -32,11 +32,12 @@ class ViewModelPageBuilder
             return false;
         }
         $view = trim($view);
-        $theme = empty($settings->theme) ? TConfiguration::getValue('theme','templates','cerulean')
-            : $settings->theme;
+        $theme = PeanutSettings::GetThemeName();
+        $loader = PeanutSettings::GetPeanutLoaderScript();
 
         return $this->templateManager->replaceTokens($content,array(
             'theme' => $theme,
+            'loader' => $loader,
             'view' => $view,
             'vmname' => $settings->vmName
         ));
