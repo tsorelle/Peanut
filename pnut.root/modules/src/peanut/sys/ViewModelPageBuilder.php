@@ -58,7 +58,7 @@ class ViewModelPageBuilder
 
     public static function Build($pagePath,$templatePath = null)
     {
-        $settings = ViewModelManager::geViewModelSettings($pagePath);
+        $settings = ViewModelManager::getViewModelSettings($pagePath);
         if ($settings === false) {
             return false;
         }

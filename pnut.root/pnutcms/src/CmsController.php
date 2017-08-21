@@ -92,7 +92,7 @@ class CmsController
                 print json_encode($response);
                 exit;
             default:
-                $vmInfo = ViewModelManager::geViewModelSettings($routePath);
+                $vmInfo = ViewModelManager::getViewModelSettings($routePath);
                 $this->vmName = '';
                 if (empty($vmInfo)) {
                     $this->contentFile = $fileRoot."/content/$routePath.php";

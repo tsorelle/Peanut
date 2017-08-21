@@ -11,18 +11,18 @@ use Peanut\sys\ViewModelManager;
 
 class ViewModelManagerTest extends TestCase
 {
-    function testGeViewModelSettings()
+    function testGetViewModelSettings()
     {
         // reinitialize test path, maybe changed by previous test
         $projectFileRoot =   str_replace('\\','/', realpath(__DIR__.'/..')).'/';
         \Tops\sys\TPath::Initialize($projectFileRoot,'config');
 
-        $actual = ViewModelManager::geViewModelSettings('testpage');
+        $actual = ViewModelManager::getViewModelSettings('testpage');
         $this->assertNotEmpty($actual);
         $expected = 'application/mvvm/view/TestPage.html';
         $this->assertEquals($expected,$actual->view);
 
-        $actual = ViewModelManager::geViewModelSettings('qnut/test');
+        $actual = ViewModelManager::getViewModelSettings('qnut/test');
         $this->assertNotEmpty($actual);
         $expected = 'modules/pnut/packages/test-package/view/QnutTest.html';
         $this->assertEquals($expected,$actual->view);
@@ -35,7 +35,7 @@ class ViewModelManagerTest extends TestCase
         $projectFileRoot =   str_replace('\\','/', realpath(__DIR__.'/..')).'/';
         \Tops\sys\TPath::Initialize($projectFileRoot,'tests/config');
 
-        $actual = ViewModelManager::geViewModelSettings('subdir/testpage');
+        $actual = ViewModelManager::getViewModelSettings('subdir/testpage');
         $this->assertNotEmpty($actual);
         $expected = 'application/mvvm/subdir/view/TestPage.html';
         $this->assertEquals($expected,$actual->view);

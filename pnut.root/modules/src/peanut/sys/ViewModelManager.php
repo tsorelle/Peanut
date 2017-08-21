@@ -56,7 +56,7 @@ class ViewModelManager
      * @param $pathAlias
      * @return bool|ViewModelInfo
      */
-    public static function geViewModelSettings($pathAlias)
+    public static function getViewModelSettings($pathAlias)
     {
         if (!isset(self::$vmSettings)) {
             $path = TPath::getConfigPath();
@@ -123,7 +123,7 @@ class ViewModelManager
     /**
      * @return bool|ViewModelInfo
      */
-    public static function geViewModelInfo()
+    public static function getViewModelInfo()
     {
         return isset(self::$info) ? self::$info : false;
     }
