@@ -70,11 +70,14 @@ class ViewModelPageBuilder
         ));
     }
 
-    public static function Build($pagePath,$templatePath = null)
+    public static function Build($pagePath,$templatePath = null,$authorize=true)
     {
         $settings = ViewModelManager::getViewModelSettings($pagePath);
         if ($settings === false) {
             return false;
+        }
+        if ($authorize) {
+            ViewModelManager::authorize($settings);
         }
         $builder = new ViewModelPageBuilder();
         return $builder->buildPage($settings);
