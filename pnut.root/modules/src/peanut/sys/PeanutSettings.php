@@ -56,7 +56,11 @@ class PeanutSettings
     }
 
     public static function GetThemeName() {
-        return self::getIni()->getValue('theme','peanut','cerulean');
+        return self::getIni()->getValue('default','themes','cerulean');
+    }
+
+    public static function GetLoginPage() {
+        return self::getIni()->getValue('login-page','themes','login');
     }
 
 }

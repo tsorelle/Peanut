@@ -12,6 +12,7 @@ namespace Peanut\sys;
 use Tops\sys\IUser;
 use Tops\sys\TConfiguration;
 use Tops\sys\TPath;
+use Tops\sys\TUser;
 
 class ViewModelManager
 {
@@ -216,6 +217,19 @@ class ViewModelManager
             }
         }
         return false;
+    }
+
+    public static function authorize(ViewModelInfo $settings) {
+        $user = TUser::getCurrent();
+        $authorized = ViewModelManager::isAuthorized($user,$settings);
+        if (!$authorized) {
+            header('HTTP/1.0 403 Forbidden');
+            $message = $settings->roles[0] == 'authenticated' ? 'not-authenticated' : 'not-authorized';
+            $messagePage = ViewModelPageBuilder::BuildMessagePage($message);
+            print $messagePage;
+            exit;
+        }
+
     }
 
 }

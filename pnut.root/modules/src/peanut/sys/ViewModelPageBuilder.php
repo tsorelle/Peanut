@@ -44,17 +44,30 @@ class ViewModelPageBuilder
 
     }
 
-    public function buildPage(ViewModelInfo $settings, $templatePath = null) {
-
+    private function getTemplate($templateName,$templatePath=null) {
         if (empty($templatePath)) {
             $templatePath = TPath::getFileRoot().'application/assets/templates';
         }
+        return $this->templateManager->getContent($templateName,$templatePath);
+    }
 
+    public function buildPage(ViewModelInfo $settings, $templatePath = null) {
         $templateName = empty($settings->template) ?  TConfiguration::getValue('template','templates','default-page.html')
             : $settings->template;
-
-        $content = $this->templateManager->getContent($templateName,$templatePath);
+        $content = $this->getTemplate($templateName,$templatePath);
         return $this->buildPageContent($settings, $content);
+    }
+
+    private function buildMessage($message, $content, $title, $alert,$templatePath) {
+        $content = $this->getTemplate('message-page',$templatePath);
+        $theme = PeanutSettings::GetThemeName();
+        return $this->templateManager->replaceTokens($content,array(
+            'theme' => $theme,
+            'title' => $title,
+            'alert' => $alert,
+            'message' => $message,
+            'content' => $content
+        ));
     }
 
     public static function Build($pagePath,$templatePath = null)
@@ -65,5 +78,28 @@ class ViewModelPageBuilder
         }
         $builder = new ViewModelPageBuilder();
         return $builder->buildPage($settings);
+    }
+
+    public static function BuildMessagePage($message,$title=null, $content='',$alert="danger",$templatePath=null)
+    {
+        $builder = new ViewModelPageBuilder();
+        if ($title == null) {
+            $title = 'Not authorized';
+        }
+        switch ($message) {
+            case 'not-authorized' :
+                $title = 'Not authorized';
+                $message = 'Sorry, you are not authorized to access this page. Please contact the site administrator.';
+                $content = "<a href='/'>Please return to home page >></a>";
+                break;
+            case 'not-authenticated' :
+                $title = 'Please sign in';
+                $message = 'You must sign in to your account to access the page.';
+                $href = PeanutSettings::GetLoginPage();
+                $content = "<a href='/$href'>Please sign in or create an account >></a>";
+                break;
+        }
+
+        return $builder->buildMessage($message, $content, $title, $alert, $templatePath);
     }
 }
