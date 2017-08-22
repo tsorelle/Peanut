@@ -17,4 +17,5 @@ class ViewModelInfo
     public $view;
     public $template;
     public $theme;
+    public $roles;
 }

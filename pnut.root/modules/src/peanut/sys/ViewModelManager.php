@@ -9,6 +9,7 @@
 namespace Peanut\sys;
 
 
+use Tops\sys\IUser;
 use Tops\sys\TConfiguration;
 use Tops\sys\TPath;
 
@@ -83,6 +84,7 @@ class ViewModelManager
         $key = strtolower($pathAlias);
         if (array_key_exists($key, self::$vmSettings)) {
             $item = self::$vmSettings[$key];
+
             $vmName = empty($item['vm']) ? array_pop(explode('/', $pathAlias)) : $item['vm'];
 
             $view = empty($item['view']) ? $vmName . '.html' : $item['view'];
@@ -93,7 +95,6 @@ class ViewModelManager
                 $root =  ViewModelManager::getPackagePath()."/".$item['package'];
                 $vmName = "@pkg/" . $item['package']."/$vmName";
             }
-
 
             $result = new ViewModelInfo();
             $result->pathAlias = $pathAlias;
@@ -113,6 +114,13 @@ class ViewModelManager
             }
             $result->template = empty($item['template']) ? false : $item['template'];
             $result->theme = empty($item['theme']) ? false : $item['theme'];
+            $result->roles = array();
+            if (!empty($item['roles'])) {
+                $roles = explode(',',$item['roles']);
+                foreach ($roles as $role) {
+                    $result->roles[] = trim($role);
+                }
+            }
 
             self::$info = $result;
             return $result;
@@ -190,5 +198,24 @@ class ViewModelManager
 
     }
 
+    public static function isAuthorized(IUser $user, ViewModelInfo $viewModelInfo) {
+        if (empty($viewModelInfo->roles) || $user->isAdmin()) {
+            return true;
+        }
+        foreach ($viewModelInfo->roles as $role) {
+            switch($role) {
+                case 'authenticated' :
+                    return $user->isAuthenticated();
+                case 'admin' :
+                    return false;
+                default :
+                    if ($user->isMemberOf($role)) {
+                        return true;
+                    }
+                    break;
+            }
+        }
+        return false;
+    }
 
 }
