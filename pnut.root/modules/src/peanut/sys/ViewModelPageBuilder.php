@@ -59,7 +59,7 @@ class ViewModelPageBuilder
     }
 
     private function buildMessage($message, $content, $title, $alert,$templatePath) {
-        $content = $this->getTemplate('message-page',$templatePath);
+        $content = $this->getTemplate('message-page.html',$templatePath);
         $theme = PeanutSettings::GetThemeName();
         return $this->templateManager->replaceTokens($content,array(
             'theme' => $theme,
