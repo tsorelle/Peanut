@@ -93,13 +93,13 @@ class ViewModelPageBuilder
             case 'not-authorized' :
                 $title = 'Not authorized';
                 $message = 'Sorry, you are not authorized to access this page. Please contact the site administrator.';
-                $content = "<a href='/'>Please return to home page >></a>";
+                $content = "<strong><a href='/'>Please return to home page >></a></strong>";
                 break;
             case 'not-authenticated' :
                 $title = 'Please sign in';
                 $message = 'You must sign in to your account to access the page.';
                 $href = PeanutSettings::GetLoginPage();
-                $content = "<a href='/$href'>Please sign in or create an account >></a>";
+                $content = "<strong><a href='/$href'>Please sign in or create an account >></a></strong>";
                 break;
         }
 

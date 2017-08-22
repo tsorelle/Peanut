@@ -224,7 +224,7 @@ class ViewModelManager
         $authorized = ViewModelManager::isAuthorized($user,$settings);
         if (!$authorized) {
             header('HTTP/1.0 403 Forbidden');
-            $message = $settings->roles[0] == 'authenticated' ? 'not-authenticated' : 'not-authorized';
+            $message = $user->isAuthenticated() == 'authenticated' ? 'not-authenticated' : 'not-authorized';
             $messagePage = ViewModelPageBuilder::BuildMessagePage($message);
             print $messagePage;
             exit;
