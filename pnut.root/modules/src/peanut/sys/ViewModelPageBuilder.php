@@ -36,6 +36,7 @@ class ViewModelPageBuilder
         $loader = PeanutSettings::GetPeanutLoaderScript();
 
         return $this->templateManager->replaceTokens($content,array(
+            'title' => $settings->pageTitle,
             'theme' => $theme,
             'loader' => $loader,
             'view' => $view,

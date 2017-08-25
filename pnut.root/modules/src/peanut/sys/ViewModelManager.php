@@ -115,6 +115,10 @@ class ViewModelManager
             }
             $result->template = empty($item['template']) ? false : $item['template'];
             $result->theme = empty($item['theme']) ? false : $item['theme'];
+            $result->pageTitle =  empty($item['page-title']) ?
+                TConfiguration::getValue('page-title','pages',$pathAlias) :
+                $item['page-title'];
+
             $result->roles = array();
             if (!empty($item['roles'])) {
                 $roles = explode(',',$item['roles']);
