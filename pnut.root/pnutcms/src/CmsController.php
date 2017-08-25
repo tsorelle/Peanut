@@ -13,6 +13,7 @@ namespace Peanut\cms;
 
 use Peanut\Bootstrap;
 use Peanut\sys\PeanutSettings;
+use Peanut\sys\ViewModelPageBuilder;
 use Tops\sys\Autoloader;
 use Tops\sys\TStrings;
 use Peanut\sys\ViewModelManager;
@@ -64,17 +65,18 @@ class CmsController
 
         $siteRoot = str_ireplace('index.php', '', $_SERVER['PHP_SELF']);
 
-        if (strstr($uri,'/index.php') == false ) {
-            $routePath = substr($uri,strlen($siteRoot));
-        }
-        else {
-            $routePath = isset($_GET['v']) ? $_GET['v'] : false;
-        }
+        $routePath = substr($uri,strlen($siteRoot));
+
         if (substr($routePath,-1) == '/') {
             $routePath = substr($routePath,0,strlen($routePath) - 1);
         }
 
-        if (empty($routePath)) {
+        $q = strpos($routePath,'?');
+        if ($q !== false) {
+            $routePath = substr($routePath,0,$q);
+        }
+
+        if (empty($routePath) || strtolower($routePath) == 'index.php') {
             $routePath = 'home';
         }
 
@@ -82,11 +84,12 @@ class CmsController
         $this->route($fileRoot, $routePath,$settings->peanutUrl);
     }
 
-    private function route($fileRoot, $routePath, $peanutUrl) {
+    private function route($fileRoot, $routePath, $peanutUrl)
+    {
         switch ($routePath) {
             case 'peanut/settings' :
                 header('Content-type: application/json');
-                include($fileRoot."/application/config/settings.php");
+                include($fileRoot . "/application/config/settings.php");
                 exit;
             case 'peanut/service/execute' :
                 header('Content-type: application/json');
@@ -95,29 +98,18 @@ class CmsController
                 exit;
             default:
                 $peanutUrlPos = strlen($peanutUrl) + 1;
-                if (substr($routePath,0,$peanutUrlPos) == $peanutUrl.'/') {
-                    $content = \Peanut\sys\ViewModelPageBuilder::Build(substr($routePath,$peanutUrlPos));
-                    if ($content === false) {
-                        exit("View model not found.");
-                    }
-                    print $content;
-                    exit;
+                if (substr($routePath, 0, $peanutUrlPos) == $peanutUrl . '/') {
+                    $content = \Peanut\sys\ViewModelPageBuilder::Build(substr($routePath, $peanutUrlPos));
+                } else {
+                    $pageContent = @file_get_contents($fileRoot . '/content/' . $routePath . '.html');
+                    $content = $pageContent === false ?  false  : ViewModelPageBuilder::BuildStaticPage($pageContent);
                 }
 
-                $vmInfo = ViewModelManager::getViewModelSettings($routePath);
-                $this->vmName = '';
-                if (empty($vmInfo)) {
-                    $this->contentFile = $fileRoot."/content/$routePath.php";
-                    if (!file_exists($this->contentFile)) {
-                        header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-                        exit;
-                    }
+                if ($content === false) {
+                    $content = ViewModelPageBuilder::BuildMessagePage('page-not-found');
                 }
-                else {
-
-                    $this->vmName = $vmInfo->vmName;
-                    $this->contentFile = $fileRoot.$vmInfo->view;
-                }
+                print $content;
+                exit;
         }
     }
 
