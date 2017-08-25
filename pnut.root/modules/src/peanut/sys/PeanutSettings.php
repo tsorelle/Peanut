@@ -62,4 +62,7 @@ class PeanutSettings
         return TConfiguration::getValue('peanutUrl','pages','peanut');
     }
 
+    public static function getNavBar() {
+        return TConfiguration::getValue('navbar','pages','default');
+    }
 }

@@ -26,7 +26,7 @@ class ViewModelPageBuilder
         $this->templateManager = new TTemplateManager();
     }
 
-    public function buildPageContent(ViewModelInfo $settings, $content) {
+    public function buildPageContent(ViewModelInfo $settings, $content, $navbarContent='') {
         $view = @file_get_contents($settings->view);
         if ($view === false) {
             return false;
@@ -34,9 +34,11 @@ class ViewModelPageBuilder
         $view = trim($view);
         $theme = PeanutSettings::GetThemeName();
         $loader = PeanutSettings::GetPeanutLoaderScript();
+        $navbar = PeanutSettings::getNavBar();
 
         return $this->templateManager->replaceTokens($content,array(
             'title' => $settings->pageTitle,
+            'navbar' => $navbarContent,
             'theme' => $theme,
             'loader' => $loader,
             'view' => $view,
@@ -55,8 +57,12 @@ class ViewModelPageBuilder
     public function buildPage(ViewModelInfo $settings, $templatePath = null) {
         $templateName = empty($settings->template) ?  TConfiguration::getValue('template','templates','default-page.html')
             : $settings->template;
-        $content = $this->getTemplate($templateName,$templatePath);
-        return $this->buildPageContent($settings, $content);
+        $pageContent = $this->getTemplate($templateName,$templatePath);
+        $navbar = TConfiguration::getValue('navbar','pages','default');
+        $navbarContent = $this->getTemplate("navbar-$navbar.html",$templatePath);
+
+
+        return $this->buildPageContent($settings, $pageContent,$navbarContent);
     }
 
     private function buildMessage($message, $content, $title, $alert,$templatePath) {
