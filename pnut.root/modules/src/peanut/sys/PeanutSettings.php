@@ -8,59 +8,58 @@
 
 namespace Peanut\sys;
 
+use Tops\sys\TConfiguration;
 use Tops\sys\TIniSettings;
+use Tops\sys\TPath;
 
 class PeanutSettings
 {
     /**
      * @var TIniSettings
      */
-    private static $ini;
-    private static function getIni() {
-        if (!isset(self::$ini)) {
-            self::$ini = TIniSettings::Create();
-        }
-        return self::$ini;
-    }
 
     public static function GetModulePath (){
-        $modulePath = self::getIni()->getValue('modulePath','peanut','modules');
+        $modulePath = TConfiguration::getValue('modulePath','peanut','modules');
         return $modulePath;
     }
     public static function GetPeanutRoot (){
         $modulePath = self::GetModulePath();
-        $peanutRoot = self::getIni()->getValue('peanutRootPath','peanut',"$modulePath/pnut");
+        $peanutRoot = TConfiguration::getValue('peanutRootPath','peanut',"$modulePath/pnut");
         return $peanutRoot;
     }
     public static function GetMvvmPath   (){
-        $mvvmPath = self::getIni()->getValue('mvvmPath','peanut','application/mvvm');
+        $mvvmPath = TConfiguration::getValue('mvvmPath','peanut','application/mvvm');
         return $mvvmPath;
     }
     public static function GetCorePath   (){
-        $settings = self::getIni();
         $peanutRoot = self::GetPeanutRoot();
-        $corePath   =   (empty($settings['corePath']) ? $peanutRoot . '/core' : $settings['corePath']);
+        // $corePath   =   (empty($settings['corePath']) ? $peanutRoot . '/core' : $settings['corePath']);
+        $corePath   =   TConfiguration::getValue('corePath',$peanutRoot . '/core');
         return $corePath;
     }
     public static function GetPackagePath(){
         $peanutRoot = self::GetPeanutRoot();
-        $packagePath = self::getIni()->getValue('packagePath','peanut',$peanutRoot . "/packages");
+        $packagePath = TConfiguration::getValue('packagePath','peanut',$peanutRoot . "/packages");
         return $packagePath;
     }
 
     public static function GetPeanutLoaderScript() {
         $peanutRoot = self::GetPeanutRoot();
-        $optimize = self::getIni()->getBoolean('optimize','peanut');
+        $optimize = TConfiguration::getBoolean('optimize','peanut');
         $script = $optimize ? 'dist/loader.min.js' : 'core/PeanutLoader.js';
         return "$peanutRoot/$script";
     }
 
     public static function GetThemeName() {
-        return self::getIni()->getValue('default','themes','cerulean');
+        return TConfiguration::getValue('default','pages','cerulean');
     }
 
     public static function GetLoginPage() {
-        return self::getIni()->getValue('login-page','themes','login');
+        return TConfiguration::getValue('login-page','pages','login');
+    }
+
+    public static function GetPeanutUrl() {
+        return TConfiguration::getValue('peanutUrl','pages','peanut');
     }
 
 }

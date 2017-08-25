@@ -140,6 +140,7 @@ class Bootstrap
         $result->topsLocation = empty($ini['locations']['tops']) ? "$srcLocation/tops" : $ini['locations']['tops'];
         $result->peanutSrcLocation = "$srcLocation/peanut";
         $result->autoloadItems=empty($ini['autoload']) ? array() : $ini['autoload'];
+        $result->peanutUrl = empty($ini['pages']['peanutUrl']) ? 'peanut' : $ini['pages']['peanutUrl'];
         if (empty($settings['loggingMode'])) {
             $result->loggingMode = $optimize ? 'none' : 'verbose';
         } else {

@@ -12,6 +12,7 @@ namespace Peanut\cms;
 // require_once str_replace('\\','/',realpath(__DIR__.'../../../')). '/vendor/autoload.php';
 
 use Peanut\Bootstrap;
+use Peanut\sys\PeanutSettings;
 use Tops\sys\Autoloader;
 use Tops\sys\TStrings;
 use Peanut\sys\ViewModelManager;
@@ -77,10 +78,11 @@ class CmsController
             $routePath = 'home';
         }
 
-        $this->route($fileRoot, $routePath);
+
+        $this->route($fileRoot, $routePath,$settings->peanutUrl);
     }
 
-    private function route($fileRoot, $routePath) {
+    private function route($fileRoot, $routePath, $peanutUrl) {
         switch ($routePath) {
             case 'peanut/settings' :
                 header('Content-type: application/json');
@@ -92,6 +94,16 @@ class CmsController
                 print json_encode($response);
                 exit;
             default:
+                $peanutUrlPos = strlen($peanutUrl) + 1;
+                if (substr($routePath,0,$peanutUrlPos) == $peanutUrl.'/') {
+                    $content = \Peanut\sys\ViewModelPageBuilder::Build(substr($routePath,$peanutUrlPos));
+                    if ($content === false) {
+                        exit("View model not found.");
+                    }
+                    print $content;
+                    exit;
+                }
+
                 $vmInfo = ViewModelManager::getViewModelSettings($routePath);
                 $this->vmName = '';
                 if (empty($vmInfo)) {
