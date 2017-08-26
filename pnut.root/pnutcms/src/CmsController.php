@@ -97,6 +97,17 @@ class CmsController
                 print json_encode($response);
                 exit;
             default:
+                $content = false;
+                $pageContent = @file_get_contents($fileRoot . '/content/' . $routePath . '.html');
+                if ($pageContent === false) {
+                    $content = \Peanut\sys\ViewModelPageBuilder::Build($routePath);
+                }
+                else {
+                    $content =  ViewModelPageBuilder::BuildStaticPage($pageContent);
+                }
+
+                /*
+                 * // example using sub path
                 $peanutUrlPos = strlen($peanutUrl) + 1;
                 if (substr($routePath, 0, $peanutUrlPos) == $peanutUrl . '/') {
                     $content = \Peanut\sys\ViewModelPageBuilder::Build(substr($routePath, $peanutUrlPos));
@@ -104,6 +115,7 @@ class CmsController
                     $pageContent = @file_get_contents($fileRoot . '/content/' . $routePath . '.html');
                     $content = $pageContent === false ?  false  : ViewModelPageBuilder::BuildStaticPage($pageContent);
                 }
+                */
 
                 if ($content === false) {
                     $content = ViewModelPageBuilder::BuildMessagePage('page-not-found');
