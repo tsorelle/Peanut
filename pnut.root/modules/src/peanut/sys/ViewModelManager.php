@@ -82,6 +82,8 @@ class ViewModelManager
             }
         }
 
+
+
         $key = strtolower($pathAlias);
         if (array_key_exists($key, self::$vmSettings)) {
             $item = self::$vmSettings[$key];
@@ -234,6 +236,27 @@ class ViewModelManager
             exit;
         }
 
+    }
+
+    public static function ExtractVmName($uri) {
+        $result = parse_url(trim($uri),PHP_URL_PATH);
+        if (strpos($result,'.') !== false) {
+            return false; // it is a file name not a vm name
+        }
+        $parts = explode('/',$result);
+        if (empty($parts)) {
+            return false;
+        }
+        if (empty($parts[0])) {
+            array_shift($parts);
+        }
+        if (empty($parts)) {
+            return false;
+        }
+        if (empty($parts[sizeof($parts) - 1])) {
+            array_pop($parts);
+        }
+        return join('/',$parts);
     }
 
 }

@@ -63,23 +63,15 @@ class CmsController
         session_start();
         \Tops\sys\TSession::Initialize();
 
-        $siteRoot = str_ireplace('index.php', '', $_SERVER['PHP_SELF']);
-
-        $routePath = substr($uri,strlen($siteRoot));
-
-        if (substr($routePath,-1) == '/') {
-            $routePath = substr($routePath,0,strlen($routePath) - 1);
-        }
-
-        $q = strpos($routePath,'?');
-        if ($q !== false) {
-            $routePath = substr($routePath,0,$q);
-        }
-
-        if (empty($routePath) || strtolower($routePath) == 'index.php') {
+        if (strtolower($uri) == '/index.php') {
             $routePath = 'home';
         }
-
+        else {
+            $routePath = ViewModelManager::ExtractVmName($uri);
+            if (empty($routePath)) {
+                $routePath = 'home';
+            }
+        }
 
         $this->route($fileRoot, $routePath,$settings->peanutUrl);
     }

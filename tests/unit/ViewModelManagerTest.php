@@ -83,4 +83,56 @@ class ViewModelManagerTest extends TestCase
 
 
     }
+
+    public function testExtractVmName() {
+        // invalid: filename
+        $subject = '/manual/en/function.parse-url.php';
+        $actual = ViewModelManager::ExtractVmName($subject);
+        $this->assertFalse($actual);
+
+        $subject = 'http://local.peanut/testpage/';
+        $expected = 'testpage';
+        $actual = ViewModelManager::ExtractVmName($subject);
+        $this->assertEquals($expected,$actual);
+
+
+        $subject = 'http://local.peanut/testpage/';
+        $expected = 'testpage';
+        $actual = ViewModelManager::ExtractVmName($subject);
+        $this->assertEquals($expected,$actual);
+
+        $subject = 'http://local.peanut/this/is/my/testpage?q=query&a=another';
+        $expected = 'this/is/my/testpage';
+        $actual = ViewModelManager::ExtractVmName($subject);
+        $this->assertEquals($expected,$actual);
+
+        $subject = '/this/is/my/testpage/';
+        $expected = 'this/is/my/testpage';
+        $actual = ViewModelManager::ExtractVmName($subject);
+        $this->assertEquals($expected,$actual);
+
+        $subject = 'this/is/my/testpage/';
+        $expected = 'this/is/my/testpage';
+        $actual = ViewModelManager::ExtractVmName($subject);
+        $this->assertEquals($expected,$actual);
+
+        $subject = 'this/is/my/testpage/';
+        $expected = 'this/is/my/testpage';
+        $actual = ViewModelManager::ExtractVmName($subject);
+        $this->assertEquals($expected,$actual);
+
+        $subject = 'this/is/my/testpage';
+        $expected = 'this/is/my/testpage';
+        $actual = ViewModelManager::ExtractVmName($subject);
+        $this->assertEquals($expected,$actual);
+
+        $subject = 'testpage';
+        $expected = 'testpage';
+        $actual = ViewModelManager::ExtractVmName($subject);
+        $this->assertEquals($expected,$actual);
+
+
+
+
+    }
 }
