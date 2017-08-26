@@ -23,13 +23,13 @@ class ViewModelPageBuilderTest extends TestCase
     }
 
     public function testBuildPage() {
-        $expected = 'theme:cerulean; view: view content here; vmname: tesViewModel';
+        $expected = 'theme:cerulean; view: view content here; vmname: testViewModel';
         $templatePath = realpath( __DIR__.'/../../pnut.root/application/assets/templates');
         $settings = new \Peanut\sys\ViewModelInfo();
-        $settings->vmName='tesViewModel';
+        $settings->vmName='testViewModel';
         $settings->view=__DIR__.'/files/testview1.html';
         $builder = new ViewModelPageBuilder();
-        $actual = $builder->buildPage($settings ,$templatePath);
+        $actual = $builder->buildView($settings ,$templatePath);
         $this->assertNotEmpty($actual);
 
     }

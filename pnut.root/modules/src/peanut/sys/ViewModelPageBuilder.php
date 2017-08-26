@@ -78,7 +78,8 @@ class ViewModelPageBuilder
         ));
     }
 
-    private function buildPage($content, $title, $templatePath) {
+    // public for unit testing
+    public function buildPage($content, $title, $templatePath=null) {
         $template = $this->getTemplate('static-page.html',$templatePath);
         $navbar = TConfiguration::getValue('navbar','pages','default');
         $navbarContent = $this->getTemplate("navbar-$navbar.html",$templatePath);
@@ -93,6 +94,7 @@ class ViewModelPageBuilder
 
     public static function Build($pagePath,$templatePath = null,$authorize=true)
     {
+        $pagePath = ViewModelManager::ExtractVmName($pagePath);
         $settings = ViewModelManager::getViewModelSettings($pagePath);
         if ($settings === false) {
             return false;
