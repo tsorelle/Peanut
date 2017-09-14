@@ -9,6 +9,7 @@ namespace Peanut\sys;
 
 use DateTime;
 use PHPUnit\Runner\Exception;
+use Tops\db\TDbInstaller;
 use Tops\sys\TDates;
 use Tops\sys\TObjectContainer;
 use Tops\sys\TPath;
@@ -19,13 +20,6 @@ abstract class PeanutInstaller
      * @var PeanutInstallationLog
      */
     private $log;
-    public function openLog($location=null) {
-        if (!isset($this->log)) {
-            $this->log = new PeanutInstallationLog();
-            $this->log->openLogFile($location);
-        }
-        return $this->log;
-    }
 
     /**
      * @return PeanutInstaller
@@ -73,21 +67,21 @@ abstract class PeanutInstaller
     }
 
     public function installPackage($package,$logLocation=null) {
-        $log = new PeanutInstallationLog();
-        $log->startSession($package,$logLocation);
+        $this->log = new PeanutInstallationLog();
+        $this->log->startSession($package,$logLocation);
         try {
             if ($package=='peanut') {
                 $this->installPeanut();
             }
-            $log->endSession();
+            $this->log->endSession();
         }
         catch (\Exception $ex) {
-            $log->failSession("Exception: ".$ex->getMessage());
+            $this->log->failSession("Exception: ".$ex->getMessage());
         }
         $result = new \stdClass();
         // $result->status = ($this->getInstallationStatus($package,$log) !== false);
-        $result->status = $this->getInstallationStatus($package,$log);
-        $result->log = $log->getLogFlat();
+        $result->status = $this->getInstallationStatus($package,$this->log);
+        $result->log = $this->log->getLogFlat();
         return $result;
     }
 
@@ -105,9 +99,21 @@ abstract class PeanutInstaller
         return $this->findInstallationStatus($package, $archive);
     }
 
-    public function installPeanut() {
+    function installPeanut() {
+        $this->installPeanutSchema();
         $this->doCustomSetup();
-        // throw new \Exception('Test installation failure.');
+    }
+
+    protected function installPeanutSchema() {
+        $dbInstaller = new TDbInstaller();
+        $dbLog = $dbInstaller->installTopsSchema();
+        foreach ($dbLog as $entry) {
+            $this->log->addLogEntry($entry);
+        }
+    }
+
+    protected function addLogEntry($message) {
+        $this->log->addLogEntry($message);
     }
 
     abstract public function doCustomSetup();
