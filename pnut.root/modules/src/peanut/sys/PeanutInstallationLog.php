@@ -181,5 +181,19 @@ class PeanutInstallationLog
         return $this->flattenLog();
     }
 
+    public function getLogMessages($package) {
+        $result = array();
+        if (array_key_exists($package,$this->log)) {
+            return $this->log[$package];
+            /*
+            foreach ($this->log[$package] as $entry) {
+                $result[] = $entry->message;
+            }
+            */
+        }
+        return $result;
+
+    }
+
 
 }

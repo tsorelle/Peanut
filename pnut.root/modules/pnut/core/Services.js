@@ -1,3 +1,9 @@
+/**
+ * Created by Terry on 5/21/2017.
+ */
+/// <reference path='../../typings/jquery/jquery.d.ts' />
+/// <reference path='./peanut.d.ts' />
+/// <reference path='./PeanutLoader.ts' />
 var Peanut;
 (function (Peanut) {
     Peanut.allMessagesType = -1;
@@ -42,6 +48,7 @@ var Peanut;
                 var url = Peanut.Config.values.serviceUrl;
                 var me = _this;
                 me.errorInfo = '';
+                // peanut controller requires parameter as a string.
                 if (!parameters)
                     parameters = "";
                 else {
@@ -74,10 +81,12 @@ var Peanut;
                 });
                 return result;
             };
+            // Execute a peanut service and handle Service Response.
             this.executeService = function (serviceName, parameters, successFunction, errorFunction) {
                 if (parameters === void 0) { parameters = ""; }
                 return _this.executeRPC("POST", serviceName, parameters, successFunction, errorFunction);
             };
+            // GET is no longer supported. This method is for backward compatibility but is identical to execute service
             this.getFromService = function (serviceName, parameters, successFunction, errorFunction) {
                 if (parameters === void 0) { parameters = ""; }
                 return _this.executeRPC("POST", serviceName, parameters, successFunction, errorFunction);
@@ -103,9 +112,10 @@ var Peanut;
         };
         ServiceBroker.prototype.parseErrorResult = function (result) {
             var me = this;
-            var errorDetailLevel = 4;
+            var errorDetailLevel = 4; // verbosity control to be implemented later
             var responseText = "An unexpected system error occurred.";
             try {
+                // WCF returns a big whopping HTML page.  Could add code later to parse it but for now, just status info.
                 if (result.status) {
                     if (result.status == '404') {
                         return responseText + " The web service was not found.";
@@ -183,6 +193,9 @@ var Peanut;
         return ServiceBroker;
     }());
     Peanut.ServiceBroker = ServiceBroker;
+    /**
+     * Use for testing. Normally IServiceResponse is returned from a service
+     */
     var fakeServiceResponse = (function () {
         function fakeServiceResponse(returnValue) {
             this.Messages = [];
@@ -194,5 +207,4 @@ var Peanut;
         return fakeServiceResponse;
     }());
     Peanut.fakeServiceResponse = fakeServiceResponse;
-})(Peanut || (Peanut = {}));
-//# sourceMappingURL=Services.js.map
+})(Peanut || (Peanut = {})); // end namespace

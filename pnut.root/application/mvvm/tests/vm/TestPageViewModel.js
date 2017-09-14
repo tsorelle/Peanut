@@ -1,6 +1,3 @@
-/**
- * Created by Terry on 5/7/2017.
- */
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -11,6 +8,9 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+m; /**
+ * Created by Terry on 5/7/2017.
+ */
 // required for all view models:
 /// <reference path='../../../../modules/pnut/core/ViewModelBase.ts' />
 /// <reference path='../../../../modules/typings/knockout/knockout.d.ts' />
@@ -110,7 +110,7 @@ var Peanut;
                             console.log('Lodash installed');
                         }
                         Testing.Test.sayHello();
-                        var cvm = new Peanut.messageConstructorComponent('Smoke Test Buttons:');
+                        var cvm = new messageConstructorComponent('Smoke Test Buttons:');
                         me.application.registerComponent('tests/message-constructor', cvm, function () {
                             me.bindDefaultSection();
                             successFunction();

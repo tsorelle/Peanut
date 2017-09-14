@@ -1,3 +1,12 @@
+/**
+ * Created by Terry on 7/4/2017.
+ */
+/****
+ * Created by Terry on 5/3/2017.
+ */
+/// <reference path="../../typings/custom/head.load.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path='Peanut.d.ts' />
 var Peanut;
 (function (Peanut) {
     var peanutVersionNumber = '0.2';
@@ -161,5 +170,4 @@ var Peanut;
         return PeanutLoader;
     }());
     Peanut.PeanutLoader = PeanutLoader;
-})(Peanut || (Peanut = {}));
-//# sourceMappingURL=PeanutLoader.js.map
+})(Peanut || (Peanut = {})); // end namespace

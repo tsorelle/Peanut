@@ -21,6 +21,8 @@ namespace Peanut {
     export class InstallPackagesViewModel  extends Peanut.ViewModelBase {
         activePage = ko.observable('');
         packageList = ko.observableArray([]);
+        installResultMessage = ko.observable('');
+        installResultLog = ko.observableArray([]);
         init(successFunction?: () => void) {
             let me = this;
             let request = {};
@@ -58,12 +60,17 @@ namespace Peanut {
             let me = this;
             // let request = {};
             let request = pkgName;
+            me.installResultLog([]);
+            me.installResultMessage('');
             me.application.hideServiceMessages();
-            me.application.showWaiter('Installing' + pkgName + '...');
+            me.application.showWaiter('Installing ' + pkgName + '...');
             me.services.executeService('Peanut::InstallPackage', request,
                 function (serviceResponse: Peanut.IServiceResponse) {
                     me.application.hideWaiter();
                     let response = <installPkgResponse>serviceResponse.Value;
+                    let resultMessage = 'Installation of ' + pkgName + ' ' + (response.success ? 'succeeded'  : 'failed');
+                    me.installResultMessage(resultMessage);
+                    me.installResultLog(response.log);
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         me.showPackageList(response.list);
                     }
@@ -81,5 +88,9 @@ namespace Peanut {
             let msgCount = log.length;
             alert('Package log for '+ pkgName + ' ' + msgCount + ' entries');
         };
+
+        showInstallationResult = () => {
+            jQuery("#install-results-modal").modal('show');
+        }
     }
 }

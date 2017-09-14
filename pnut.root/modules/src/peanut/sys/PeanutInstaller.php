@@ -79,9 +79,8 @@ abstract class PeanutInstaller
             $this->log->failSession("Exception: ".$ex->getMessage());
         }
         $result = new \stdClass();
-        // $result->status = ($this->getInstallationStatus($package,$log) !== false);
         $result->status = $this->getInstallationStatus($package,$this->log);
-        $result->log = $this->log->getLogFlat();
+        $result->log =  $this->log->getLogMessages($package);
         return $result;
     }
 

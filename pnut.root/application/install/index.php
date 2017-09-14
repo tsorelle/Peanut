@@ -44,6 +44,9 @@ $loader = $settings->optimize ?  '../..'.$settings->peanutRootPath.'dist/loader.
         <div class="col-md-12">
             <h1>Peanut Package Installer</h1>
             <div id="installpackages-view-container" style="display: none;">
+                <div data-bind="visible:installResultMessage() !== ''">
+                    <a href="#" data-bind="click:showInstallationResult">Show installation log.</a>
+                </div>
                 <div data-bind="visible:activePage()=='packageList'">
                     <table class="table">
                         <thead>
@@ -66,9 +69,35 @@ $loader = $settings->optimize ?  '../..'.$settings->peanutRootPath.'dist/loader.
                 <div data-bind="visible:activePage()=='noPackages'">
                     <p>No packages were found.</p>
                 </div>
+
+
+                <div class="modal" id="install-results-modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Installation Results</h4>
+                            </div>
+                            <div class="modal-body">
+                                <h4 data-bind="text:installResultMessage"></h4>
+                                <p>Log</p>
+                                <ul data-bind="foreach:installResultLog">
+                                    <li data-bind="text:message"></li>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="#" data-dismiss="modal">Close</a>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+
             </div>
         </div>
     </div>
+
+
+
 </div>
 
 </body>

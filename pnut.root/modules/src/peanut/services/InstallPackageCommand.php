@@ -39,13 +39,16 @@ class InstallPackageCommand extends TServiceCommand
         $installResult = $installer->installPackage($package);
         $result = new \stdClass();
         $result->success = $installResult->status !== false;
-        $result->log = $installResult->log;
+
         if ($result->success) {
             $this->addInfoMessage("Installed package '$package' version " . $installResult->status->version);
         } else {
             $this->addErrorMessage("Installation of package '$package' failed.");
         }
-
+        $result->log = $installResult->log;
+        if (!empty($result->log)) {
+            array_shift($result->log); // remove start message.
+        }
         $result->list = $installer->getPackageList();
         $this->setReturnValue($result);
     }
