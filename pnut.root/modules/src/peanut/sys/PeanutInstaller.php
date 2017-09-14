@@ -7,6 +7,9 @@
  */
 namespace Peanut\sys;
 
+use DateTime;
+use PHPUnit\Runner\Exception;
+use Tops\sys\TDates;
 use Tops\sys\TObjectContainer;
 use Tops\sys\TPath;
 
@@ -24,6 +27,9 @@ abstract class PeanutInstaller
         return $this->log;
     }
 
+    /**
+     * @return PeanutInstaller
+     */
     public static function GetInstaller()
     {
         if (TObjectContainer::HasDefinition('peanut.installer')) {
@@ -40,12 +46,15 @@ abstract class PeanutInstaller
             $pkgInfo->status =  $peanutInstalled ? 'Ready to install' : 'Please install Peanut first';
         }
         else {
-            $dt = strtotime($status->time);
-            $date = date($dt, 'M j h:i A');
+            // $dt = strtotime($status->time);
+            // $date = date($dt, 'M j h:i A');
+            $date = TDates::reformatDateTime($status->time,'M j h:i A');
             $pkgInfo->status = "Installed version $status->version on $date";
         }
         return $pkgInfo;
     }
+
+
 
 
     public function getPackageList() {
@@ -75,7 +84,10 @@ abstract class PeanutInstaller
         catch (\Exception $ex) {
             $log->failSession("Exception: ".$ex->getMessage());
         }
-        $result = ($this->getInstallationStatus($package,$log) !== false);
+        $result = new \stdClass();
+        // $result->status = ($this->getInstallationStatus($package,$log) !== false);
+        $result->status = $this->getInstallationStatus($package,$log);
+        $result->log = $log->getLogFlat();
         return $result;
     }
 
@@ -86,7 +98,8 @@ abstract class PeanutInstaller
             $archive = $log->readLogFile();
         }
         else {
-            $archive = $log->getArchive();
+            // $archive = $log->getArchive();
+            $archive = $log->getLog();
         }
 
         return $this->findInstallationStatus($package, $archive);
@@ -94,6 +107,7 @@ abstract class PeanutInstaller
 
     public function installPeanut() {
         $this->doCustomSetup();
+        // throw new \Exception('Test installation failure.');
     }
 
     abstract public function doCustomSetup();

@@ -15,10 +15,39 @@ use Tops\services\TServiceCommand;
 class InstallPackageCommand extends TServiceCommand
 {
 
+    /**
+     *  Service Interfaces (TypeScript)
+     *    interface pkgListItem {
+     *        name: string;
+     *        status: string;
+     *    }
+     *    interface installPkgResponse {
+     *        success: boolean;
+     *        list: pkgListItem[];
+     *        log: string[];
+     *    }
+     * Request:
+     *      string - name of package
+     * Response:
+     *      installPackageResponse
+     *
+     */
     protected function run()
     {
-       $package = $this->getRequest();
-       $installer = PeanutInstaller::GetInstaller();
-       $installer->installPackage($package);
+        $package = $this->getRequest();
+        $installer = PeanutInstaller::GetInstaller();
+        $installResult = $installer->installPackage($package);
+        $result = new \stdClass();
+        $result->success = $installResult->status !== false;
+        if ($result->success) {
+            $this->addInfoMessage("Installed package '$package' version " . $installResult->status->version);
+            $result->log = [];
+        } else {
+            $this->addErrorMessage("Installation of package '$package' failed.");
+            $result->log = $installResult->log;
+        }
+
+        $result->list = $installer->getPackageList();
+        $this->setReturnValue($result);
     }
 }

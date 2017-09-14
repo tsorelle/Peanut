@@ -71,7 +71,7 @@ class PeanutInstallationLog
 
     private function getFilePath() {
         if (!isset($this->filePath)) {
-            $this->filePath = TPath::getFileRoot() . '/install/'.self::LogFileName;
+            $this->filePath = TPath::fromFileRoot('application/install/'.self::LogFileName);
         }
         return $this->filePath;
     }
@@ -146,7 +146,7 @@ class PeanutInstallationLog
         // unit test will not write file.
         if (!empty($this->filePath)) {
             $content = $this->flattenLog();
-            file_put_contents($this->filePath, join("\n", $content), FILE_APPEND);
+            file_put_contents($this->filePath, join("\n", $content)."\n", FILE_APPEND);
         }
     }
 
