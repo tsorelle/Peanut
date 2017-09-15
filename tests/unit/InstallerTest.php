@@ -13,12 +13,6 @@ use PHPUnit\Framework\TestCase;
 
 class InstallerTest extends TestCase
 {
-    public function testGetDefaultInstaller()
-    {
-        $actual = \Peanut\sys\PeanutInstaller::GetInstaller();
-        $this->assertInstanceOf('Peanut\sys\DefaultPeanutInstaller', $actual);
-    }
-
     private function createTestLog(array $lines)
     {
         $time = new DateTime();

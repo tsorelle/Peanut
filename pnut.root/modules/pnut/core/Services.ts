@@ -33,8 +33,8 @@ namespace Peanut {
         }
 
         securityToken: string = '';
-
         errorInfo = '';
+        errorMessage = '';
 
         readSecurityToken() {
             let cookie = document.cookie;
@@ -170,14 +170,14 @@ namespace Peanut {
 
         executeRPC = (requestMethod: string, serviceName: string, parameters: any = "",
                       successFunction?: (serviceResponse: IServiceResponse) => void,
-                      errorFunction?: (errorMessage: string) => void) : JQueryPromise<any> => {
+                      errorFunction?: (errorMessage: any) => void) : JQueryPromise<any> => {
 
             if (!Peanut.Config.loaded) {
                 throw "Peanut.config must be initialized before ajax call."
             }
             let url = Peanut.Config.values.serviceUrl;
             let me = this;
-
+            me.errorMessage = '';
             me.errorInfo = '';
 
             // peanut controller requires parameter as a string.
@@ -210,10 +210,10 @@ namespace Peanut {
                     )
                     .fail(
                         function(jqXHR, textStatus ) {
-                            let errorMessage = me.showExceptionMessage(jqXHR);
+                            me.errorMessage = me.showExceptionMessage(jqXHR);
                             me.errorInfo = (jqXHR) ? jqXHR.responseText : '';
                             if (errorFunction) {
-                                errorFunction(errorMessage);
+                                errorFunction({'message' : me.errorMessage, 'details' : me.errorInfo});
                             }
                         });
             return result;
@@ -233,6 +233,11 @@ namespace Peanut {
                           errorFunction?: (errorMessage: string) => void) : JQueryPromise<any> => {
             return this.executeRPC("POST", serviceName, parameters, successFunction, errorFunction);
         };
+
+        getErrorInformation = () => {
+            let me = this;
+            return me.errorInfo;
+        }
     }
 
     /**

@@ -80,7 +80,7 @@ $loader = $settings->optimize ?  '../..'.$settings->peanutRootPath.'dist/loader.
                             </div>
                             <div class="modal-body">
                                 <h4 data-bind="text:installResultMessage"></h4>
-                                <p>Log</p>
+                                <p><strong>Log:</strong></p>
                                 <ul data-bind="foreach:installResultLog">
                                     <li data-bind="text:message"></li>
                                 </ul>

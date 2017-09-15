@@ -79,6 +79,7 @@ namespace Peanut {
                     }
                 }
             ).fail(function () {
+                let trace = me.services.getErrorInformation();
                 me.application.hideWaiter();
             });
         };

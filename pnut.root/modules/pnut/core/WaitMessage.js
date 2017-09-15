@@ -1,14 +1,10 @@
-/**
- * Created by Terry on 5/4/2017.
- */
 var Peanut;
 (function (Peanut) {
     var WaitMessage = (function () {
         function WaitMessage() {
         }
-        // public static uiHelper : IUiHelper;
         WaitMessage.addTemplate = function (templateName, content) {
-            templateName = templateName.split('/').pop(); // strip location alias and path.
+            templateName = templateName.split('/').pop();
             WaitMessage.templates[templateName] = content;
         };
         WaitMessage.setWaiterType = function (waiterType) {
@@ -58,4 +54,5 @@ var Peanut;
         return WaitMessage;
     }());
     Peanut.WaitMessage = WaitMessage;
-})(Peanut || (Peanut = {})); // end namespace
+})(Peanut || (Peanut = {}));
+//# sourceMappingURL=WaitMessage.js.map

@@ -10,7 +10,9 @@ namespace Peanut\sys;
 use DateTime;
 use PHPUnit\Runner\Exception;
 use Tops\db\TDbInstaller;
+use Tops\sys\IPermissionsManager;
 use Tops\sys\TDates;
+use Tops\sys\TIniSettings;
 use Tops\sys\TObjectContainer;
 use Tops\sys\TPath;
 
@@ -32,6 +34,13 @@ abstract class PeanutInstaller
         return new DefaultPeanutInstaller();
     }
 
+    /**
+     * @param $package
+     * @param bool $peanutInstalled
+     * @return \stdClass
+     *
+     * Used by gePackageList
+     */
     private function getPackageInfo($package,$peanutInstalled=true) {
         $pkgInfo = new \stdClass();
         $pkgInfo->name = $package;
@@ -40,15 +49,11 @@ abstract class PeanutInstaller
             $pkgInfo->status =  $peanutInstalled ? 'Ready to install' : 'Please install Peanut first';
         }
         else {
-            // $dt = strtotime($status->time);
-            // $date = date($dt, 'M j h:i A');
             $date = TDates::reformatDateTime($status->time,'M j h:i A');
             $pkgInfo->status = "Installed version $status->version on $date";
         }
         return $pkgInfo;
     }
-
-
 
 
     public function getPackageList() {
@@ -69,10 +74,83 @@ abstract class PeanutInstaller
     public function installPackage($package,$logLocation=null) {
         $this->log = new PeanutInstallationLog();
         $this->log->startSession($package,$logLocation);
+
+        $installPath = TPath::fromFileRoot(
+            $package == 'peanut' ? 'application/install' :
+                PeanutSettings::GetPackagePath()."/$package/install"
+        );
+
+        $config = TIniSettings::Create('install.ini',$installPath);
+        if ($config === false) {
+            $config = array();
+        }
+        $testing = $config->getBoolean('test','settings');
         try {
-            if ($package=='peanut') {
-                $this->installPeanut();
+            $tables = $config->getSection('tables');
+            if (!empty($tables)) {
+                $dbInstaller = new TDbInstaller();
+                if ($testing) {
+                    $this->addLogEntry('Test: create schema');
+                }
+                else {
+                    $dbLog = $dbInstaller->installSchema($config,$installPath.'/sql');
+                    foreach ($dbLog as $entry) {
+                        $this->log->addLogEntry($entry);
+                    }
+                }
             }
+
+            $roles =  $config->getSection('roles');
+            $permissions = $config->getSection('permissions');
+            $permissionRoles = $config->getSection('permission-roles');
+            if (!(empty($roles) && empty($permissions) && empty($permissionRoles))) {
+                /**
+                 * @var $manager IPermissionsManager
+                 */
+                $manager = TObjectContainer::Get('tops.permissions');
+                if (empty($manager)) {
+                    throw new \Exception('Permission manager not registered in classes.ini');
+                }
+
+                if (!empty($roles)) {
+                    foreach ($roles as $roleName => $description) {
+                        $manager->addRole($roleName, $description);
+                        $this->addLogEntry("Added role '$roleName'");
+                    }
+                }
+
+                if (!empty($permissions)) {
+                    foreach ($permissions as $permission => $description) {
+                        $manager->addPermission($permission, $description);
+                        $this->addLogEntry("Added permission '$permission'");
+                    }
+                }
+
+                if (!empty($permissionRoles)) {
+                    foreach ($permissionRoles as $permission => $value) {
+                        $roleNames = explode(',',$value);
+                        foreach ($roleNames as $roleName) {
+                            $manager->assignPermission($roleName, $permission);
+                            $this->addLogEntry("Granted permission '$permission' to '$roleName'");
+                        }
+                    }
+                }
+                if ($package == 'peanut') {
+                    $this->doCustomSetup();
+                }
+                else {
+                    if (file_exists(PeanutSettings::GetPackagePath()."/$package/src/install/PackageInstaller.php")) {
+                        $classname = ucfirst($package).'\\install\\PackageInstaller';
+                        /**
+                         * @var $instance IPackageInstaller
+                         */
+                        $instance = new $classname();
+                        $instance->run($this->log);
+                    }
+
+                }
+            }
+
             $this->log->endSession();
         }
         catch (\Exception $ex) {
@@ -87,15 +165,16 @@ abstract class PeanutInstaller
     public function getInstallationStatus($package,PeanutInstallationLog $log = null)
     {
         if ($log === null) {
+            // when called to get package info for listing, retrieve the entire log
             $log = new PeanutInstallationLog();
-            $archive = $log->readLogFile();
+            $logContent = $log->readLogFile();
         }
         else {
-            // $archive = $log->getArchive();
-            $archive = $log->getLog();
+            // at end of install, the currnt log is provided
+            $logContent = $log->getLog();
         }
 
-        return $this->findInstallationStatus($package, $archive);
+        return $this->findInstallationStatus($package, $logContent);
     }
 
     function installPeanut() {

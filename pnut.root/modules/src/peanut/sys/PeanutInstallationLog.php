@@ -76,6 +76,7 @@ class PeanutInstallationLog
         return $this->filePath;
     }
 
+
     public function startSession($package,$logLocation=null) {
         if ($logLocation!=null) {
             $this->filePath = $logLocation.'/'.self::LogFileName;

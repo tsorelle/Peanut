@@ -20,6 +20,12 @@ declare namespace Peanut {
         bindSection(containerName: string, context: any);
         bindNode(containerName: string, context: any);
     }
+
+    export interface errorInformation {
+        message: string;
+        details : string;
+    }
+
     /*******
      * Previously used IPeanutClient members:
      * -----------------------------------------
