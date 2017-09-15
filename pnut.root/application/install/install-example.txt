@@ -1,0 +1,24 @@
+; This file can be revised for a specific implementation and renamed to install.ini
+; The three tables listed are required for tops permissions and mailbox systems
+; there other settings are just examples.
+
+[settings]
+; For testing, you can set test=1 to disable database calls
+test=1
+
+[tables]
+tops_rolepermissions=0
+tops_permissions=0
+tops_mailboxes=0
+
+[roles]
+specialadmin='Special Administrator'
+peon='A low life user'
+
+[permissions]
+update-data='Can update data'
+mop-floor='Can mop floor'
+
+[permission-roles]
+update-data='admin,specialadmin'
+mop-floor='peon'
