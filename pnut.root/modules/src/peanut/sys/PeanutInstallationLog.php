@@ -88,7 +88,11 @@ class PeanutInstallationLog
         else {
             $iniPath = PeanutSettings::GetPeanutRoot()."/packages/$package/package.ini";
         }
-        $settings = parse_ini_file(TPath::getFileRoot().$iniPath);
+        $settings = @parse_ini_file(TPath::getFileRoot().$iniPath);
+        if ($settings === false) {
+            $this->failSession('Package ini file not found');
+            return false;
+        }
         $this->session = new \stdClass();
         $this->session->package = $package;
         $this->session->version = $settings['version'];
@@ -97,6 +101,7 @@ class PeanutInstallationLog
             $this->archive = $this->readLogFile();
         }
         $this->addLogEntry(self::InstallationStartedMessage);
+        return true;
     }
 
     public function endSession() {

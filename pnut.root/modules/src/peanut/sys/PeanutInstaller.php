@@ -73,7 +73,9 @@ abstract class PeanutInstaller
 
     public function installPackage($package,$logLocation=null) {
         $this->log = new PeanutInstallationLog();
-        $this->log->startSession($package,$logLocation);
+         if ($this->log->startSession($package,$logLocation) === false) {
+             return $this->getInstallationResult($package);
+         }
 
         $installPath = TPath::fromFileRoot(
             $package == 'peanut' ? 'application/install' :
@@ -156,10 +158,7 @@ abstract class PeanutInstaller
         catch (\Exception $ex) {
             $this->log->failSession("Exception: ".$ex->getMessage());
         }
-        $result = new \stdClass();
-        $result->status = $this->getInstallationStatus($package,$this->log);
-        $result->log =  $this->log->getLogMessages($package);
-        return $result;
+        return $this->getInstallationResult($package);
     }
 
     public function getInstallationStatus($package,PeanutInstallationLog $log = null)
@@ -214,6 +213,18 @@ abstract class PeanutInstaller
                 }
             }
         }
+        return $result;
+    }
+
+    /**
+     * @param $package
+     * @return \stdClass
+     */
+    private function getInstallationResult($package): \stdClass
+    {
+        $result = new \stdClass();
+        $result->status = $this->getInstallationStatus($package, $this->log);
+        $result->log = $this->log->getLogMessages($package);
         return $result;
     }
 
