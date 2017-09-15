@@ -78,6 +78,9 @@ class PeanutInstallationLog
 
 
     public function startSession($package,$logLocation=null) {
+        $this->session = new \stdClass();
+        $this->session->package = $package;
+        $this->log = array();
         if ($logLocation!=null) {
             $this->filePath = $logLocation.'/'.self::LogFileName;
         }
@@ -93,10 +96,7 @@ class PeanutInstallationLog
             $this->failSession('Package ini file not found');
             return false;
         }
-        $this->session = new \stdClass();
-        $this->session->package = $package;
         $this->session->version = $settings['version'];
-        $this->log = array();
         if (!isset($this->archive)) {
             $this->archive = $this->readLogFile();
         }

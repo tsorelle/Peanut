@@ -74,20 +74,12 @@ namespace Peanut {
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         me.showPackageList(response.list);
                     }
-                    else {
-                        me.showPgkLog(pkgName,response.log);
-                    }
+                    me.showInstallationResult();
                 }
             ).fail(function () {
                 let trace = me.services.getErrorInformation();
                 me.application.hideWaiter();
             });
-        };
-
-        showPgkLog = (pkgName: string, log: string[]) => {
-            let me = this;
-            let msgCount = log.length;
-            alert('Package log for '+ pkgName + ' ' + msgCount + ' entries');
         };
 
         showInstallationResult = () => {

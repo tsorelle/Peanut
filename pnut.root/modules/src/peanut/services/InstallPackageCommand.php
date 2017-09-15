@@ -46,9 +46,6 @@ class InstallPackageCommand extends TServiceCommand
             $this->addErrorMessage("Installation of package '$package' failed.");
         }
         $result->log = $installResult->log;
-        if (!empty($result->log)) {
-            array_shift($result->log); // remove start message.
-        }
         $result->list = $installer->getPackageList();
         $this->setReturnValue($result);
     }
