@@ -77,12 +77,11 @@ abstract class PeanutInstaller
              return $this->getInstallationResult($package);
          }
 
-        $installPath = TPath::fromFileRoot(
-            $package == 'peanut' ? 'application/install' :
-                PeanutSettings::GetPackagePath()."/$package/install"
-        );
+         $installPath = $package == 'peanut' ? 'application/install' :
+             PeanutSettings::GetPackagePath()."/$package/install";
 
-        $config = TIniSettings::Create('install.ini',$installPath);
+        $config = TIniSettings::Create('install.ini',
+           TPath::fromFileRoot($installPath));
         if ($config === false) {
             $config = array();
         }
