@@ -121,6 +121,7 @@ class ViewModelManager
                 TConfiguration::getValue('page-title','pages',$pathAlias) :
                 $item['page-title'];
 
+            $result->permission = empty($item['permission']) ? '' : $item['permission'];
             $result->roles = array();
             if (!empty($item['roles'])) {
                 $roles = explode(',',$item['roles']);
@@ -206,9 +207,14 @@ class ViewModelManager
     }
 
     public static function isAuthorized(IUser $user, ViewModelInfo $viewModelInfo) {
-        if (empty($viewModelInfo->roles) || $user->isAdmin()) {
+        if ($user->isAdmin()) {
             return true;
         }
+
+        if (!empty($viewModelInfo->permission)) {
+            return $user->isAuthorized($viewModelInfo->permission);
+        }
+
         foreach ($viewModelInfo->roles as $role) {
             switch($role) {
                 case 'authenticated' :

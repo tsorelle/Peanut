@@ -18,5 +18,6 @@ class ViewModelInfo
     public $template;
     public $theme;
     public $roles;
+    public $permission;
     public $pageTitle;
 }

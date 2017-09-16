@@ -1,0 +1,3 @@
+<FilesMatch "install.ini">
+Deny from all
+</FilesMatch>

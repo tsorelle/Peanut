@@ -9,15 +9,57 @@
 namespace Peanut\cms;
 
 
-use Tops\sys\TConfiguration;
+use Tops\sys\TAbstractUser;
 
-class CmsUser implements \Tops\sys\IUser
+class CmsUser extends TAbstractUser
 {
 
-    private $username = 'tester';
+    private $username='guest';
     private $roles = array();
-    private $id;
+    private $id = false;
+    private $email = '';
+    private $first = '';
+    private $last = '';
 
+    private $config;
+    private function getConfig() {
+        if (!isset($this->config)) {
+            $this->config = parse_ini_file(__DIR__.'/../users.ini',true);
+        }
+        return $this->config;
+    }
+
+    public function __construct($config=null)
+    {
+        if ($config != null) {
+            $this->config = $config;
+        }
+    }
+
+    private function loadUserInfo(array $userInfo) {
+        $this->id = empty($userInfo['id'] ? false : $userInfo['id']);
+        $this->username = empty($userInfo['name'] ? 'guest' : $userInfo['name']);
+        $this->roles = empty($userInfo['roles']) ? array() : explode(',',$userInfo['roles']);
+        $this->email = empty($userInfo['email'] ? '' : $userInfo['email']);
+        $this->first = empty($userInfo['first'] ? '' : $userInfo['first']);
+        $this->email = empty($userInfo['last'] ? '' : $userInfo['last']);
+    }
+
+    private function searchUsers($key,$value)
+    {
+        $config = $this->getConfig();
+        foreach (array_keys($this->getConfig()) as $sectionKey) {
+            if ($sectionKey != 'settings' && $config[$sectionKey[$key] == $value]) {
+                return $config[$sectionKey];
+            }
+        }
+        return array();
+    }
+
+    private function getUserInfo($username) {
+        $config = $this->getConfig();
+        return empty($config[$username]) ? array() : $config[$username];
+    }
 
 
     /**
@@ -26,7 +68,9 @@ class CmsUser implements \Tops\sys\IUser
      */
     public function loadById($id)
     {
-        $this->loadByUserName($id == 1 ? 'admin' : 'tester');
+        $info = $this->searchUsers('id',$id);
+        $this->loadUserInfo($info);
+        return (!empty($info));
     }
 
     /**
@@ -35,15 +79,16 @@ class CmsUser implements \Tops\sys\IUser
      */
     public function loadByUserName($userName)
     {
-        $this->username = $userName;
-        if ($userName == 'admin') {
-            $this->id = 1;
-            $this->roles = array('admin');
-        }
-        else {
-            $this->id = 2;
-            $this->roles = array('finance');
-        }
+        $config = $this->getConfig();
+        $info = array_key_exists($userName,$config) ? $config[$userName] : array();
+        $this->loadUserInfo($info);
+        return (!empty($info));
+    }
+
+    private function getCurrentUserName() {
+        $config = $this->getConfig();
+        return  empty($config['settings']['current']) ? '' : $config['settings']['current'];
+
     }
 
     /**
@@ -51,7 +96,10 @@ class CmsUser implements \Tops\sys\IUser
      */
     public function loadCurrentUser()
     {
-        $this->loadByUserName('tester');
+        $username =  $this->getCurrentUserName();
+        $info = $this->getUserInfo($username);
+        $this->loadUserInfo($info);
+        return (!empty($info));
     }
 
     /**
@@ -78,32 +126,7 @@ class CmsUser implements \Tops\sys\IUser
      */
     public function isAuthenticated()
     {
-        return true;
-    }
-
-    /**
-     * @param string $value
-     * @return bool
-     */
-    public function isAuthorized($value = '')
-    {
-        if ($this->isAdmin()) {
-            return true;
-        }
-        $roles = TConfiguration::getValue($value,'permissions');
-        if (empty($roles)) {
-            return false;
-        }
-        if ($roles == 'authenticated') {
-            return $this->isAuthenticated();
-        }
-        $roles = explode(',',$roles);
-        foreach ($roles as $value) {
-            if (in_array($value,$this->roles)) {
-                return true;
-            }
-        }
-        return false;
+        return $this->getCurrentUserName() == $this->username;
     }
 
     /**
@@ -111,7 +134,7 @@ class CmsUser implements \Tops\sys\IUser
      */
     public function getFirstName()
     {
-        return "Tommy";
+        return $this->first;
     }
 
     /**
@@ -119,7 +142,7 @@ class CmsUser implements \Tops\sys\IUser
      */
     public function getLastName()
     {
-        return "Tester";
+        return $this->last;
     }
 
     /**
@@ -136,7 +159,7 @@ class CmsUser implements \Tops\sys\IUser
      */
     public function getFullName($defaultToUsername = true)
     {
-        return "Tommy Tester";
+        return "$this->first $this->last";
     }
 
     /**
@@ -153,7 +176,7 @@ class CmsUser implements \Tops\sys\IUser
      */
     public function getEmail()
     {
-        return 'tester@tops.com';
+        return $this->email;
     }
 
     /**
@@ -169,17 +192,18 @@ class CmsUser implements \Tops\sys\IUser
      */
     public function isCurrent()
     {
-        return true;
+        return $this->username == $this->getCurrentUserName();
     }
 
     public function getProfileValue($key)
     {
-        // TODO: Implement getProfileValue() method.
+        // not implemented
+        return false;
     }
 
     public function setProfileValue($key, $value)
     {
-        // TODO: Implement setProfileValue() method.
+        // not implemented
     }
 
     /**
@@ -188,6 +212,27 @@ class CmsUser implements \Tops\sys\IUser
      */
     public function loadByEmail($email)
     {
-        // TODO: Implement loadByEmail() method.
+        $info = $this->searchUsers('email',$email);
+        $this->loadUserInfo($info);
+        return (!empty($info));
+    }
+
+    protected function test()
+    {
+        return true;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    protected function loadProfile()
+    {
+        // not implemented
+        return false;
     }
 }

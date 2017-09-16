@@ -14,7 +14,8 @@
     "psr-4": {
       "Tops\\" : "pnut.root/modules/src/tops",
       "Peanut\\" : "pnut.root/modules/src/peanut",
-      "Peanut\\testing\\" : "tests/lib"
+      "Peanut\\testing\\" : "tests/lib",
+      "Peanut\\cms\\" : "pnut.root/pnutcms/src"
     }
   },
   "require": {
