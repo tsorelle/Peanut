@@ -1,10 +1,9 @@
 ; This file can be revised for a specific implementation and renamed to install.ini
-; The three tables listed are required for tops permissions and mailbox systems
-; there other settings are just examples.
+; The examples below are required for the tops permission system and mailbox system.
 
 [settings]
 ; For testing, you can set test=1 to disable database calls
-test=1
+; test=1
 
 [tables]
 tops_rolepermissions=0
@@ -12,13 +11,13 @@ tops_permissions=0
 tops_mailboxes=0
 
 [roles]
-specialadmin='Special Administrator'
-peon='A low life user'
+peanutAdmin='Administrator for Peanut Features'
+mailAdmin='E-Mail manager'
 
 [permissions]
-update-data='Can update data'
-mop-floor='Can mop floor'
+manage-mailboxes='Manage mailboxes';
+manage-permissions='Manage permissions';
 
 [permission-roles]
-update-data='admin,specialadmin'
-mop-floor='peon'
+manage-mailboxes='peanutAdmin,mailAdmin';
+manage-permissions='peanutAdmin';
