@@ -22,7 +22,17 @@ class CmsPermissionsManager implements IPermissionsManager
 
     public function __construct()
     {
-        $config = parse_ini_file(__DIR__.'/../permissions.ini',true);
+        global $_SESSION;
+        if (isset($_SESSION['permission-manager'])) {
+            $config = $_SESSION['permission-manager'];
+        }
+        else {
+            $config = parse_ini_file(__DIR__.'/../permissions.ini',true);
+            if (isset($_SESSION)) {
+                $_SESSION['permission-manager'] = $config;
+            }
+        }
+
         foreach($config['roles'] as $role => $description) {
             $this->addRole($role,$description);
         }
