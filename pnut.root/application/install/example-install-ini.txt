@@ -1,0 +1,19 @@
+[settings]
+test=1
+
+[tables]
+tops_rolepermissions=0
+tops_permissions=0
+tops_mailboxes=0
+
+[roles]
+specialadmin='Special Administrator'
+peon='A low life user'
+
+[permissions]
+update-data='Can update data'
+mop-floor='Can mop floor'
+
+[permission-roles]
+update-data='admin,specialadmin'
+mop-floor='peon'
