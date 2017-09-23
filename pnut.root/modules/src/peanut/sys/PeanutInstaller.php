@@ -175,19 +175,6 @@ abstract class PeanutInstaller
         return $this->findInstallationStatus($package, $logContent);
     }
 
-    function installPeanut() {
-        $this->installPeanutSchema();
-        $this->doCustomSetup();
-    }
-
-    protected function installPeanutSchema() {
-        $dbInstaller = new TDbInstaller();
-        $dbLog = $dbInstaller->installTopsSchema();
-        foreach ($dbLog as $entry) {
-            $this->log->addLogEntry($entry);
-        }
-    }
-
     protected function addLogEntry($message) {
         $this->log->addLogEntry($message);
     }
