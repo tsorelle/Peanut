@@ -12,8 +12,12 @@ namespace Peanut\sys;
 class DefaultPeanutInstaller extends PeanutInstaller
 {
 
-    public function doCustomSetup()
+    public function doCustomSetup($testing=false)
     {
+        // Implement doCustomSetup() method in cms specific versions.
+    }
+
+    public function doTeardown($testing=false) {
         // Implement doCustomSetup() method in cms specific versions.
     }
 }

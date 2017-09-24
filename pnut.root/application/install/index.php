@@ -59,7 +59,8 @@ $loader = $settings->optimize ?  '../..'.$settings->peanutRootPath.'dist/loader.
                                 <td data-bind="text:name"></td>
                                 <td data-bind="text:status"></td>
                                 <td>
-                                    <a href="#" data-bind="visible:status=='Ready to install',click:$parent.installPkg">Install now >></a>
+                                    <a href="#" data-bind="visible:installed==0,click:$parent.installPkg">Install now >></a>
+                                    <a href="#" data-bind="visible:installed==1,click:$parent.uninstallPkg">Uninstall >></a>
                                 </td>
                             </tr>
                         </tbody>

@@ -82,6 +82,33 @@ namespace Peanut {
             });
         };
 
+        uninstallPkg = (pkgInfo: pkgListItem) => {
+            let pkgName = pkgInfo.name;
+            let me = this;
+            // let request = {};
+            let request = pkgName;
+            me.installResultLog([]);
+            me.installResultMessage('');
+            me.application.hideServiceMessages();
+            me.application.showWaiter('Installing ' + pkgName + '...');
+            me.services.executeService('Peanut::UninstallPackage', request,
+                function (serviceResponse: Peanut.IServiceResponse) {
+                    me.application.hideWaiter();
+                    let response = <installPkgResponse>serviceResponse.Value;
+                    let resultMessage = 'Uninstall of ' + pkgName + ' ' + (response.success ? 'succeeded'  : 'failed');
+                    me.installResultMessage(resultMessage);
+                    me.installResultLog(response.log);
+                    if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+                        me.showPackageList(response.list);
+                    }
+                    me.showInstallationResult();
+                }
+            ).fail(function () {
+                let trace = me.services.getErrorInformation();
+                me.application.hideWaiter();
+            });
+        };
+
         showInstallationResult = () => {
             jQuery("#install-results-modal").modal('show');
         }

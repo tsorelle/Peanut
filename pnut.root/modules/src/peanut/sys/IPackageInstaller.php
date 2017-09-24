@@ -11,5 +11,6 @@ namespace Peanut\sys;
 
 interface IPackageInstaller
 {
-    public function run(PeanutInstallationLog $log);
+    public function install(PeanutInstallationLog $log,$testing=false);
+    public function uninstall(PeanutInstallationLog $log,$testing=false);
 }

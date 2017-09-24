@@ -138,4 +138,14 @@ class CmsPermissionsManager implements IPermissionsManager
         }
         return true;
     }
+
+    public function removePermission($name)
+    {
+        if (isset($this->permissions[$name])) {
+            unset($this->permissions[$name]);
+            return false;
+        }
+        return true;
+
+    }
 }

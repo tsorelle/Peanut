@@ -21,8 +21,10 @@ class PeanutInstallationLog
     private $session;
 
     const InstallationCompletedMessage = 'installation completed';
+    const UninstallCompletedMessage = 'uninstalled';
     const InstallationFailedMessage = 'installation failed';
     const InstallationStartedMessage = 'installation started';
+    const UninstallStartedMessage = 'uninstall started';
     const LogFileName = 'peanut-installation.log';
 
     public function getSession() {
@@ -77,7 +79,15 @@ class PeanutInstallationLog
     }
 
 
-    public function startSession($package,$logLocation=null) {
+    public function startUninstallSession($package,$logLocation=null) {
+        $this->initSession($package,$logLocation,self::UninstallStartedMessage);
+    }
+    public function startSession($package,$logLocation=null)
+    {
+        $this->initSession($package,$logLocation,self::InstallationStartedMessage);
+    }
+
+    public function initSession($package,$logLocation,$message) {
         $this->session = new \stdClass();
         $this->session->package = $package;
         $this->log = array();
@@ -100,12 +110,12 @@ class PeanutInstallationLog
         if (!isset($this->archive)) {
             $this->archive = $this->readLogFile();
         }
-        $this->addLogEntry(self::InstallationStartedMessage);
+        $this->addLogEntry("$package: $message");
         return true;
     }
 
-    public function endSession() {
-        $this->addLogEntry(self::InstallationCompletedMessage);
+    public function endSession($message=self::InstallationCompletedMessage) {
+        $this->addLogEntry($message);
         $this->save();
         unset($this->session);
     }
