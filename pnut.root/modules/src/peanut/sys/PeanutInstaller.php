@@ -296,7 +296,7 @@ abstract class PeanutInstaller
             }
 
             if ($package == 'peanut') {
-                $this->doCustomSetup();
+                $this->doTeardown();
             }
             else {
                 if (file_exists(PeanutSettings::GetPackagePath()."/$package/src/install/PackageInstaller.php")) {
