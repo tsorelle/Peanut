@@ -9,6 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/pnut.root/modules/src/peanut" isTestSource="false" packagePrefix="Peanut" />
       <sourceFolder url="file://$MODULE_DIR$/pnut.root/modules/src/test" isTestSource="true" packagePrefix="PeanutTest" />
       <sourceFolder url="file://$MODULE_DIR$/tests/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/pnut.root/modules/pnut/packages/permissions/src" isTestSource="false" packagePrefix="Peanut\permissions" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />

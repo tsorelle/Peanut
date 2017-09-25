@@ -228,9 +228,14 @@ namespace Peanut {
             PeanutLoader.getConfig((config: IPeanutConfig) => {
                 let htmlPath = componentPath.root + 'templates/' + componentPath.templateFile;
                 jQuery.get(htmlPath, function (template: string) {
-                    if (finalFunction) {
-                        finalFunction(template);
+                    // JQuery.get returns the entire parent page if the template is not found!
+                    if (template.toLowerCase().indexOf('<!doctype') === 0) {
+                        console.error('Template not found at '+htmlPath);
+                        template = '';
                     }
+                        if (finalFunction) {
+                            finalFunction(template);
+                        }
                 });
             });
         };

@@ -37,6 +37,10 @@ var Peanut;
                 Peanut.PeanutLoader.getConfig(function (config) {
                     var htmlPath = componentPath.root + 'templates/' + componentPath.templateFile;
                     jQuery.get(htmlPath, function (template) {
+                        if (template.toLowerCase().indexOf('<!doctype') === 0) {
+                            console.error('Template not found at ' + htmlPath);
+                            template = '';
+                        }
                         if (finalFunction) {
                             finalFunction(template);
                         }

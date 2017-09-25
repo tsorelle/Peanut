@@ -6,7 +6,7 @@
  * Time: 5:02 PM
  */
 
-namespace Qnut\services;
+namespace Peanut\Qnut\services;
 
 
 /**

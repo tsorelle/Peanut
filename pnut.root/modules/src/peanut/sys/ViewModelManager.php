@@ -215,6 +215,10 @@ class ViewModelManager
             return $user->isAuthorized($viewModelInfo->permission);
         }
 
+        if (empty($viewModelInfo->roles)) {
+            return true;
+        }
+
         foreach ($viewModelInfo->roles as $role) {
             switch($role) {
                 case 'authenticated' :

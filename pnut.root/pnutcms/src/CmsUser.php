@@ -14,9 +14,7 @@ use Tops\sys\TAbstractUser;
 class CmsUser extends TAbstractUser
 {
 
-    private $username='guest';
     private $roles = array();
-    private $id = false;
     private $email = '';
     private $first = '';
     private $last = '';
@@ -37,12 +35,12 @@ class CmsUser extends TAbstractUser
     }
 
     private function loadUserInfo(array $userInfo) {
-        $this->id = empty($userInfo['id'] ? false : $userInfo['id']);
-        $this->username = empty($userInfo['name'] ? 'guest' : $userInfo['name']);
+        $this->id = empty($userInfo['id']) ? false : $userInfo['id'];
+        $this->username = empty($userInfo['name']) ? 'guest' : $userInfo['name'];
         $this->roles = empty($userInfo['roles']) ? array() : explode(',',$userInfo['roles']);
-        $this->email = empty($userInfo['email'] ? '' : $userInfo['email']);
-        $this->first = empty($userInfo['first'] ? '' : $userInfo['first']);
-        $this->email = empty($userInfo['last'] ? '' : $userInfo['last']);
+        $this->email = empty($userInfo['email']) ? '' : $userInfo['email'];
+        $this->first = empty($userInfo['first']) ? '' : $userInfo['first'];
+        $this->email = empty($userInfo['last']) ? '' : $userInfo['last'];
     }
 
     private function searchUsers($key,$value)

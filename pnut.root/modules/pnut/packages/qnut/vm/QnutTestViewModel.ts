@@ -12,11 +12,14 @@ namespace Qnut {
         init(successFunction?: () => void) {
             let me = this;
             console.log('VM Init');
+            // me.bindDefaultSection();
 
             // load components from the package, peanut core and the default application
-            me.application.registerComponents('@pkg/qnut/qnut-message,@pnut/modal-confirm,test-message', () => {
+            // me.application.registerComponents('test-message', () => {
+            me.application.registerComponents('@pkg/qnut/qnut-message,@pnut/modal-confirm', () => {
                 me.bindDefaultSection();
             });
+
             successFunction();
         }
 
@@ -34,7 +37,7 @@ namespace Qnut {
             let request = {"tester" : 'Terry SoRelle'};
             me.application.hideServiceMessages();
             me.application.showWaiter('Testing service...');
-            me.services.executeService('qnut::HelloMars', request,
+            me.services.executeService('peanut.Qnut::HelloMars', request,
                 function (serviceResponse: Peanut.IServiceResponse) {
                     me.application.hideWaiter();
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {

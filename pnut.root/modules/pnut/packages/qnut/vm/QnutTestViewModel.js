@@ -25,7 +25,7 @@ var Qnut;
                 var request = { "tester": 'Terry SoRelle' };
                 me.application.hideServiceMessages();
                 me.application.showWaiter('Testing service...');
-                me.services.executeService('qnut::HelloMars', request, function (serviceResponse) {
+                me.services.executeService('peanut.Qnut::HelloMars', request, function (serviceResponse) {
                     me.application.hideWaiter();
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         var response = serviceResponse.Value;
@@ -40,7 +40,7 @@ var Qnut;
         QnutTestViewModel.prototype.init = function (successFunction) {
             var me = this;
             console.log('VM Init');
-            me.application.registerComponents('@pkg/qnut/qnut-message,@pnut/modal-confirm,test-message', function () {
+            me.application.registerComponents('@pkg/qnut/qnut-message,@pnut/modal-confirm', function () {
                 me.bindDefaultSection();
             });
             successFunction();

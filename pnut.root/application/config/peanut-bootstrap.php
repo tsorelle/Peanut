@@ -66,7 +66,7 @@ class Bootstrap
             foreach ($packages as $package) {
                 $namespace = TStrings::toCamelCase($package);
                 $srcRoot = $fileRoot.$packagePath."/$package/src";
-                $loader->addPsr4($namespace.'\\', $srcRoot);
+                $loader->addPsr4('Peanut\\'.$namespace.'\\', $srcRoot);
             }
         }
 
