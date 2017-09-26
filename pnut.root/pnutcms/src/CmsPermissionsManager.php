@@ -93,7 +93,7 @@ class CmsPermissionsManager implements IPermissionsManager
         $permission = new TPermission();
         $permission->setDescription($description);
         $permission->setPermissionName($name);
-        $permission->setRoles(array());
+        // $permission->setRoles(array());
         $this->permissions[$name] = $permission;
     }
 
@@ -102,6 +102,7 @@ class CmsPermissionsManager implements IPermissionsManager
         $permission->setDescription('null permission');
         $permission->setPermissionName($name);
         $permission->setRoles(array());
+        return $permission;
     }
 
     /**
@@ -109,7 +110,8 @@ class CmsPermissionsManager implements IPermissionsManager
      */
     public function getPermission($permissionName)
     {
-        return (isset($this->permissions[$permissionName])) ? $this->permissions[$permissionName] : $this->getNullPermission($permissionName);
+        $permission = (isset($this->permissions[$permissionName])) ? $this->permissions[$permissionName] : $this->getNullPermission($permissionName);
+        return $permission;
     }
 
     /**
