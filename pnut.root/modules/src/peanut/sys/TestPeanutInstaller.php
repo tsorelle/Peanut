@@ -17,8 +17,14 @@ class TestPeanutInstaller extends PeanutInstaller
         $this->addLogEntry('Schema installation skipped in testing.');
     }
 
-    public function doCustomSetup()
+
+    public function doTeardown($testing = false)
     {
-        // Implement doCustomSetup() method in cms specific versions.
+        // TODO: Implement doTeardown() method.
+    }
+
+    public function doCustomSetup($testing = false)
+    {
+        // TODO: Implement doCustomSetup() method.
     }
 }
