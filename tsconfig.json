@@ -5,6 +5,7 @@
     "sourceMap": true
   },
   "include"  : [
+    "pnut.root/tests/js/**/*",
     "pnut.root/modules/pnut/core/**/*",
     "pnut.root/modules/pnut/components/**/*",
     "pnut.root/modules/pnut/packages/**/*",

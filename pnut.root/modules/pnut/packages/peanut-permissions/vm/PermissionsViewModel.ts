@@ -5,7 +5,7 @@
 /// <reference path='../../../../typings/knockout/knockout.d.ts' />
 /// <reference path='../../../../typings/lodash/difference/index.d.ts' />
 
-namespace Permissions {
+namespace PeanutPermissions {
     interface IPermission {
         permissionName : string;
         description: string;
@@ -47,7 +47,7 @@ namespace Permissions {
             let request = {};
             me.application.hideServiceMessages();
             me.application.showWaiter('Getting permissions...');
-            me.services.executeService('peanut.Permissions::GetPermissions', request,
+            me.services.executeService('peanut.peanut-permissions::GetPermissions', request,
                 function (serviceResponse: Peanut.IServiceResponse) {
                     me.application.hideWaiter();
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
@@ -61,6 +61,7 @@ namespace Permissions {
                 }
             ).fail(function () {
                 me.application.hideWaiter();
+                let trace = me.services.getErrorInformation();
             });
         };
 
@@ -73,7 +74,7 @@ namespace Permissions {
             };
             me.application.hideServiceMessages();
             me.application.showWaiter('Updating permission...');
-            me.services.executeService('peanut.Permissions::UpdatePermission', request,
+            me.services.executeService('peanut.peanut-permissions::UpdatePermission', request,
                 function (serviceResponse: Peanut.IServiceResponse) {
                     me.application.hideWaiter();
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {

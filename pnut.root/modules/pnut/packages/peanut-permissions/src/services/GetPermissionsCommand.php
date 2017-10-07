@@ -6,8 +6,7 @@
  * Time: 11:46 AM
  */
 
-namespace Peanut\Permissions\services;
-
+namespace Peanut\PeanutPermissions\services;
 
 use Tops\services\TServiceCommand;
 use Tops\sys\IPermissionsManager;
@@ -50,6 +49,9 @@ class GetPermissionsCommand extends TServiceCommand
          * @var $manager IPermissionsManager
          */
         $manager = TObjectContainer::Get('tops.permissions');
+        if ($manager === false) {
+            $this->addErrorMessage('Permision manager not defined.');
+        }
         $result = new \stdClass();
         $result->roles = $manager->getRoles();
         $result->permissions = self::getPermissionsList($manager);

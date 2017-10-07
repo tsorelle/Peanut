@@ -6,7 +6,7 @@
  * Time: 8:41 AM
  */
 
-namespace Peanut\Permissions\services;
+namespace Peanut\PeanutPermissions\services;
 
 
 use Tops\services\TServiceCommand;

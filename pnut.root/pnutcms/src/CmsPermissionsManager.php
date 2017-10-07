@@ -150,4 +150,5 @@ class CmsPermissionsManager implements IPermissionsManager
         return true;
 
     }
+
 }
