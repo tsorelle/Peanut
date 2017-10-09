@@ -99,12 +99,12 @@ namespace PeanutPermissions {
             me.permissionForm.permissionName(selected.permissionName);
             let available = _.differenceBy(me.roles, selected.roles, 'Key');
             me.permissionForm.assigned(selected.roles);
-            me.permissionForm.assigned.sort(function (left:ILookupItem,right:ILookupItem) {
+            me.permissionForm.assigned.sort((left:ILookupItem,right:ILookupItem) => {
                 return left.Key.localeCompare(right.Key);
             });
 
             me.permissionForm.available(available);
-            me.permissionForm.available.sort(function (left:ILookupItem,right:ILookupItem) {
+            me.permissionForm.available.sort((left:ILookupItem,right:ILookupItem) => {
                 return left.Key.localeCompare(right.Key);
             });
 
@@ -116,7 +116,7 @@ namespace PeanutPermissions {
             let me = this;
             me.permissionForm.assigned.push(selected);
             me.permissionForm.available.remove(selected);
-            me.permissionForm.assigned.sort(function (left:ILookupItem,right:ILookupItem) {
+            me.permissionForm.assigned.sort((left:ILookupItem,right:ILookupItem) => {
                 return left.Key.localeCompare(right.Key);
             });
             me.permissionForm.changed(true);
@@ -126,7 +126,7 @@ namespace PeanutPermissions {
             let me = this;
             me.permissionForm.assigned.remove(selected);
             me.permissionForm.available.push(selected);
-            me.permissionForm.available.sort(function (left:ILookupItem,right:ILookupItem) {
+            me.permissionForm.available.sort((left:ILookupItem,right:ILookupItem) => {
                 return left.Key.localeCompare(right.Key);
             });
             me.permissionForm.changed(true);
