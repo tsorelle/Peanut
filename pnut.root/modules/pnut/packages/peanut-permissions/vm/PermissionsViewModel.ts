@@ -2,12 +2,15 @@
  * Created by Terry on 5/2/2017.
  */
 
-/// <reference path="../../../../pnut/core/ViewModelBase.ts" />
+
+    /// <reference path="../../../../pnut/core/ViewModelBase.ts" />
 /// <reference path='../../../../typings/knockout/knockout.d.ts' />
 /// <reference path='../../../../typings/lodash/difference/index.d.ts' />
 /// <reference path='../../../../pnut/core/peanut.d.ts' />
 
 namespace PeanutPermissions {
+
+    import ILookupItem = Peanut.ILookupItem;
 
     interface IPermission {
         permissionName : string;
@@ -94,13 +97,9 @@ namespace PeanutPermissions {
         showPermissionUpdateForm = (selected: IPermission) => {
             let me = this;
             me.permissionForm.permissionName(selected.permissionName);
-            // let available = _.difference(me.roles,selected.roles);
-            let available = _.differenceWith(me.roles, selected.roles, function(arrValue, othValue) {
-                return arrValue.Key === othValue.Key;
+            let available = _.differenceWith(me.roles, selected.roles, function(left: ILookupItem, right: ILookupItem) {
+                return left.Key === right.Key;
             });
-
-
-
             me.permissionForm.assigned(selected.roles);
             me.permissionForm.available(available);
             me.permissionForm.changed(false);
