@@ -11,6 +11,7 @@ namespace Peanut\cms;
 
 use Tops\sys\IPermissionsManager;
 use Tops\sys\TPermission;
+use Tops\sys\TStrings;
 
 class CmsPermissionsManager implements IPermissionsManager
 {
@@ -23,6 +24,7 @@ class CmsPermissionsManager implements IPermissionsManager
     public function __construct()
     {
         global $_SESSION;
+        // unset($_SESSION['permission-manager']);
         if (isset($_SESSION['permission-manager'])) {
             $config = $_SESSION['permission-manager'];
         }
@@ -70,14 +72,23 @@ class CmsPermissionsManager implements IPermissionsManager
                $this->revokePermission($roleName,$permissionKey);
             }
         }
+        return true;
     }
 
     /**
-     * @return string[]
+     * @return \stdClass[]
      */
     public function getRoles()
     {
-        return array_keys($this->roles);
+        $result = array();
+        foreach ($this->roles as $name => $description) {
+            $item = new \stdClass();
+            $item->Key = TStrings::ConvertNameFormat($name,IPermissionsManager::roleKeyFormat);
+            $item->Name = TStrings::ConvertNameFormat($name,IPermissionsManager::roleNameFormat);
+            $item->Description = TStrings::ConvertNameFormat($name,IPermissionsManager::roleDescriptionFormat);
+            $result[] = $item;
+        }
+        return $result;
     }
 
     /**
@@ -101,7 +112,6 @@ class CmsPermissionsManager implements IPermissionsManager
         $permission = new TPermission();
         $permission->setDescription('null permission');
         $permission->setPermissionName($name);
-        $permission->setRoles(array());
         return $permission;
     }
 
@@ -149,6 +159,21 @@ class CmsPermissionsManager implements IPermissionsManager
         }
         return true;
 
+    }
+
+    public function saveChanges() {
+        global $_SESSION;
+        $config = array();
+        $roles = $this->getRoles();
+        foreach ($roles as $role) {
+            $config['roles'][$role->Key] = $role->Description;
+        }
+        $permissions = $this->getPermissions();
+        foreach ($permissions as $p) {
+            $config['permissions'][$p->getPermissionName()] = $p->getDescription();
+            $config['permission-roles'][$p->getPermissionName()] = join(',',$p->getRoles());
+        }
+        $_SESSION['permission-manager'] = $config;
     }
 
 }

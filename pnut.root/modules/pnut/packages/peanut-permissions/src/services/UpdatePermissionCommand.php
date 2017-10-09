@@ -40,18 +40,21 @@ class UpdatePermissionCommand extends TServiceCommand
          */
         $manager = TObjectContainer::Get('tops.permissions');
         $permission = $manager->getPermission($request->permissionName);
-        foreach($request->roles as $roleName) {
-            if (!$permission->check($roleName)) {
-                $manager->assignPermission($request->permissionName,$roleName);
+        $roleKeys = [];
+        foreach($request->roles as $role) {
+            $roleKeys[] = $role->Key;
+            if (!$permission->check($role->Key)) {
+                $manager->assignPermission($role->Key,$request->permissionName);
             }
         }
         $currentRoles = $permission->getRoles();
-        foreach ($currentRoles as $roleName) {
-            if (!in_array($roleName,$request->roles)) {
-                $manager->revokePermission($request->permissionName,$roleName);
+        foreach ($currentRoles as $roleKey) {
+            if (!in_array($roleKey,$roleKeys)) {
+                $manager->revokePermission($roleKey,$request->permissionName);
             }
         }
-        $permissions = GetPermissionsCommand::getPermissionsList($manager);
+        $manager->saveChanges();
+        $permissions = GetPermissionsCommand::getPermissionsList($manager,$manager->getRoles());
         $this->addInfoMessage("Updated roles for permission '$request->permissionName'");
         $this->setReturnValue($permissions);
     }

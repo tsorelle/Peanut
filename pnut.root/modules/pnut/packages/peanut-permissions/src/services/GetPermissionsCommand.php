@@ -29,14 +29,24 @@ class GetPermissionsCommand extends TServiceCommand
      *    }
      *******/
 
-    public static function getPermissionsList(IPermissionsManager $manager) {
+    public static function getPermissionsList(IPermissionsManager $manager,$roles) {
         $result = array();
         $permissions = $manager->getPermissions();
+        $roleIndex = [];
+        foreach ($roles as $role) {
+            $roleIndex[$role->Key] = $role;
+        }
         foreach ($permissions as $permission) {
             $item = new \stdClass();
             $item->permissionName = $permission->getPermissionName();
             $item->description = $permission->getDescription();
-            $item->roles = $permission->getRoles();
+            $item->roles = [];
+            $permissionRoles = $permission->getRoles();
+            foreach ($permissionRoles as $roleKey) {
+                if (array_key_exists($roleKey,$roleIndex)) {
+                    $item->roles[] = $roleIndex[$roleKey];
+                }
+            }
             $result[] = $item;
         }
         return $result;
@@ -54,7 +64,7 @@ class GetPermissionsCommand extends TServiceCommand
         }
         $result = new \stdClass();
         $result->roles = $manager->getRoles();
-        $result->permissions = self::getPermissionsList($manager);
+        $result->permissions = self::getPermissionsList($manager,$result->roles);
         $this->setReturnValue($result);
 
     }

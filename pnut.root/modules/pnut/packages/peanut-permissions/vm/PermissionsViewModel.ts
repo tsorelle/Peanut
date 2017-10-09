@@ -1,20 +1,23 @@
 /**
  * Created by Terry on 5/2/2017.
  */
+
 /// <reference path="../../../../pnut/core/ViewModelBase.ts" />
 /// <reference path='../../../../typings/knockout/knockout.d.ts' />
 /// <reference path='../../../../typings/lodash/difference/index.d.ts' />
+/// <reference path='../../../../pnut/core/peanut.d.ts' />
 
 namespace PeanutPermissions {
+
     interface IPermission {
         permissionName : string;
         description: string;
-        roles: string[];
+        roles: Peanut.ILookupItem[];
     }
 
     interface IGetPermissionsResponse {
         permissions: IPermission[];
-        roles: string[];
+        roles: Peanut.ILookupItem[];
     }
 
     export class PermissionsViewModel extends Peanut.ViewModelBase {
@@ -24,8 +27,8 @@ namespace PeanutPermissions {
         permissionsList = ko.observableArray<IPermission>([]);
         permissionForm = {
             permissionName : ko.observable(''),
-            assigned: ko.observableArray<string>([]),
-            available: ko.observableArray<string>([]),
+            assigned: ko.observableArray<Peanut.ILookupItem>([]),
+            available: ko.observableArray<Peanut.ILookupItem>([]),
             changed: ko.observable(false)
         };
 
@@ -91,7 +94,13 @@ namespace PeanutPermissions {
         showPermissionUpdateForm = (selected: IPermission) => {
             let me = this;
             me.permissionForm.permissionName(selected.permissionName);
-            let available = _.difference(me.roles,selected.roles);
+            // let available = _.difference(me.roles,selected.roles);
+            let available = _.differenceWith(me.roles, selected.roles, function(arrValue, othValue) {
+                return arrValue.Key === othValue.Key;
+            });
+
+
+
             me.permissionForm.assigned(selected.roles);
             me.permissionForm.available(available);
             me.permissionForm.changed(false);
