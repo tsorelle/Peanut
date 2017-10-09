@@ -20,6 +20,7 @@ class CmsPermissionsManager implements IPermissionsManager
      */
     private $permissions = array();
     private $roles = array();
+    private $initializing = true;
 
     public function __construct()
     {
@@ -48,6 +49,7 @@ class CmsPermissionsManager implements IPermissionsManager
                 $this->assignPermission($roleName,$permission);
             }
         }
+        $this->initializing = false;
     }
 
     /**
@@ -57,6 +59,7 @@ class CmsPermissionsManager implements IPermissionsManager
     public function addRole($roleName, $roleDescription = '')
     {
         $this->roles[$roleName] = $roleDescription;
+        $this->saveChanges();
     }
 
     /**
@@ -72,6 +75,7 @@ class CmsPermissionsManager implements IPermissionsManager
                $this->revokePermission($roleName,$permissionKey);
             }
         }
+        $this->saveChanges();
         return true;
     }
 
@@ -106,6 +110,7 @@ class CmsPermissionsManager implements IPermissionsManager
         $permission->setPermissionName($name);
         // $permission->setRoles(array());
         $this->permissions[$name] = $permission;
+        $this->saveChanges();
     }
 
     private function getNullPermission($name) {
@@ -131,11 +136,13 @@ class CmsPermissionsManager implements IPermissionsManager
      */
     public function assignPermission($roleName, $permissionName)
     {
+        $result = false;
         if (isset($this->permissions[$permissionName])) {
             $this->permissions[$permissionName]->addRole($roleName);
-            return true;
+            $result = true;
         }
-        return false;
+        $this->saveChanges();
+        return $result;
     }
 
     /**
@@ -148,21 +155,28 @@ class CmsPermissionsManager implements IPermissionsManager
         if (isset($this->permissions[$permissionName])) {
             $this->permissions[$permissionName]->removeRole($roleName);
         }
+        $this->saveChanges();
         return true;
     }
 
     public function removePermission($name)
     {
+        $result = true;
         if (isset($this->permissions[$name])) {
             unset($this->permissions[$name]);
-            return false;
+            $result = false;
         }
-        return true;
+        $this->saveChanges();
+        return $result;
 
     }
 
     public function saveChanges() {
+        if ($this->initializing) {
+            return;
+        }
         global $_SESSION;
+
         $config = array();
         $roles = $this->getRoles();
         foreach ($roles as $role) {
