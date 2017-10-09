@@ -97,9 +97,7 @@ namespace PeanutPermissions {
         showPermissionUpdateForm = (selected: IPermission) => {
             let me = this;
             me.permissionForm.permissionName(selected.permissionName);
-            let available = _.differenceWith(me.roles, selected.roles, function(left: ILookupItem, right: ILookupItem) {
-                return left.Key === right.Key;
-            });
+            let available = _.differenceBy(me.roles, selected.roles, 'Key');
             me.permissionForm.assigned(selected.roles);
             me.permissionForm.available(available);
             me.permissionForm.changed(false);
