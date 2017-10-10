@@ -53,7 +53,7 @@ class UpdatePermissionCommand extends TServiceCommand
                 $manager->revokePermission($roleKey,$request->permissionName);
             }
         }
-        $permissions = GetPermissionsCommand::getPermissionsList($manager,$manager->getRoles());
+        $permissions = GetPermissionsCommand::getPermissionsList($manager,GetPermissionsCommand::getRoles($manager));
         $this->addInfoMessage("Updated roles for permission '$request->permissionName'");
         $this->setReturnValue($permissions);
     }
