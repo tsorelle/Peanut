@@ -40,7 +40,7 @@
                                             <tbody data-bind="foreach:permissionForm.assigned">
                                             <tr>
                                                 <td data-bind="text:Name" style="padding-right: 10px"></td>
-                                                <td><a href="#" data-bind="click:$parent.onRemoveRole">>></a> </td>
+                                                <td><a href="#" data-bind="click:$parent.onRemoveRole,attr: { title: Description }">>></a> </td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -52,7 +52,7 @@
                                         <table>
                                             <tbody data-bind="foreach:permissionForm.available">
                                             <tr>
-                                                <td><a href="#" data-bind="click:$parent.onAddRole"><<</a> </td>
+                                                <td><a href="#" data-bind="click:$parent.onAddRole,attr: { title: Description }"><<</a> </td>
                                                 <td data-bind="text: Name" style="padding-left: 10px"></td>
                                             </tr>
                                             </tbody>

@@ -10,17 +10,21 @@
 
 namespace PeanutPermissions {
 
-    import ILookupItem = Peanut.ILookupItem;
+    interface IUserRole {
+        Key : string;
+        Name: string;
+        Description: string;
+    }
 
     interface IPermission {
         permissionName : string;
         description: string;
-        roles: Peanut.ILookupItem[];
+        roles: IUserRole[];
     }
 
     interface IGetPermissionsResponse {
         permissions: IPermission[];
-        roles: Peanut.ILookupItem[];
+        roles: IUserRole[];
     }
 
     export class PermissionsViewModel extends Peanut.ViewModelBase {
@@ -30,8 +34,8 @@ namespace PeanutPermissions {
         permissionsList = ko.observableArray<IPermission>([]);
         permissionForm = {
             permissionName : ko.observable(''),
-            assigned: ko.observableArray<Peanut.ILookupItem>([]),
-            available: ko.observableArray<Peanut.ILookupItem>([]),
+            assigned: ko.observableArray<IUserRole>([]),
+            available: ko.observableArray<IUserRole>([]),
             changed: ko.observable(false)
         };
 
@@ -99,12 +103,12 @@ namespace PeanutPermissions {
             me.permissionForm.permissionName(selected.permissionName);
             let available = _.differenceBy(me.roles, selected.roles, 'Key');
             me.permissionForm.assigned(selected.roles);
-            me.permissionForm.assigned.sort((left:ILookupItem,right:ILookupItem) => {
+            me.permissionForm.assigned.sort((left:IUserRole,right:IUserRole) => {
                 return left.Key.localeCompare(right.Key);
             });
 
             me.permissionForm.available(available);
-            me.permissionForm.available.sort((left:ILookupItem,right:ILookupItem) => {
+            me.permissionForm.available.sort((left:IUserRole,right:IUserRole) => {
                 return left.Key.localeCompare(right.Key);
             });
 
@@ -116,7 +120,7 @@ namespace PeanutPermissions {
             let me = this;
             me.permissionForm.assigned.push(selected);
             me.permissionForm.available.remove(selected);
-            me.permissionForm.assigned.sort((left:ILookupItem,right:ILookupItem) => {
+            me.permissionForm.assigned.sort((left:IUserRole,right:IUserRole) => {
                 return left.Key.localeCompare(right.Key);
             });
             me.permissionForm.changed(true);
@@ -126,7 +130,7 @@ namespace PeanutPermissions {
             let me = this;
             me.permissionForm.assigned.remove(selected);
             me.permissionForm.available.push(selected);
-            me.permissionForm.available.sort((left:ILookupItem,right:ILookupItem) => {
+            me.permissionForm.available.sort((left:IUserRole,right:IUserRole) => {
                 return left.Key.localeCompare(right.Key);
             });
             me.permissionForm.changed(true);
