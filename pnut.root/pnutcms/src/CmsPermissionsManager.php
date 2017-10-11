@@ -12,6 +12,7 @@ namespace Peanut\cms;
 use Tops\sys\IPermissionsManager;
 use Tops\sys\TPermission;
 use Tops\sys\TStrings;
+use Tops\sys\TUser;
 
 class CmsPermissionsManager implements IPermissionsManager
 {
@@ -25,7 +26,6 @@ class CmsPermissionsManager implements IPermissionsManager
     public function __construct()
     {
         global $_SESSION;
-        // unset($_SESSION['permission-manager']);
         if (isset($_SESSION['permission-manager'])) {
             $config = $_SESSION['permission-manager'];
         }
@@ -37,7 +37,10 @@ class CmsPermissionsManager implements IPermissionsManager
         }
 
         foreach($config['roles'] as $role => $description) {
-            $this->addRole($role,$description);
+            if ($role != TUser::AdminRole && $role != TUser::GuestRole) {
+
+                $this->addRole($role,$description);
+            }
         }
         foreach($config['permissions'] as $name => $description) {
             $this->addPermission($name,$description);
@@ -84,6 +87,15 @@ class CmsPermissionsManager implements IPermissionsManager
      */
     public function getRoles()
     {
+        $result = $this->getActualRoles();
+        $virtualRoles = TUser::getVirtualRoles();
+        $result[] = $virtualRoles[TUser::AuthenticatedRole];
+        $result[] = $virtualRoles[TUser::GuestRole];
+
+        return $result;
+    }
+
+    public function getActualRoles() {
         $result = array();
         foreach ($this->roles as $name => $description) {
             $item = new \stdClass();
@@ -178,7 +190,7 @@ class CmsPermissionsManager implements IPermissionsManager
         global $_SESSION;
 
         $config = array();
-        $roles = $this->getRoles();
+        $roles = $this->getActualRoles();
         foreach ($roles as $role) {
             $config['roles'][$role->Key] = $role->Description;
         }

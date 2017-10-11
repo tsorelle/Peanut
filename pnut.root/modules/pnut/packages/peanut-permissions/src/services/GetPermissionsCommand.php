@@ -55,20 +55,6 @@ class GetPermissionsCommand extends TServiceCommand
 
     }
 
-    /**
-     * @param $manager IPermissionsManager
-     * @return \stdClass[];
-     */
-    public static function getRoles($manager) {
-        $roles = $manager->getRoles();
-        $authRole = new \stdClass();
-        $authRole->Key = TUser::AuthenticatedRole;
-        $authRole->Name = 'Authenticated user';
-        $authRole->Description = 'Authenticated user';
-        $roles[] = $authRole;
-        return $roles;
-
-    }
     protected function run()
     {
         /**
@@ -79,7 +65,7 @@ class GetPermissionsCommand extends TServiceCommand
             $this->addErrorMessage('Permision manager not defined.');
         }
         $result = new \stdClass();
-        $result->roles = self::getRoles($manager);
+        $result->roles = $manager->getRoles();
         $result->permissions = self::getPermissionsList($manager,$result->roles);
         $this->setReturnValue($result);
     }
