@@ -8,7 +8,7 @@
 namespace Peanut\sys;
 
 use Tops\db\TDbInstaller;
-use Tops\sys\IPermissionsManager;
+use Tops\sys\TPermissionsManager;
 use Tops\sys\TDates;
 use Tops\sys\TIniSettings;
 use Tops\sys\TObjectContainer;
@@ -108,9 +108,9 @@ abstract class PeanutInstaller
             $permissionRoles = $config->getSection('permission-roles');
             if (!(empty($roles) && empty($permissions) && empty($permissionRoles))) {
                 /**
-                 * @var $manager IPermissionsManager
+                 * @var $manager TPermissionsManager
                  */
-                $manager = TObjectContainer::Get('tops.permissions');
+                $manager = TPermissionsManager::getPermissionManager();
                 if (empty($manager)) {
                     throw new \Exception('Permission manager not registered in classes.ini');
                 }
@@ -232,9 +232,9 @@ abstract class PeanutInstaller
             $permissionRoles = $config->getSection('permission-roles');
             if (!(empty($roles) && empty($permissions) && empty($permissionRoles))) {
                 /**
-                 * @var $manager IPermissionsManager
+                 * @var $manager TPermissionsManager
                  */
-                $manager = TObjectContainer::Get('tops.permissions');
+                $manager = TPermissionsManager::getPermissionManager();
                 if (empty($manager)) {
                     throw new \Exception('Permission manager not registered in classes.ini');
                 }

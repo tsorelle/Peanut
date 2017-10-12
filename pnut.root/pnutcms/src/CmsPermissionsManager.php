@@ -9,12 +9,12 @@
 namespace Peanut\cms;
 
 
-use Tops\sys\IPermissionsManager;
+use Tops\sys\TPermissionsManager;
 use Tops\sys\TPermission;
 use Tops\sys\TStrings;
 use Tops\sys\TUser;
 
-class CmsPermissionsManager implements IPermissionsManager
+class CmsPermissionsManager extends TPermissionsManager
 {
     /**
      * @var TPermission[];
@@ -37,7 +37,7 @@ class CmsPermissionsManager implements IPermissionsManager
         }
 
         foreach($config['roles'] as $role => $description) {
-            if ($role != TUser::AdminRole && $role != TUser::GuestRole) {
+            if ($role != TPermissionsManager::adminRole && $role != TPermissionsManager::guestRole) {
 
                 $this->addRole($role,$description);
             }
@@ -88,9 +88,9 @@ class CmsPermissionsManager implements IPermissionsManager
     public function getRoles()
     {
         $result = $this->getActualRoles();
-        $virtualRoles = TUser::getVirtualRoles();
-        $result[] = $virtualRoles[TUser::AuthenticatedRole];
-        $result[] = $virtualRoles[TUser::GuestRole];
+        $virtualRoles = $this->getVirtualRoles();
+        $result[] = $virtualRoles[self::authenticatedRole];
+        $result[] = $virtualRoles[self::guestRole];
 
         return $result;
     }
@@ -99,9 +99,9 @@ class CmsPermissionsManager implements IPermissionsManager
         $result = array();
         foreach ($this->roles as $name => $description) {
             $item = new \stdClass();
-            $item->Key = TStrings::ConvertNameFormat($name,IPermissionsManager::roleKeyFormat);
-            $item->Name = TStrings::ConvertNameFormat($name,IPermissionsManager::roleNameFormat);
-            $item->Description = TStrings::ConvertNameFormat($name,IPermissionsManager::roleDescriptionFormat);
+            $item->Key = TStrings::ConvertNameFormat($name,TPermissionsManager::roleKeyFormat);
+            $item->Name = TStrings::ConvertNameFormat($name,TPermissionsManager::roleNameFormat);
+            $item->Description = TStrings::ConvertNameFormat($name,TPermissionsManager::roleDescriptionFormat);
             $result[] = $item;
         }
         return $result;

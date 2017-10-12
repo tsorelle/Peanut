@@ -10,6 +10,7 @@ namespace Peanut\cms;
 
 
 use Tops\sys\TAbstractUser;
+use Tops\sys\TPermissionsManager;
 
 class CmsUser extends TAbstractUser
 {
@@ -34,13 +35,14 @@ class CmsUser extends TAbstractUser
         }
     }
 
+
     private function loadUserInfo(array $userInfo) {
         $this->id = empty($userInfo['id']) ? false : $userInfo['id'];
-        $this->username = empty($userInfo['name']) ? 'guest' : $userInfo['name'];
+        $this->userName = empty($userInfo['name']) ? 'guest' : $userInfo['name'];
         $this->roles = empty($userInfo['roles']) ? array() : explode(',',$userInfo['roles']);
         $this->email = empty($userInfo['email']) ? '' : $userInfo['email'];
         $this->first = empty($userInfo['first']) ? '' : $userInfo['first'];
-        $this->email = empty($userInfo['last']) ? '' : $userInfo['last'];
+        $this->last = empty($userInfo['last']) ? '' : $userInfo['last'];
     }
 
     private function searchUsers($key,$value)
@@ -54,9 +56,9 @@ class CmsUser extends TAbstractUser
         return array();
     }
 
-    private function getUserInfo($username) {
+    private function getUserInfo($userName) {
         $config = $this->getConfig();
-        return empty($config[$username]) ? array() : $config[$username];
+        return empty($config[$userName]) ? array() : $config[$userName];
     }
 
 
@@ -94,8 +96,8 @@ class CmsUser extends TAbstractUser
      */
     public function loadCurrentUser()
     {
-        $username =  $this->getCurrentUserName();
-        $info = $this->getUserInfo($username);
+        $userName =  $this->getCurrentUserName();
+        $info = $this->getUserInfo($userName);
         $this->loadUserInfo($info);
         return (!empty($info));
     }
@@ -124,7 +126,26 @@ class CmsUser extends TAbstractUser
      */
     public function isAuthenticated()
     {
-        return $this->getCurrentUserName() == $this->username;
+        return $this->getCurrentUserName() == $this->userName;
+    }
+
+    public function isAuthorized($permissionName = '')
+    {
+
+        $result = parent::isAuthorized($permissionName);
+        if (!$result) {
+            $manager = TPermissionsManager::getPermissionManager();
+            $permission = $manager->getPermission($permissionName);
+            $roles = $this->getRoles();
+            foreach ($roles as $role) {
+                if ($permission->check($role)) {
+                    return true;
+                }
+            }
+
+            return $result;
+        }
+        return $result;
     }
 
     /**
@@ -148,7 +169,7 @@ class CmsUser extends TAbstractUser
      */
     public function getUserName()
     {
-        return $this->username;
+        return $this->userName;
     }
 
     /**
@@ -166,7 +187,7 @@ class CmsUser extends TAbstractUser
      */
     public function getUserShortName($defaultToUsername = true)
     {;
-        return $this->username;
+        return $this->userName;
     }
 
     /**
@@ -190,7 +211,7 @@ class CmsUser extends TAbstractUser
      */
     public function isCurrent()
     {
-        return $this->username == $this->getCurrentUserName();
+        return $this->userName == $this->getCurrentUserName();
     }
 
     public function getProfileValue($key)

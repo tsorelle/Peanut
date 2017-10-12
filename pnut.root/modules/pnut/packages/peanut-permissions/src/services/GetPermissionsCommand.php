@@ -9,9 +9,7 @@
 namespace Peanut\PeanutPermissions\services;
 
 use Tops\services\TServiceCommand;
-use Tops\sys\IPermissionsManager;
-use Tops\sys\TObjectContainer;
-use Tops\sys\TUser;
+use Tops\sys\TPermissionsManager;
 
 class GetPermissionsCommand extends TServiceCommand
 {
@@ -30,7 +28,7 @@ class GetPermissionsCommand extends TServiceCommand
      *    }
      *******/
 
-    public static function getPermissionsList(IPermissionsManager $manager,$roles) {
+    public static function getPermissionsList(TPermissionsManager $manager,$roles) {
         $result = array();
         $permissions = $manager->getPermissions();
         $roleIndex = [];
@@ -58,12 +56,9 @@ class GetPermissionsCommand extends TServiceCommand
     protected function run()
     {
         /**
-         * @var $manager IPermissionsManager
+         * @var $manager TPermissionsManager
          */
-        $manager = TObjectContainer::Get('tops.permissions');
-        if ($manager === false) {
-            $this->addErrorMessage('Permision manager not defined.');
-        }
+        $manager = TPermissionsManager::getPermissionManager();
         $result = new \stdClass();
         $result->roles = $manager->getRoles();
         $result->permissions = self::getPermissionsList($manager,$result->roles);

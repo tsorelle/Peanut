@@ -10,8 +10,7 @@ namespace Peanut\PeanutPermissions\services;
 
 
 use Tops\services\TServiceCommand;
-use Tops\sys\IPermissionsManager;
-use Tops\sys\TObjectContainer;
+use Tops\sys\TPermissionsManager;
 
 class UpdatePermissionCommand extends TServiceCommand
 {
@@ -36,9 +35,9 @@ class UpdatePermissionCommand extends TServiceCommand
     {
         $request = $this->getRequest();
         /**
-         * @var $manager IPermissionsManager
+         * @var $manager TPermissionsManager
          */
-        $manager = TObjectContainer::Get('tops.permissions');
+        $manager = TPermissionsManager::getPermissionManager();
         $permission = $manager->getPermission($request->permissionName);
         $roleKeys = [];
         foreach($request->roles as $role) {

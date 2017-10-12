@@ -7,7 +7,9 @@
  */
 namespace Peanut\testing;
 
-class FakeUser implements \Tops\sys\IUser
+use Tops\sys\TAbstractUser;
+
+class FakeUser extends TAbstractUser
 {
     private $authenticated;
     private $roles;
@@ -162,5 +164,37 @@ class FakeUser implements \Tops\sys\IUser
     public function setProfileValue($key, $value)
     {
         // TODO: Implement setProfileValue() method.
+    }
+
+    /**
+     * @param bool $defaultToUsername
+     * @return string
+     */
+    public function getShortName($defaultToUsername = true)
+    {
+        // TODO: Implement getShortName() method.
+    }
+
+    public function getDisplayName($defaultToUsername = true)
+    {
+        // TODO: Implement getDisplayName() method.
+    }
+
+    public function getUserPicture($size = 0, array $classes = [], array $attributes = [])
+    {
+        // TODO: Implement getUserPicture() method.
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRoles()
+    {
+        // TODO: Implement getRoles() method.
+    }
+
+    protected function loadProfile()
+    {
+        // TODO: Implement loadProfile() method.
     }
 }
