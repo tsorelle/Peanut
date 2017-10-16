@@ -99,9 +99,9 @@ class CmsPermissionsManager extends TPermissionsManager
         $result = array();
         foreach ($this->roles as $name => $description) {
             $item = new \stdClass();
-            $item->Key = TStrings::ConvertNameFormat($name,TPermissionsManager::roleKeyFormat);
-            $item->Name = TStrings::ConvertNameFormat($name,TPermissionsManager::roleNameFormat);
-            $item->Description = TStrings::ConvertNameFormat($name,TPermissionsManager::roleDescriptionFormat);
+            $item->Key = $this->formatRoleKey($name);
+            $item->Name = $this->formatRoleName($name);
+            $item->Description = $this->formatRoleDescription($name);
             $result[] = $item;
         }
         return $result;
