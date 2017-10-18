@@ -155,4 +155,20 @@ class CmsMailboxManager implements IMailboxManager
             $_SESSION['mailbox-manager'] = $this->config;
         }
     }
+
+    /**
+     * @param $id
+     */
+    public function remove($mailboxCode)
+    {
+        // TODO: Implement remove() method.
+    }
+
+    /**
+     * @param $mailboxCode string
+     */
+    public function restore($mailboxCode)
+    {
+        // TODO: Implement restore() method.
+    }
 }
