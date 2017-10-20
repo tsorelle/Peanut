@@ -2,7 +2,7 @@
  * Created by Terry on 4/28/2017.
  */
 ///<reference path='../../typings/jquery/jquery.d.ts' />
-/// <reference path='./peanut.d.ts' />
+/// <reference path='../core/peanut.d.ts' />
 
 namespace Peanut {
     export class KeyValueDTO implements INameValuePair {
