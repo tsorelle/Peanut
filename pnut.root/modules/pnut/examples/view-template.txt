@@ -1,0 +1,8 @@
+<h2>Page Title</h2>
+
+<div id="viewname-view-container" class="row" style="display: none">
+    <div class="col-md-12">
+        <!-- view model bindings -->
+        <h1 data-bind="text:test"></h1>
+    </div>
+</div>
