@@ -9,9 +9,11 @@
 namespace Peanut\sys;
 
 
+use Tops\services\TServiceCommand;
 use Tops\sys\IUser;
 use Tops\sys\TConfiguration;
 use Tops\sys\TPath;
+use Tops\sys\TStrings;
 use Tops\sys\TUser;
 
 class ViewModelManager
@@ -121,14 +123,8 @@ class ViewModelManager
                 TConfiguration::getValue('page-title','pages',$pathAlias) :
                 $item['page-title'];
 
-            $result->permission = empty($item['permission']) ? '' : $item['permission'];
-            $result->roles = array();
-            if (!empty($item['roles'])) {
-                $roles = explode(',',$item['roles']);
-                foreach ($roles as $role) {
-                    $result->roles[] = trim($role);
-                }
-            }
+            $result->permissions = TStrings::ListToArray(@$item['permissions']);
+            $result->roles = TStrings::ListToArray(@$item['roles']);
 
             self::$info = $result;
             return $result;
@@ -211,25 +207,27 @@ class ViewModelManager
             return true;
         }
 
-        if (!empty($viewModelInfo->permission)) {
-            return $user->isAuthorized($viewModelInfo->permission);
+        if (!empty($viewModelInfo->permissions)) {
+            foreach ($viewModelInfo->permissions as $permission) {
+                if ($user->isAuthorized($permission)) {
+                    return true;
+                }
+            }
         }
 
-        if (empty($viewModelInfo->roles)) {
-            return true;
-        }
-
-        foreach ($viewModelInfo->roles as $role) {
-            switch($role) {
-                case 'authenticated' :
-                    return $user->isAuthenticated();
-                case 'admin' :
-                    return false;
-                default :
-                    if ($user->isMemberOf($role)) {
+        if (!empty($viewModelInfo->roles)) {
+            foreach ($viewModelInfo->roles as $role) {
+                switch ($role) {
+                    case 'guest' :
                         return true;
-                    }
-                    break;
+                    case 'authenticated' :
+                        return $user->isAuthenticated();
+                    default :
+                        if ($user->isMemberOf($role)) {
+                            return true;
+                        }
+                        break;
+                }
             }
         }
         return false;
