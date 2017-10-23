@@ -1,12 +1,3 @@
-/**
- * Created by Terry on 7/4/2017.
- */
-/****
- * Created by Terry on 5/3/2017.
- */
-/// <reference path="../../typings/custom/head.load.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path='Peanut.d.ts' />
 var Peanut;
 (function (Peanut) {
     var peanutVersionNumber = '0.2';
@@ -102,6 +93,7 @@ var Peanut;
                     Peanut.Config.values.vmNamespace = data.vmNamespace;
                     Peanut.Config.values.loggingMode = data.loggingMode;
                     Peanut.Config.values.uiExtension = data.uiExtension;
+                    Peanut.Config.values.libraries = data.libraries;
                     if (data.loggingMode == 'verbose') {
                         console.log('Namespace ' + Peanut.Config.values.vmNamespace);
                     }
@@ -170,4 +162,5 @@ var Peanut;
         return PeanutLoader;
     }());
     Peanut.PeanutLoader = PeanutLoader;
-})(Peanut || (Peanut = {})); // end namespace
+})(Peanut || (Peanut = {}));
+//# sourceMappingURL=PeanutLoader.js.map

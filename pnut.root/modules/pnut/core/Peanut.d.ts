@@ -84,6 +84,7 @@ declare namespace Peanut {
         vmNamespace:        string;
         loggingMode:    string;
         uiExtension : string;
+        libraries : string[];
     }
 
     export interface IServiceMessage {

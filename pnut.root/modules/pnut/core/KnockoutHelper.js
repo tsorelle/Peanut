@@ -268,11 +268,24 @@ var Peanut;
             Peanut.PeanutLoader.getConfig(function (config) {
                 var params = [];
                 for (var i = 0; i < resourceList.length; i++) {
-                    var path = me.expandFileName(resourceList[i], config.mvvmPath);
+                    var path = me.getLibrary(resourceList[i], config);
+                    if (path === false) {
+                        path = me.expandFileName(resourceList[i], config.mvvmPath);
+                    }
                     params.push(path);
                 }
                 Peanut.PeanutLoader.load(params, successFunction);
             });
+        };
+        KnockoutHelper.prototype.getLibrary = function (name, config) {
+            if (name && name.substr(0, 4) == 'lib:') {
+                var key = name.substr(4);
+                if (key in config.libraries) {
+                    return config.libraries[key];
+                }
+                console.error('Library "' + key + '" not in settings.ini');
+            }
+            return false;
         };
         KnockoutHelper.prototype.getHtmlTemplate = function (name, successFunction) {
             var me = this;

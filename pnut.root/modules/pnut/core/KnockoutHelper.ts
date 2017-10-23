@@ -166,12 +166,28 @@ namespace Peanut {
             PeanutLoader.getConfig((config: IPeanutConfig) => {
                 let params = [];
                 for (let i = 0; i < resourceList.length; i++) {
-                    let path = me.expandFileName(resourceList[i],config.mvvmPath);
+
+                    let path = me.getLibrary(resourceList[i],config);
+                    if (path === false) {
+                        path = me.expandFileName(resourceList[i],config.mvvmPath);
+                    }
                     params.push(path);
                 }
                 PeanutLoader.load(params, successFunction);
             });
         }
+
+        private getLibrary (name: string, config: IPeanutConfig) {
+            if (name && name.substr(0,4) == 'lib:') {
+                let key = name.substr(4);
+                if (key in config.libraries) {
+                    return config.libraries[key];
+                }
+                console.error('Library "' + key + '" not in settings.ini')
+            }
+            return false;
+        }
+
 
 
         public loadViewModel = (vmName : string, final : (viewModel: IViewModel) => void) => {

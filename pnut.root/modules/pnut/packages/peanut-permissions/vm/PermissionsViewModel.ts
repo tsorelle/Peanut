@@ -43,7 +43,8 @@ namespace PeanutPermissions {
             let me = this;
             console.log('VM Init');
             me.application.loadResources([
-                'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'
+                'lib:lodash'
+                // 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'
             ], () => {
                 me.getPermissions(() => {
                     me.bindDefaultSection();
@@ -70,8 +71,8 @@ namespace PeanutPermissions {
                     }
                 }
             ).fail(function () {
-                me.application.hideWaiter();
                 let trace = me.services.getErrorInformation();
+                me.application.hideWaiter();
             });
         };
 

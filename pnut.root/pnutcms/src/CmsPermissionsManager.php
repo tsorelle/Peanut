@@ -115,7 +115,7 @@ class CmsPermissionsManager extends TPermissionsManager
         return $this->permissions;
     }
 
-    public function addPermission($name, $description)
+    public function addPermission($name, $description=null)
     {
         $permission = new TPermission();
         $permission->setDescription($description);

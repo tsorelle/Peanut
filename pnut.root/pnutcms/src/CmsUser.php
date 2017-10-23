@@ -10,6 +10,7 @@ namespace Peanut\cms;
 
 
 use Tops\sys\TAbstractUser;
+use Tops\sys\TUser;
 use Tops\sys\TPermissionsManager;
 
 class CmsUser extends TAbstractUser
@@ -17,8 +18,7 @@ class CmsUser extends TAbstractUser
 
     private $roles = array();
     private $email = '';
-    private $first = '';
-    private $last = '';
+    private $displayname = '';
 
     private $config;
     private function getConfig() {
@@ -41,8 +41,7 @@ class CmsUser extends TAbstractUser
         $this->userName = empty($userInfo['name']) ? 'guest' : $userInfo['name'];
         $this->roles = empty($userInfo['roles']) ? array() : explode(',',$userInfo['roles']);
         $this->email = empty($userInfo['email']) ? '' : $userInfo['email'];
-        $this->first = empty($userInfo['first']) ? '' : $userInfo['first'];
-        $this->last = empty($userInfo['last']) ? '' : $userInfo['last'];
+        $this->displayname = empty($userInfo['displayname']) ? '' : $userInfo['displayname'];
     }
 
     private function searchUsers($key,$value)
@@ -108,9 +107,7 @@ class CmsUser extends TAbstractUser
      */
     public function isMemberOf($roleName)
     {
-        return (
-            $this->isAdmin() || in_array($roleName,$this->roles)
-        );
+        return parent::isMemberOf($roleName) || in_array($roleName,$this->roles);
     }
 
     /**
@@ -126,7 +123,7 @@ class CmsUser extends TAbstractUser
      */
     public function isAuthenticated()
     {
-        return $this->getCurrentUserName() == $this->userName;
+        return $this->userName != 'guest';
     }
 
     public function isAuthorized($permissionName = '')
@@ -149,61 +146,11 @@ class CmsUser extends TAbstractUser
     }
 
     /**
-     * @return string
-     */
-    public function getFirstName()
-    {
-        return $this->first;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLastName()
-    {
-        return $this->last;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserName()
-    {
-        return $this->userName;
-    }
-
-    /**
-     * @param bool $defaultToUsername
-     * @return string
-     */
-    public function getFullName($defaultToUsername = true)
-    {
-        return "$this->first $this->last";
-    }
-
-    /**
-     * @param bool $defaultToUsername
-     * @return string
-     */
-    public function getUserShortName($defaultToUsername = true)
-    {;
-        return $this->userName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
      * @return bool
      */
     public function isAdmin()
     {
-        return in_array('admin',$this->roles);
+        return in_array(TPermissionsManager::adminRole,$this->roles);
     }
 
     /**
@@ -212,17 +159,6 @@ class CmsUser extends TAbstractUser
     public function isCurrent()
     {
         return $this->userName == $this->getCurrentUserName();
-    }
-
-    public function getProfileValue($key)
-    {
-        // not implemented
-        return false;
-    }
-
-    public function setProfileValue($key, $value)
-    {
-        // not implemented
     }
 
     /**
@@ -236,11 +172,6 @@ class CmsUser extends TAbstractUser
         return (!empty($info));
     }
 
-    protected function test()
-    {
-        return true;
-    }
-
     /**
      * @return string[]
      */
@@ -251,7 +182,11 @@ class CmsUser extends TAbstractUser
 
     protected function loadProfile()
     {
-        // not implemented
-        return false;
+        $this->profile = [
+             TUser::profileKeyEmail => $this->email,
+             TUser::profileKeyDisplayName => $this->displayname,
+             TUser::profileKeyShortName => $this->displayname,
+             TUser::profileKeyFullName => $this->displayname
+        ];
     }
 }

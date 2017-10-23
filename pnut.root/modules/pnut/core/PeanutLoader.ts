@@ -105,6 +105,8 @@ namespace Peanut {
                     Peanut.Config.values.vmNamespace = data.vmNamespace;
                     Peanut.Config.values.loggingMode = data.loggingMode;
                     Peanut.Config.values.uiExtension = data.uiExtension;
+                    Peanut.Config.values.libraries = data.libraries;
+
                     if (data.loggingMode == 'verbose') {
                         console.log('Namespace ' + Peanut.Config.values.vmNamespace);
                     }

@@ -99,6 +99,9 @@ class Bootstrap
 
         $settings = $ini['peanut'];
         $result = new \stdClass();
+
+        $result->libraries = empty($ini['libraries']) ? array() : $ini['libraries'];
+
         $modulePath = (empty($settings['modulePath']) ? 'modules' : $settings['modulePath']);
         $peanutRoot = (empty($settings['peanutRootPath']) ? "$modulePath/pnut" : $settings['peanutRootPath']);
         $peanutPath = $root . $peanutRoot;
