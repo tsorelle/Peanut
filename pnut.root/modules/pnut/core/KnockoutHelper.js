@@ -272,7 +272,9 @@ var Peanut;
                     if (path === false) {
                         path = me.expandFileName(resourceList[i], config.mvvmPath);
                     }
-                    params.push(path);
+                    if (path !== 'preloaded') {
+                        params.push(path);
+                    }
                 }
                 Peanut.PeanutLoader.load(params, successFunction);
             });
