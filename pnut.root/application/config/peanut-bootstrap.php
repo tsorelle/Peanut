@@ -100,7 +100,20 @@ class Bootstrap
         $settings = $ini['peanut'];
         $result = new \stdClass();
 
-        $result->libraries = empty($ini['libraries']) ? array() : $ini['libraries'];
+        $libDefaults = array(
+            'lodash' => 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'
+        );
+        if (empty($ini['libraries'])) {
+            $result->libraries = $libDefaults;
+        }
+        else {
+            $result->libraries = $ini['libraries'];
+            foreach ($libDefaults as $key => $value) {
+                if (!array_key_exists($key,$result->libraries)) {
+                    $result->libraries[$key] = $value;
+                }
+            }
+        }
 
         $modulePath = (empty($settings['modulePath']) ? 'modules' : $settings['modulePath']);
         $peanutRoot = (empty($settings['peanutRootPath']) ? "$modulePath/pnut" : $settings['peanutRootPath']);
