@@ -15,6 +15,11 @@ use Tops\sys\TPermissionsManager;
 class UpdatePermissionCommand extends TServiceCommand
 {
 
+    public function __construct()
+    {
+        $this->addAuthorization(TPermissionsManager::managePermissionsPermissionName);
+    }
+
     /*******
      * Service Contract
      *	 request:

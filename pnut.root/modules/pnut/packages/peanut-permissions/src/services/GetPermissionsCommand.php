@@ -13,6 +13,12 @@ use Tops\sys\TPermissionsManager;
 
 class GetPermissionsCommand extends TServiceCommand
 {
+    public function __construct()
+    {
+        $this->addAuthorization(TPermissionsManager::managePermissionsPermissionName);
+    }
+
+
     /*******
      * Service Contract
      *	 request: (none)
