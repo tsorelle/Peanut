@@ -44,7 +44,6 @@ namespace PeanutPermissions {
             console.log('VM Init');
             me.application.loadResources([
                 'lib:lodash'
-                // 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'
             ], () => {
                 me.getPermissions(() => {
                     me.bindDefaultSection();

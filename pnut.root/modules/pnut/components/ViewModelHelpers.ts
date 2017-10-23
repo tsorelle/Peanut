@@ -21,41 +21,6 @@ namespace Peanut {
     }
 
 
-    export class HttpRequestVars {
-        private static instance : HttpRequestVars;
-        private requestvars = [];
-
-        constructor() {
-            let me = this;
-            // let href = window.location.href;
-            let queryString = window.location.search;
-            let params = queryString.slice(queryString.indexOf('?') + 1).split('&');
-            for (let i = 0; i < params.length;i++) {
-                let parts = params[i].split('=');
-                let key = parts[0];
-                me.requestvars.push(key);
-                me.requestvars[key] = parts[1];
-            }
-        }
-
-        public getValue(key: string) {
-            let me = this;
-            let value = me.requestvars[key];
-            if (value) {
-                return value;
-            }
-            return null;
-        }
-
-        public static Get(key : string, defaultValue : any = null) {
-            if (!HttpRequestVars.instance) {
-                HttpRequestVars.instance = new HttpRequestVars();
-            }
-            let result = HttpRequestVars.instance.getValue(key);
-            return (result === null) ? defaultValue : result;
-        }
-    }
-
     export class Helper {
         /*
          * Utility routines

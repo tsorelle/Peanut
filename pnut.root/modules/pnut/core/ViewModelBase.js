@@ -37,9 +37,45 @@ var Peanut;
                     _this.application.bindSection(section, _this);
                 });
             };
+            this.getRequestVar = function (key, defaultValue) {
+                if (defaultValue === void 0) { defaultValue = null; }
+                return HttpRequestVars.Get(key, defaultValue);
+            };
         }
         return ViewModelBase;
     }());
     Peanut.ViewModelBase = ViewModelBase;
+    var HttpRequestVars = (function () {
+        function HttpRequestVars() {
+            this.requestvars = [];
+            var me = this;
+            var queryString = window.location.search;
+            var params = queryString.slice(queryString.indexOf('?') + 1).split('&');
+            for (var i = 0; i < params.length; i++) {
+                var parts = params[i].split('=');
+                var key = parts[0];
+                me.requestvars.push(key);
+                me.requestvars[key] = parts[1];
+            }
+        }
+        HttpRequestVars.prototype.getValue = function (key) {
+            var me = this;
+            var value = me.requestvars[key];
+            if (value) {
+                return value;
+            }
+            return null;
+        };
+        HttpRequestVars.Get = function (key, defaultValue) {
+            if (defaultValue === void 0) { defaultValue = null; }
+            if (!HttpRequestVars.instance) {
+                HttpRequestVars.instance = new HttpRequestVars();
+            }
+            var result = HttpRequestVars.instance.getValue(key);
+            return (result === null) ? defaultValue : result;
+        };
+        return HttpRequestVars;
+    }());
+    Peanut.HttpRequestVars = HttpRequestVars;
 })(Peanut || (Peanut = {}));
 //# sourceMappingURL=ViewModelBase.js.map
