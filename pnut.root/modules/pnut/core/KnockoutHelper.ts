@@ -178,8 +178,8 @@ namespace Peanut {
         }
 
         private getLibrary (name: string, config: IPeanutConfig) {
-            if (name && name.substr(0,4) == 'lib:') {
-                let key = name.substr(4);
+            if (name && name.substr(0,5) == '@lib:') {
+                let key = name.substr(5);
                 if (key in config.libraries) {
                     return config.libraries[key];
                 }

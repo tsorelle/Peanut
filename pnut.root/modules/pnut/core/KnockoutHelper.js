@@ -278,8 +278,8 @@ var Peanut;
             });
         };
         KnockoutHelper.prototype.getLibrary = function (name, config) {
-            if (name && name.substr(0, 4) == 'lib:') {
-                var key = name.substr(4);
+            if (name && name.substr(0, 5) == '@lib:') {
+                var key = name.substr(5);
                 if (key in config.libraries) {
                     return config.libraries[key];
                 }

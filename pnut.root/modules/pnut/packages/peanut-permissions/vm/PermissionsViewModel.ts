@@ -43,7 +43,7 @@ namespace PeanutPermissions {
             let me = this;
             console.log('VM Init');
             me.application.loadResources([
-                'lib:lodash'
+                '@lib:lodash'
             ], () => {
                 me.getPermissions(() => {
                     me.bindDefaultSection();
