@@ -1,0 +1,18 @@
+<div data-bind="visible:failed" style="color:red;font-weight: bold">
+     Sorry, too many guesses.
+</div>
+<div class="form-group"  data-bind="visible:showInputs">
+    <label class="control-label" data-bind="visible:showInputs">Help us control spam by answering this question: </label>
+    <div style="color:red;font-weight: bold" data-bind="visible: answerError, text: answerError"></div>
+    <div data-bind="text: questionText"></div>
+</div>
+<div class="form-group" data-bind="css: {'has-error': answerError}">
+    <input type="text" class="form-control" id="answer" data-bind="visible:showInputs,textInput: answerInput" />
+</div>
+<div data-bind="visible:showButton">
+    <button type="button" class="btn btn-primary" data-bind="click: onConfirmClick">
+        <span data-bind="text:buttonLabel"></span>
+        <span  style="margin-left: 10px" data-bind="css: glyphicon"></span>
+    </button>
+    <a style="margin-left: 20px" href="#" data-bind="click:cancelClick,visible:showCancel">Cancel</a>
+</div>

@@ -13,6 +13,8 @@
     "pnut.root/application/mvvm/vm/**/*",
     "pnut.root/application/tests/mvvm/vm/**/*",
     "pnut.root/application/mvvm/components/**/*",
-    "pnut.root/application/mvvm/tests/components/**/*"
+    "pnut.root/application/mvvm/tests/components/**/*",
+    "pnut.root/application/mvvm/tests/vm/**/*"
+
   ]
 }

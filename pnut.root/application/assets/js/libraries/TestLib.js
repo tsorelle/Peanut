@@ -1,6 +1,3 @@
-/**
- * Created by Terry on 6/5/2017.
- */
 var Testing;
 (function (Testing) {
     var Test = (function () {
@@ -13,3 +10,4 @@ var Testing;
     }());
     Testing.Test = Test;
 })(Testing || (Testing = {}));
+//# sourceMappingURL=TestLib.js.map

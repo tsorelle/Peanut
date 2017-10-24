@@ -1,0 +1,30 @@
+Documentation for modal-confirm component
+ Example markup:
+
+  <riddler-captcha params="confirmClick:onCaptchaConfirm, topic:'presidents', buttonLabel:'Send message', glyphicon:'envelope', cancelClick: onCaptchaCancel"></riddler-captcha>
+
+    confirmClick is required, the rest are optional
+    The confirmClick and cancelClick must refer to a parameter-less function on the main view.
+
+    Text parameters (topic, buttonLabel) can be either a string (in quotes) or an observable (no quotes)
+
+    Note that the component must be placed inside a <form> </form> element
+
+ Example event handling
+   onCaptchaConfirm = () => {
+        // we can assume a question was answered correctly
+        // proceed with form submission
+    };
+
+ Example initialization
+
+  init(applicationPath: string, successFunction?: () => void) {
+     me.application.initialize(applicationPath,
+         function() {
+             me.application.loadComponent('riddler-captcha', successFunction);
+         }
+     );
+  }
+
+  Requirements:
+    bootstrap css.
