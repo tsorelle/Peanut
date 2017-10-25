@@ -1,10 +1,13 @@
 declare namespace Peanut {
-    export interface IPeanutClient {
-        startVM(vmName: string, final?: (viewModel: IViewModel) => void);
+    export interface IServiceClient {
         showServiceMessages(messages:IServiceMessage[]): void;
-        initialize(successFunction?:() => void);
         hideServiceMessages(): void;
         showError(errorMessage?:string): void;
+    }
+
+    export interface IPeanutClient extends IServiceClient{
+        startVM(vmName: string, final?: (viewModel: IViewModel) => void);
+        initialize(successFunction?:() => void);
         showMessage(messageText?:string): void;
         showWarning(messageText?:string): void;
         showWaiter(message?:string) : void;
@@ -97,6 +100,7 @@ declare namespace Peanut {
         Result: number;
         Value: any;
         Data: any;
+
     }
 
     export interface INameValuePair {

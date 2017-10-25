@@ -16,7 +16,8 @@ namespace Peanut {
         init(successFunction?: () => void) {
             let me = this;
             console.log('TestCaptcha Init');
-            me.application.registerComponents('@pnut/riddler-captcha', () => {
+            // me.application.registerComponents('@pnut/riddler-captcha', () => {
+            me.application.registerComponents('@pkg/peanut-riddler/riddler-captcha', () => {
                     me.bindDefaultSection();
                     successFunction();
                 });

@@ -91,6 +91,9 @@ var Peanut;
             var me = this;
             me.securityToken = me.readSecurityToken();
         }
+        ServiceBroker.create = function (client) {
+            return new ServiceBroker(client);
+        };
         ServiceBroker.getInstance = function (application) {
             if (ServiceBroker.instance == null) {
                 ServiceBroker.instance = new ServiceBroker(application);

@@ -21,13 +21,16 @@ namespace Peanut {
 
     export class ServiceBroker {
         private static instance: ServiceBroker = null;
-        public static getInstance(application: IPeanutClient) {
+        public static create(client: IServiceClient) {
+            return new ServiceBroker(client);
+        }
+        public static getInstance(application: IServiceClient) {
             if (ServiceBroker.instance == null) {
                 ServiceBroker.instance = new ServiceBroker(application);
             }
             return ServiceBroker.instance;
         }
-        constructor(public clientApp: IPeanutClient) {
+        constructor(public clientApp: IServiceClient) {
             let me = this;
             me.securityToken = me.readSecurityToken();
         }
