@@ -206,8 +206,9 @@ class ViewModelManager
         if ($user->isAdmin()) {
             return true;
         }
-
+        $default = true;
         if (!empty($viewModelInfo->permissions)) {
+            $default = false;
             foreach ($viewModelInfo->permissions as $permission) {
                 if ($user->isAuthorized($permission)) {
                     return true;
@@ -216,6 +217,7 @@ class ViewModelManager
         }
 
         if (!empty($viewModelInfo->roles)) {
+            $default = false;
             foreach ($viewModelInfo->roles as $role) {
                 switch ($role) {
                     case 'guest' :
@@ -230,7 +232,7 @@ class ViewModelManager
                 }
             }
         }
-        return false;
+        return $default;
     }
 
     public static function authorize(ViewModelInfo $settings) {
