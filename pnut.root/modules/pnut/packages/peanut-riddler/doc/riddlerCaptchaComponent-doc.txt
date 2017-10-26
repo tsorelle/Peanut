@@ -1,30 +1,89 @@
-Documentation for modal-confirm component
+Documentation for riddler-capcha component
+============================================
+
+ Requirements:
+ ---------------
+    Peanut core libraries
+    bootstrap css.
+    Font Awesome fonts are optional
+
  Example markup:
+ --------------
+         <form>
+            <riddler-captcha params="confirmClick:onCaptchaConfirm,topic:'quakers', buttonLabel:'Send message', cancelClick: onCaptchaCancel, icon:'paper-plane-o'"></riddler-captcha>
+        </form>
 
-  <riddler-captcha params="confirmClick:onCaptchaConfirm, topic:'presidents', buttonLabel:'Send message', glyphicon:'envelope', cancelClick: onCaptchaCancel"></riddler-captcha>
+    Notes:
+        The component must be placed inside a <form> </form> element
+        The questions are displayed and required only for anonymous users
+        The 'confirmClick' parameter is required. All others are optional.
+        Text parameters (topic, buttonLabel) can be either a string (in quotes) or an observable (no quotes)
 
-    confirmClick is required, the rest are optional
-    The confirmClick and cancelClick must refer to a parameter-less function on the main view.
-
-    Text parameters (topic, buttonLabel) can be either a string (in quotes) or an observable (no quotes)
-
-    Note that the component must be placed inside a <form> </form> element
-
- Example event handling
-   onCaptchaConfirm = () => {
-        // we can assume a question was answered correctly
-        // proceed with form submission
-    };
+    Parameters:
+        - confirmClick: REQUIRED refers to a parameter-less function.
+            Example event handling:
+               onCaptchaConfirm = () => {
+                    // we can assume a question was answered correctly or not required
+                    // proceed with form submission for whatever task follows
+                };
+        - cancelClick: refers to a parameterless function for cancel actions.
+        - topic: indicates which set of questions to use. See 'Topic Files' below. The 'presidents' topic is default.
+        - buttonLabel: text displayed on button
+        - icon: indicates Font Awesome icon for button
+        - glyphicon: indicates the name a Glyphicon icon for button.
+                You can have only one icon type. If 'icon' is used 'glyphicon is ignored)
+                Include only the icon name followed by additional Font Awesome classes (e.g. fa-2x) as needed.
+        - spinner: Fontawsome icon to display next to wait message.
+                if 'spinner:none' no icon will be displayed.
+                The defualt is a Font Awesome spinner icon 'fa fa-spinner fa-pulse'
+                Full css class list is requird
 
  Example initialization
+ ----------------------
+        init(successFunction?: () => void) {
+            let me = this;
+            me.application.loadResources('@lib:fontawesome', () => { // required if font awesome icons are used.
+                me.application.registerComponents(['@pkg/peanut-riddler/riddler-captcha'], () => {
+                    me.bindDefaultSection();
+                    successFunction();
+                });
+            });
+        }
 
-  init(applicationPath: string, successFunction?: () => void) {
-     me.application.initialize(applicationPath,
-         function() {
-             me.application.loadComponent('riddler-captcha', successFunction);
-         }
-     );
-  }
+ Configuration
+ -------------
+ If Font Awesome is used, and not already included by the CMS (as in Concrete5) the Font awesome JS file location must
+ be included in the [libraries] section of application/config/settings.ini
 
-  Requirements:
-    bootstrap css.
+    [libraries]
+    fontawesome='https://use.fontawesome.com/3914690617.js'
+
+ Topic Files
+ -----------
+    Topic files are ini files containing the questions and answers.
+    Two topic files are provided in packages/peanut-riddler/data
+        presidents.ini (used by default)
+        quakers.ini
+
+    These files may be overriden and additional topic files can be provided by placing them in:
+        application/data/riddler
+
+    A topic file contains a [questions] section with entries in the form of key=question.
+    Answers are listed in sections were the section name takes the form [answers-key] where
+    key corresponds to the key in the question entry. A match on any answer in the set returns a positive.
+    The submitted answer is converted to lower case, periods are replaced with spaces and extra spaces are remove.
+        e.g.  'U.S.   Grant' =>  'u s grant'
+
+    A simplified example:
+        [questions]
+        1='Who is buried in Grants tomb?'
+        2='Who was the first U.S. president?'
+
+        [answers-1]
+        1='grant',
+        2='ulysses grant',
+        3='u s grant'
+
+        [answers-2]
+        1='washington'
+        2='george washington'

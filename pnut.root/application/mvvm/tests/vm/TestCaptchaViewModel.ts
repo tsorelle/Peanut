@@ -17,7 +17,7 @@ namespace Peanut {
             let me = this;
             // let fa = 'https://use.fontawesome.com/3914690617.js';
             console.log('TestCaptcha Init');
-            me.application.loadResources('@lib:fontawesome', () => {
+            me.application.loadResources('@lib:fontawesome', () => { // required if font awesome icons are used.
                 me.application.registerComponents(['@pkg/peanut-riddler/riddler-captcha'], () => {
                     me.bindDefaultSection();
                     successFunction();
