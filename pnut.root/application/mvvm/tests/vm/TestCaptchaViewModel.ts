@@ -15,12 +15,14 @@ namespace Peanut {
         test =  ko.observable('I am bound');
         init(successFunction?: () => void) {
             let me = this;
+            // let fa = 'https://use.fontawesome.com/3914690617.js';
             console.log('TestCaptcha Init');
-            // me.application.registerComponents('@pnut/riddler-captcha', () => {
-            me.application.registerComponents('@pkg/peanut-riddler/riddler-captcha', () => {
+            me.application.loadResources('@lib:fontawesome', () => {
+                me.application.registerComponents(['@pkg/peanut-riddler/riddler-captcha'], () => {
                     me.bindDefaultSection();
                     successFunction();
                 });
+            });
         }
 
         onCaptchaConfirm = () => {

@@ -9,13 +9,13 @@
 <div class="form-group" data-bind="css: {'has-error': answerError}">
     <input type="text" class="form-control" id="answer" data-bind="visible:showInputs,textInput: answerInput" />
 </div>
-<div data-bind="visible:waitmessage">
-    <span data-bind="text: waitmessage"></span>. . .
+<div style="margin-bottom: 6px" data-bind="visible:waitmessage">
+    <span style="margin-right: 10px" data-bind="visible:spinnericon,css:spinnericon"></span><span data-bind="text: waitmessage"></span>. . .
 </div>
 <div data-bind="visible:showButton">
     <button type="button" class="btn btn-primary" data-bind="click: onConfirmClick">
         <span data-bind="text:buttonLabel"></span>
-        <span  style="margin-left: 10px" data-bind="css: glyphicon"></span>
+        <span  style="margin-left: 10px" data-bind="css: buttonicon,visible:buttonicon"></span>
     </button>
     <a style="margin-left: 20px" href="#" data-bind="click:cancelClick,visible:showCancel">Cancel</a>
 </div>

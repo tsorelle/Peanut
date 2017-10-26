@@ -28,8 +28,9 @@ namespace PeanutRiddler {
         public questionText = ko.observable('');
         public answerInput = ko.observable('');
         public answerError = ko.observable('');
-        public glyphicon = ko.observable('');
+        public buttonicon = ko.observable('');
         public buttonLabel = ko.observable('Continue');
+        public spinnericon = ko.observable('fa fa-spinner fa-pulse');
 
         // event handlers
         public confirmClick : ()=> void;
@@ -39,9 +40,56 @@ namespace PeanutRiddler {
         private questions : IRiddlerQuestion[] = [];
         private services: Peanut.ServiceBroker;
         private currentQuestionIndex : number = -1;
-        private retries : number;
+        private retries : number = 0;
         private canCancel = false;
         private topic = '';
+
+        constructor(params : any) {
+
+            if (!params) {
+                throw('Params not defined in ridlerCaptchaComponent');
+            }
+            if (!params.confirmClick) {
+                throw('Confirm click handler must be specified.')
+            }
+            let me = this;
+
+            me.services = Peanut.ServiceBroker.create(me);
+
+            me.confirmClick = params.confirmClick;
+            me.topic = 'presidents'; // 'quakers';
+            if (params.topic) {
+                me.topic = params.topic;
+            }
+            if (params.cancelClick) {
+                me.canCancel = true;
+                me.cancelClick = params.cancelClick;
+                me.showCancel(true);
+            }
+            else {
+                me.canCancel = false;
+                me.cancelClick = () => {};
+            }
+            if (params.buttonLabel) {
+                me.buttonLabel(params.buttonLabel);
+            }
+            if (params.icon) {
+                me.buttonicon("fa fa-" + params.icon)
+            }
+            else if (params.glyphicon) {
+                me.buttonicon("glyphicon glyphicon-"+params.glyphicon);
+            }
+            if (params.spinner) {
+                if (params.spinner = 'none') {
+                    me.spinnericon('');
+                }
+                else {
+                    me.spinnericon(params.spinner);
+                }
+            }
+
+            me.getQuestions();
+        }
 
         private setWaitState = (message) => {
             let me = this;
@@ -66,12 +114,17 @@ namespace PeanutRiddler {
             me.showCancel(me.canCancel);
         };
 
-        private setErrorState = (response: any = null) => {
+        private setFailedState = () => {
             let me = this;
             me.waitmessage('');
             me.showInputs(false);
             me.showButton(false);
             me.showCancel(false);
+        };
+
+        private setErrorState = (response: any = null) => {
+            let me = this;
+            me.setFailedState();
             me.showSystemError(true);
             let debugMessage = null;
             if (response === null) {
@@ -85,41 +138,6 @@ namespace PeanutRiddler {
             }
 
         };
-
-        constructor(params : any) {
-
-            if (!params) {
-                throw('Params not defined in ridlerCaptchaComponent');
-            }
-            if (!params.confirmClick) {
-                throw('Confirm click handler must be specifies.')
-            }
-            let me = this;
-
-            me.services = Peanut.ServiceBroker.create(me);
-
-            me.confirmClick = params.confirmClick;
-            me.topic = 'presidents'; // 'quakers';
-            if (params.topic) {
-                me.topic = params.topic;
-            }
-            if (params.cancelClick) {
-                me.canCancel = true;
-                me.cancelClick = params.cancelClick;
-                me.showCancel(true);
-            }
-            else {
-                me.canCancel = false;
-                me.cancelClick = () => {};
-            }
-            if (params.buttonLabel) {
-                me.buttonLabel(params.buttonLabel);
-            }
-            if (params.glyphicon) {
-                me.glyphicon("glyphicon glyphicon-"+params.glyphicon);
-            }
-            me.getQuestions();
-        }
 
         onConfirmClick = () => {
             let me = this;
@@ -155,7 +173,7 @@ namespace PeanutRiddler {
             me.retries--;
             if (me.retries < 1) {
                 me.failed(true);
-                me.setErrorState();
+                me.setFailedState();
                 return;
             }
             me.answerError('Sorry, incorrect answer. Try another question.');
@@ -172,6 +190,7 @@ namespace PeanutRiddler {
             let i = Math.floor((Math.random() * me.questions.length));
             me.currentQuestionIndex = i;
             me.questionText(me.questions[i].question);
+            me.retries = me.questions.length + 2;
             me.setQuestionState();
         };
 
@@ -198,7 +217,6 @@ namespace PeanutRiddler {
                 let trace = me.services.getErrorInformation();
                 me.setErrorState();
             });
-            me.retries = me.questions.length + 5;
         }
 
         private checkAnswer = (answer: string) => {
@@ -239,32 +257,33 @@ namespace PeanutRiddler {
             let count = messages.length;
             for(let i=0; i<count; i++) {
                 let message = messages[i];
+                if (typeof message.Text !== 'string') {
+                    console.log('SERVICE ERROR: Message unknown');
+                    continue;
+                }
                 switch (message.MessageType) {
                     case Peanut.errorMessageType :
                         if (message.Text) {
-                            console.error(message.Text);
+                            console.log('SERVICE ERROR:'+ message.Text);
                         }
                         break;
                     default:
                         if (message.Text) {
-                            console.log(message.Text);
+                            console.log('Service message:' + message.Text);
                         }
                 }
-
             }
         }
 
         hideServiceMessages(): void {
-            // throw new Error("Method not implemented.");
+            // NOT needed
         }
 
         showError(errorMessage?: string): void {
             let trace = this.services.getErrorInformation();
-            let message = 'Service error occurred' + (errorMessage ? ': ' + errorMessage : '');
-            console.error(errorMessage);
+            let message = 'Service error occurred. ' + (errorMessage ? ': ' + errorMessage : '');
+            console.log(errorMessage);
         }
-
-
 
     }
 }
