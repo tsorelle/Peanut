@@ -25,19 +25,23 @@ namespace Peanut {
         messageFormVisible = ko.observable(false);
         messageButtonVisible = ko.observable(true);
 
+        languageA = ko.observable('');
+        languageB = ko.observable('');
+
         private testForm : testFormComponent;
 
         // call this funtions at end of page
         init(successFunction?: () => void) {
             let me = this;
             // setup messaging and other application initializations
+            me.addTranslation('test','Un prueba de traducadora');
 
             // for components inside the default secton (<div id='testpage-view-container>)
             // Call load component to load and register. Before calling showDefaultSection()
             // final block must bind any view models (main or component) and call the success function.
 
             // me.application.registerComponentPrototype('@pnut/modal-confirm', () => {
-            me.application.registerComponents('tests/intro-message,@pnut/modal-confirm', () => {
+            me.application.registerComponents('tests/intro-message,@pnut/modal-confirm,@pnut/translate', () => {
                 me.application.loadComponents('tests/message-constructor',() => {
                     me.application.loadResources([
                         'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'
@@ -49,7 +53,6 @@ namespace Peanut {
                             }
 
                             Testing.Test.sayHello();
-
                              let cvm = new messageConstructorComponent('Smoke Test Buttons:');
                              me.application.registerComponent('tests/message-constructor',cvm,() => {
                                 me.bindDefaultSection();
@@ -201,7 +204,9 @@ namespace Peanut {
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         let response = serviceResponse.Value;
                         alert(response.message);
-
+                        me.addTranslations(response.translations);
+                        me.languageA(me.translate('hello','Hello'));
+                        me.languageB(me.translate('world'));
                     }
                 }
             ).fail(function () {
@@ -215,7 +220,7 @@ namespace Peanut {
          * The factory function my be defined seperately or in-line as is doe here.
          */
         onShowForm = () => {
-            console.log('Show form component')
+            console.log('Show form component');
             let me  = this;
             this.application.attachComponent(
                 // component name

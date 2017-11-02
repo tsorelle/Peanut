@@ -34,6 +34,13 @@
             <input data-bind="value:messageText" /><button data-bind="click:onSendMessage">Send message</button>
         </div>
 
+
+        <div>
+            <h3>Translations</h3>
+            <p><translate params="textCode:'test',defaultText:'Testing translator',owner:getVmInstance"></translate></p>
+            <p><span data-bind="text:languageA"></span> <span  data-bind="text:languageB"></span></p>
+        </div>
+
         <modal-confirm params="id:'confirm-save-modal',headerText: 'Please confirm SAVE', bodyText: 'Do you want to save changes?', confirmClick: save"></modal-confirm>
 
         <div class="modal" id="test-modal">

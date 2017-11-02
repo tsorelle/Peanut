@@ -9,6 +9,8 @@
 namespace PeanutTest\services;
 
 
+use Tops\sys\TLanguage;
+
 class HelloWorldCommand extends \Tops\services\TServiceCommand
 {
     protected function run()
@@ -25,6 +27,10 @@ class HelloWorldCommand extends \Tops\services\TServiceCommand
         $this->addInfoMessage('Hello World from: '.$request->tester);
         $responseValue = new \stdClass();
         $responseValue->message = "Greatings earthlings.";
+        $responseValue->translations =  TLanguage::getTranslations(array(
+            'hello' => 'Hola',
+            'world' => 'Mundo'
+        ));
         $this->setReturnValue($responseValue);
     }
 }

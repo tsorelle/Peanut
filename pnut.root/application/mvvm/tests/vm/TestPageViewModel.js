@@ -20,6 +20,8 @@ var Peanut;
             _this.messagePanel = ko.observable('button');
             _this.messageFormVisible = ko.observable(false);
             _this.messageButtonVisible = ko.observable(true);
+            _this.languageA = ko.observable('');
+            _this.languageB = ko.observable('');
             _this.save = function () {
                 jQuery("#confirm-save-modal").modal('hide');
                 alert('you saved');
@@ -37,6 +39,9 @@ var Peanut;
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         var response = serviceResponse.Value;
                         alert(response.message);
+                        me.addTranslations(response.translations);
+                        me.languageA(me.translate('hello', 'Hello'));
+                        me.languageB(me.translate('world'));
                     }
                 }).fail(function () {
                     me.application.hideWaiter();
@@ -67,7 +72,8 @@ var Peanut;
         }
         TestPageViewModel.prototype.init = function (successFunction) {
             var me = this;
-            me.application.registerComponents('tests/intro-message,@pnut/modal-confirm', function () {
+            me.addTranslation('test', 'Un prueba de traducadora');
+            me.application.registerComponents('tests/intro-message,@pnut/modal-confirm,@pnut/translate', function () {
                 me.application.loadComponents('tests/message-constructor', function () {
                     me.application.loadResources([
                         'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js',

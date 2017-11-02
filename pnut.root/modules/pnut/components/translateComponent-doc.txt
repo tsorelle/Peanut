@@ -1,0 +1,23 @@
+The translate component presents translated text using the ViewModelBase translation functions.
+
+The translations must be registered prior to the initial component binding.
+Example:
+    init(successFunction?: () => void) {
+        let me = this;
+        me.addTranslation('test','Un prueba de traducadora');
+        let request = {translate: true};
+        me.application.registerComponents('@pnut/translate', () => {
+            me.services.executeService('initializeThisVm', request,
+                (serviceResponse: Peanut.IServiceResponse) => {
+                    me.application.hideWaiter();
+                    if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+                        me.addTranslations(response.translations);
+                        me.bindDefaultSection();
+                        successFunction();
+                    }
+                }
+            }
+    }
+
+Example markup:
+    <translate params="textCode:'test',defaultText:'A test of the translator',owner:getVmInstance"></translate></p>

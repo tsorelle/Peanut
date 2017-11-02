@@ -1,0 +1,20 @@
+/// <reference path='../../typings/knockout/knockout.d.ts' />
+namespace Peanut {
+    export class componentnameComponent {
+        // observables
+
+        // variables.
+
+
+        // include constructor if any params used
+        constructor(params: any) {
+            let me = this;
+
+            if (!params) {
+                throw('Params not defined in modalConfirmComponent');
+            }
+            // initialize observavles and variables from params
+
+        }
+    }
+}

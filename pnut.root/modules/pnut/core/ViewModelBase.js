@@ -3,6 +3,7 @@ var Peanut;
     var ViewModelBase = (function () {
         function ViewModelBase() {
             var _this = this;
+            this.translations = [];
             this.start = function (application, successFunction) {
                 var me = _this;
                 me.application = application;
@@ -40,6 +41,29 @@ var Peanut;
             this.getRequestVar = function (key, defaultValue) {
                 if (defaultValue === void 0) { defaultValue = null; }
                 return HttpRequestVars.Get(key, defaultValue);
+            };
+            this.translate = function (code, defaultText) {
+                if (defaultText === void 0) { defaultText = null; }
+                var me = _this;
+                if (code in me.translations) {
+                    return me.translations[code];
+                }
+                return defaultText === null ? code : defaultText;
+            };
+            this.addTranslation = function (code, text) {
+                var me = _this;
+                me.translations[code] = text;
+            };
+            this.addTranslations = function (translations) {
+                var me = _this;
+                if (translations) {
+                    for (var code in translations) {
+                        me.translations[code] = translations[code];
+                    }
+                }
+            };
+            this.getVmInstance = function () {
+                return _this;
             };
         }
         return ViewModelBase;

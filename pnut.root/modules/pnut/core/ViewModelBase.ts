@@ -8,6 +8,7 @@ namespace Peanut {
     export abstract class ViewModelBase implements IViewModel{
         protected services: ServiceBroker;
         protected application: IPeanutClient;
+        protected translations: string[] = [];
 
         abstract init(successFunction?: () => void);
         public start = (application : IPeanutClient, successFunction?: (viewModel: IViewModel) => void)  => {
@@ -64,6 +65,32 @@ namespace Peanut {
 
         protected getRequestVar = (key : string, defaultValue : any = null) => {
             return HttpRequestVars.Get(key,defaultValue);
+        };
+
+        public translate = (code:string, defaultText:string = null) => {
+            let me = this;
+            if (code in me.translations) {
+                return me.translations[code];
+            }
+            return defaultText === null ? code : defaultText;
+        };
+
+        protected addTranslation = (code: string, text: string)  => {
+            let me = this;
+            me.translations[code] = text;
+        };
+        protected addTranslations = (translations : string[]) => {
+            let me = this;
+            if (translations) {
+                for (let code in translations) {
+                    me.translations[code] = translations[code];
+                }
+            }
+        };
+
+        // for us by components
+        public getVmInstance = () => {
+            return this;
         }
     }
 
@@ -100,8 +127,8 @@ namespace Peanut {
             let result = HttpRequestVars.instance.getValue(key);
             return (result === null) ? defaultValue : result;
         }
-    }
 
+    }
 
 
 } // end namespace
