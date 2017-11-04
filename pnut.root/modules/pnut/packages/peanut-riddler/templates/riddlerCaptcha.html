@@ -1,8 +1,6 @@
-<div data-bind="visible:failed" style="color:red;font-weight: bold">
-    Sorry, too many guesses.
-</div>
+<div data-bind="visible:failed,text:guessLimitMessage" style="color:red;font-weight: bold"></div>
 <div class="form-group"  data-bind="visible:showInputs">
-    <label class="control-label" data-bind="visible:showInputs">Help us control spam by answering this question: </label>
+    <label class="control-label" data-bind="visible:showInputs,text:riddlerHeader"></label>
     <div style="color:red;font-weight: bold" data-bind="visible: answerError, text: answerError"></div>
     <div data-bind="text: questionText"></div>
 </div>
@@ -20,6 +18,6 @@
     <a style="margin-left: 20px" href="#" data-bind="click:cancelClick,visible:showCancel">Cancel</a>
 </div>
 <div data-bind="visible:showSystemError" >
-    <p style="font-weight: bold; color: red">A system error occurred. Please try again later or contact the administrator</p>
-    <p>Check the javascript console for error details.</p>
+    <p style="font-weight: bold; color: red" data-bind="text:sysError1"></p>
+    <p data-bind="text:sysError2"></p>
 </div>

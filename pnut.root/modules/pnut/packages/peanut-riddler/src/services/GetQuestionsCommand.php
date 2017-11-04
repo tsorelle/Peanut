@@ -57,15 +57,17 @@ class GetQuestionsCommand extends TServiceCommand
     }
 
     private function getQuestions(array $data) {
-        $languageCode = TLanguage::getLanguageCode();
-        if (!empty($data["questions-$languageCode"])) {
-            return $data["questions-$languageCode"];
-        }
-        $parts = explode('-',$languageCode);
-        if (sizeof($parts) > 1) {
-            $language = $parts[0];
-            if (!empty($data["questions-$language"])) {
-                return $data["questions-$language"];
+        $languageCodes = TLanguage::getLanguageCodes();
+        foreach ($languageCodes as $languageCode) {
+            if (!empty($data["questions-$languageCode"])) {
+                return $data["questions-$languageCode"];
+            }
+            $parts = explode('-',$languageCode);
+            if (sizeof($parts) > 1) {
+                $language = $parts[0];
+                if (!empty($data["questions-$language"])) {
+                    return $data["questions-$language"];
+                }
             }
         }
         if (empty($data['questions'])) {
@@ -102,6 +104,20 @@ class GetQuestionsCommand extends TServiceCommand
             $result[] = $item;
         }
 
-        $this->setReturnValue($result);
+        $response = new \stdClass();
+        $response->questions = $result;
+        $response->translations =  TLanguage::getTranslations(
+          array(
+              'riddler-header',
+              'riddler-guess-limit',
+              'riddler-sys-error1',
+              'riddler-sys-error2',
+              'riddler-error-no-answer',
+              'riddler-error-bad-answer',
+              'riddler-wait-check-answer'
+          )
+        );
+
+        $this->setReturnValue($response);
     }
 }

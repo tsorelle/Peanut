@@ -10,6 +10,10 @@ namespace PeanutRiddler {
         question: string;
     }
 
+    interface IRiddletGetQuestionsResponse {
+        questions: IRiddlerQuestion[];
+        translations: string[];
+    }
     interface IRiddlerCheckAnswerRequest {
         topic: string;
         questionId: string;
@@ -51,6 +55,9 @@ namespace PeanutRiddler {
         private retries : number = 0;
         private canCancel = false;
         private topic = '';
+        private answerErrorNoAnswer = '';
+        private answerErrorIncorrect = '';
+        private waitCheckingAnswer = '';
 
         constructor(params : any) {
 
@@ -96,17 +103,6 @@ namespace PeanutRiddler {
                     me.spinnericon(params.spinner);
                 }
             }
-
-            if (params.translator) {
-                let translator = <ITranslator>params.translator;
-                if (translator.getLanguage() != 'en-us') {
-                    me.riddlerHeader(translator.translate('riddler-header'));
-                    me.guessLimitMessage(translator.translate('riddler-guess'));
-                    me.sysError1(translator.translate('riddler-sys-error1'));
-                    me.sysError2(translator.translate('riddler-sys-error2'));
-                }
-            }
-
             me.getQuestions();
         }
 
@@ -171,7 +167,7 @@ namespace PeanutRiddler {
             let answer = me.answerInput().trim();
             me.answerInput('');
             if (answer == '') {
-                me.answerError('Please type in your answer.');
+                me.answerError(me.answerErrorNoAnswer);
                 return;
             }
 
@@ -195,7 +191,7 @@ namespace PeanutRiddler {
                 me.setFailedState();
                 return;
             }
-            me.answerError('Sorry, incorrect answer. Try another question.');
+            me.answerError(me.answerErrorIncorrect);
             me.currentQuestionIndex++;
             if (me.currentQuestionIndex >= me.questions.length) {
                 me.currentQuestionIndex = 0;
@@ -219,7 +215,8 @@ namespace PeanutRiddler {
             me.services.executeService('peanut.PeanutRiddler::GetQuestions',me.topic,
                 function(serviceResponse: Peanut.IServiceResponse) {
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
-                        me.questions = <IRiddlerQuestion[]>serviceResponse.Value;
+                        let response = <IRiddletGetQuestionsResponse>serviceResponse.Value;
+                        me.questions = response.questions;
                         if (me.questions.length == 0) {
                             // empty array with no errors indicate user is authenticated and no riddle needed
                             me.setAnsweredState();
@@ -227,6 +224,13 @@ namespace PeanutRiddler {
                         else {
                             me.selectFirstQuestion();
                         }
+                        me.riddlerHeader(response.translations['riddler-header']);
+                        me.guessLimitMessage(response.translations['riddler-guess']);
+                        me.sysError1(response.translations['riddler-sys-error1']);
+                        me.sysError2(response.translations['riddler-sys-error2']);
+                        me.answerErrorNoAnswer = response.translations['riddler-error-no-answer'];
+                        me.answerErrorIncorrect = response.translations['riddler-error-bad-answer'];
+                        me.waitCheckingAnswer = response.translations['riddler-wait-check-answer'];
                     }
                     else {
                         me.setErrorState(serviceResponse);
@@ -246,7 +250,7 @@ namespace PeanutRiddler {
                 questionId: question.id,
                 answer: answer
             };
-            me.setWaitState('Checking answer');
+            me.setWaitState(me.waitCheckingAnswer);
             me.services.executeService('peanut.PeanutRiddler::CheckAnswer',request,
                 function(serviceResponse: Peanut.IServiceResponse) {
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {

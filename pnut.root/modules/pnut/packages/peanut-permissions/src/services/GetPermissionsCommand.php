@@ -71,12 +71,12 @@ class GetPermissionsCommand extends TServiceCommand
         $result->roles = $manager->getRoles();
         $result->permissions = self::getPermissionsList($manager,$result->roles);
         $result->translations = TLanguage::getTranslations(array(
-            'permission-name-title' => 'Permission name',
-            'edit-label' => 'Edit >>',
-            'update-permission-title' => 'Update Permission',
-            'assigned-roles-title' => 'Assigned Roles',
-            'available-roles-title' => 'Available Roles',
-            'save-changes-label' => 'Save changes'
+            'permission-name-title' ,
+            'edit-label' ,
+            'update-permission-title' ,
+            'assigned-roles-title' ,
+            'available-roles-title' ,
+            'save-changes-label' 
         ));
 
         $this->setReturnValue($result);

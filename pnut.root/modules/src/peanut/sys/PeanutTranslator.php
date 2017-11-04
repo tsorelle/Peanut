@@ -16,7 +16,7 @@ use Tops\sys\TIniTranslator;
 use Tops\sys\TLanguage;
 use Tops\sys\TPath;
 
-class PeanutTranslator
+class PeanutTranslator extends TIniTranslator
 {
     public static function GetPeanutTranslations(&$ini = false) {
         $peanutIniPath = PeanutSettings::FromPeanutRoot('translations.ini');
@@ -44,5 +44,11 @@ class PeanutTranslator
         $translations = self::GetPeanutTranslations();
         return $translator->importTranslations($translations,$username);
     }
+
+    public function importIniTranslations(&$ini)
+    {
+        PeanutTranslator::GetPeanutTranslations($ini);
+    }
+
 
 }

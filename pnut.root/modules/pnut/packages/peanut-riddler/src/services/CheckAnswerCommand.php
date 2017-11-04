@@ -43,21 +43,23 @@ class CheckAnswerCommand extends TServiceCommand
     }
     
     private function getAnswers($answerKey,$data) {
-        $languageCode = TLanguage::getLanguageCode();
-        if (!empty($data["$answerKey-$languageCode"])) {
-            return $data["$answerKey-$languageCode"];
-        }
-        $parts = explode('-',$languageCode);
-        if (sizeof($parts) > 1) {
-            $language = $parts[0];
-            if (!empty($data["$answerKey-$language"])) {
-                return $data["$answerKey-$language"];
+        $languageCodes = TLanguage::getLanguageCodes();
+        foreach ($languageCodes as $languageCode) {
+            if (!empty($data["$answerKey-$languageCode"])) {
+                return $data["$answerKey-$languageCode"];
+            }
+            $parts = explode('-',$languageCode);
+            if (sizeof($parts) > 1) {
+                $language = $parts[0];
+                if (!empty($data["$answerKey-$language"])) {
+                    return $data["$answerKey-$language"];
+                }
             }
         }
-        if (empty($data['$answerKey'])) {
+        if (empty($data[$answerKey])) {
             return false;
         }
-        return $data['$answerKey'];
+        return $data[$answerKey];
     }
 
     protected function run()
@@ -95,7 +97,6 @@ class CheckAnswerCommand extends TServiceCommand
             $this->addErrorMessage("$noAnswers #".$request->questionId,true);
         }
         $answers = $this->getAnswers($answerKey, $data);
-        $answers = array_values($data[$answers]);
         $answer = $this->cleanAnswer($request->answer);
         $result = false;
         foreach ($answers as $correct) {

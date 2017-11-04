@@ -15,7 +15,7 @@ namespace Peanut {
                 throw('owner parameter required:  "translator: getVmInstance"')
             }
             let defaultText =  params.default ? params.default : params.code;
-            let text = (<ViewModelBase>params.owner()).translate(params.code,defaultText);
+            let text = (<ViewModelBase>params.translator()).translate(params.code,defaultText);
             me.text(text);
         }
     }
