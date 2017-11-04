@@ -3,6 +3,8 @@
 ///<reference path="../../../../pnut/core/Services.ts"/>
 ///<reference path="../../../../pnut/core/peanut.d.ts"/>
 namespace PeanutRiddler {
+    import ITranslator = Peanut.ITranslator;
+
     interface IRiddlerQuestion {
         id: string;
         question: string;
@@ -23,6 +25,12 @@ namespace PeanutRiddler {
         public showInputs = ko.observable(false);
         public showCancel = ko.observable(false);
         public showButton = ko.observable(false);
+
+        // translatable text
+        riddlerHeader= ko.observable('Help us control spam by answering this question:');
+        guessLimitMessage= ko.observable('Sorry, too many guesses.');
+        sysError1= ko.observable('A system error occurred. Please try again later or contact the administrator.');
+        sysError2= ko.observable('Check the javascript console for error details.');
 
         // other observables
         public questionText = ko.observable('');
@@ -52,6 +60,7 @@ namespace PeanutRiddler {
             if (!params.confirmClick) {
                 throw('Confirm click handler must be specified.')
             }
+
             let me = this;
 
             me.services = Peanut.ServiceBroker.create(me);
@@ -85,6 +94,16 @@ namespace PeanutRiddler {
                 }
                 else {
                     me.spinnericon(params.spinner);
+                }
+            }
+
+            if (params.translator) {
+                let translator = <ITranslator>params.translator;
+                if (translator.getLanguage() != 'en-us') {
+                    me.riddlerHeader(translator.translate('riddler-header'));
+                    me.guessLimitMessage(translator.translate('riddler-guess'));
+                    me.sysError1(translator.translate('riddler-sys-error1'));
+                    me.sysError2(translator.translate('riddler-sys-error2'));
                 }
             }
 

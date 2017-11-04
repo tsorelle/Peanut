@@ -8,14 +8,14 @@ namespace Peanut {
             if (!params) {
                 throw('Params not defined in translateComponent');
             }
-            if(!params.textCode) {
+            if(!params.code) {
                 throw('Paramiter "textCode" is required')
             }
-            if (!params.owner) {
-                throw('owner parameter required:  "owner: getVmInstance"')
+            if (!params.translator) {
+                throw('owner parameter required:  "translator: getVmInstance"')
             }
-            let defaultText =  params.defaultText ? params.defaultText : params.code;
-            let text = (<ViewModelBase>params.owner()).translate(params.textCode,defaultText);
+            let defaultText =  params.default ? params.default : params.code;
+            let text = (<ViewModelBase>params.owner()).translate(params.code,defaultText);
             me.text(text);
         }
     }

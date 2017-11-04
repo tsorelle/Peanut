@@ -8,12 +8,15 @@
         <div class="col-md-12">
             <table>
                 <thead>
-                <tr><th>Permission name</th><th>&nbsp</th></tr>
+                <tr><th><translate params="code:'permission-name-title',default:'Permission name (needs transation)',translator:getVmInstance"></translate></th><th>&nbsp</th></tr>
                 </thead>
                 <tbody data-bind="foreach:permissionsList">
                 <tr>
                     <td data-bind="text:permissionName" style="padding-right: 10px"></td>
-                    <td><a href="#" data-bind="click:$parent.showPermissionUpdateForm">Edit</a> </td>
+                    <td><a href="#" data-bind="click:$parent.showPermissionUpdateForm">
+                        <translate params="code:'edit-label',default:'Edit (needs transation)',translator:$parent.getVmInstance"></translate>
+                    </a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -28,14 +31,14 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h3 class="modal-title">Update Permission</h3>
+                            <h3 class="modal-title"><translate params="code:'update-permission-title',default:'Update Permission  (needs transation)',translator:getVmInstance"></translate> </h3>
                             <h4> <span data-bind="text:permissionForm.permissionName"></span></h4>
                         </div>
                         <div class="modal-body">
                             <div class="row" style="padding-bottom: 20px">
                                 <div class="col-sm-6">
                                     <fieldset>
-                                        <legend>Assigned Roles</legend>
+                                        <legend><translate params="code:'assigned-roles-title',default:'Assigned Roles  (needs transation)',translator:getVmInstance"></translate></legend>
                                         <table>
                                             <tbody data-bind="foreach:permissionForm.assigned">
                                             <tr>
@@ -48,7 +51,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <fieldset>
-                                        <legend>Avaliable Roles</legend>
+                                        <legend><translate params="code:'available-roles-title',default:'Avaliable Roles (needs transation)',translator:getVmInstance"></translate></legend>
                                         <table>
                                             <tbody data-bind="foreach:permissionForm.available">
                                             <tr>
@@ -62,7 +65,8 @@
                         </div>
                         <div class="modal-footer">
                             <a href="#" data-dismiss="modal">Close</a>&nbsp;
-                            <button type="button" style="margin-left:20px" class="btn btn-primary" data-bind="visible:permissionForm.changed,click:updatePermission">Save changes</button>
+                            <button type="button" style="margin-left:20px" class="btn btn-primary" data-bind="visible:permissionForm.changed,click:updatePermission">
+                                <translate params="code:'save-changes-label',default:'Save changes  (needs transation)',translator:getVmInstance"></translate></button>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
@@ -71,5 +75,6 @@
     </div>
 
     </div>
+</div>
 </div>
 <!-- permissions view end -->

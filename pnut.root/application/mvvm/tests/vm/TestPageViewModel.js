@@ -73,7 +73,7 @@ var Peanut;
         TestPageViewModel.prototype.init = function (successFunction) {
             var me = this;
             me.addTranslation('test', 'Un prueba de traducadora');
-            me.application.registerComponents('tests/intro-message,@pnut/modal-confirm,@pnut/translate', function () {
+            me.application.registerComponents('tests/intro-message,@pnut/modal-confirm', function () {
                 me.application.loadComponents('tests/message-constructor', function () {
                     me.application.loadResources([
                         'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js',

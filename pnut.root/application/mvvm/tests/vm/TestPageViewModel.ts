@@ -41,7 +41,7 @@ namespace Peanut {
             // final block must bind any view models (main or component) and call the success function.
 
             // me.application.registerComponentPrototype('@pnut/modal-confirm', () => {
-            me.application.registerComponents('tests/intro-message,@pnut/modal-confirm,@pnut/translate', () => {
+            me.application.registerComponents('tests/intro-message,@pnut/modal-confirm', () => {
                 me.application.loadComponents('tests/message-constructor',() => {
                     me.application.loadResources([
                         'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'

@@ -146,6 +146,12 @@ declare namespace Peanut {
         new(): T;
     }
 
+    export interface ITranslator {
+        translate(code:string, defaultText?:string);
+        setLanguage(code: string);
+        getLanguage();
+        getUserLanguage()
+    }
     export interface IViewModel {
 
         init(successFunction?: () => void);

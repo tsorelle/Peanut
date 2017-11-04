@@ -22,6 +22,12 @@ class PeanutSettings
         $modulePath = TConfiguration::getValue('modulePath','peanut','modules');
         return $modulePath;
     }
+
+    public static function FromPeanutRoot($path) {
+        $root = TPath::fromFileRoot(self::GetPeanutRoot());
+        return TPath::combine($root,$path);
+    }
+
     public static function GetPeanutRoot (){
         $modulePath = self::GetModulePath();
         $peanutRoot = TConfiguration::getValue('peanutRootPath','peanut',"$modulePath/pnut");

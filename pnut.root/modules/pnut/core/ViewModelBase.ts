@@ -5,7 +5,7 @@
 ///<reference path="Peanut.d.ts"/>
 ///<reference path="../../typings/jquery/jquery.d.ts"/>
 namespace Peanut {
-    export abstract class ViewModelBase implements IViewModel{
+    export abstract class ViewModelBase implements IViewModel, ITranslator{
         protected services: ServiceBroker;
         protected application: IPeanutClient;
         protected translations: string[] = [];
@@ -13,14 +13,18 @@ namespace Peanut {
         abstract init(successFunction?: () => void);
         public start = (application : IPeanutClient, successFunction?: (viewModel: IViewModel) => void)  => {
             let me = this;
+            me.language = me.getUserLanguage();
             me.application = application;
             me.services = ServiceBroker.getInstance(application);
-            me.init(() => {
-                successFunction(me);
+            me.application.registerComponents('@pnut/translate', () => {
+                me.init(() => {
+                    successFunction(me);
+                });
             });
         };
 
         private vmName : string = null;
+        private language : string = 'en-us';
         public setVmName = (name: string) => {
             this.vmName = name;
         };
@@ -88,7 +92,25 @@ namespace Peanut {
             }
         };
 
-        // for us by components
+        public setLanguage = (code) => {
+            let me = this;
+            me.language = code;
+        };
+
+        public getLanguage = () =>  {
+            let me = this;
+            return me.language;
+        };
+
+        public getUserLanguage(){
+            let userLang = navigator.language || (<any>navigator).userLanguage;
+            if (userLang) {
+                return userLang.toLowerCase();
+            }
+            return 'en-us';
+        }
+
+        // for use by components that must reference main view model.
         public getVmInstance = () => {
             return this;
         }
@@ -129,6 +151,5 @@ namespace Peanut {
         }
 
     }
-
 
 } // end namespace

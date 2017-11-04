@@ -11,6 +11,7 @@ namespace Peanut\PeanutRiddler\services;
 
 
 use Tops\services\TServiceCommand;
+use Tops\sys\TLanguage;
 use Tops\sys\TPath;
 
 /**
@@ -30,29 +31,48 @@ use Tops\sys\TPath;
 class GetQuestionsCommand extends TServiceCommand
 {
 
-    public static function loadDataFile($topic) {
-    global $_SESSION;
+    public static function loadDataFile($topic)
+    {
+        global $_SESSION;
         $_SESSION["riddler-$topic"] = null;
-    /*if (isset($_SESSION["riddler-$topic"])) {
-        return $_SESSION["riddler-$topic"];
-    }*/
-    if (empty($topic)) {
-        return 'Topic not received';
-    }
-    $path =  TPath::fromFileRoot("application/data/riddler/$topic.ini");
-    if (!file_exists($path)) {
-        $path = @realpath( __DIR__."/../../data/$topic.ini");
-        if (empty($path)) {
-            return "$topic.ini not found";
+        /*if (isset($_SESSION["riddler-$topic"])) {
+            return $_SESSION["riddler-$topic"];
+        }*/
+        if (empty($topic)) {
+            return 'Topic not received';
         }
+        $path = TPath::fromFileRoot("application/data/riddler/$topic.ini");
+        if (!file_exists($path)) {
+            $path = @realpath(__DIR__ . "/../../data/$topic.ini");
+            if (empty($path)) {
+                return "$topic.ini not found";
+            }
+        }
+        $data = @parse_ini_file($path, true);
+        if ($data === false) {
+            return "$topic.ini file invalid";
+        }
+        // $_SESSION["riddler-$topic"] = $data;
+        return $data;
     }
-    $data = @parse_ini_file($path,true);
-    if ($data === false) {
-        return "$topic.ini file invalid";
+
+    private function getQuestions(array $data) {
+        $languageCode = TLanguage::getLanguageCode();
+        if (!empty($data["questions-$languageCode"])) {
+            return $data["questions-$languageCode"];
+        }
+        $parts = explode('-',$languageCode);
+        if (sizeof($parts) > 1) {
+            $language = $parts[0];
+            if (!empty($data["questions-$language"])) {
+                return $data["questions-$language"];
+            }
+        }
+        if (empty($data['questions'])) {
+            return false;
+        }
+        return $data['questions'];
     }
-    // $_SESSION["riddler-$topic"] = $data;
-    return $data;
-}
 
     protected function run()
     {
@@ -67,12 +87,15 @@ class GetQuestionsCommand extends TServiceCommand
             $this->addErrorMessage($data);
             return;
         }
-        if (!isset($data['questions'])) {
+
+        $questions = $this->getQuestions($data);
+        if ($questions === false) {
             $this->addErrorMessage("$topic.ini file invalid. No questions section");
             return;
         }
         $result = array();
-        foreach ($data['questions'] as $key => $value ) {
+
+        foreach ($questions as $key => $value) {
             $item = new \stdClass();
             $item->id = $key;
             $item->question = $value;

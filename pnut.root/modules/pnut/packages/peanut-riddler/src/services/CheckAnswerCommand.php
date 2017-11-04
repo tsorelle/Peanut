@@ -11,6 +11,8 @@ namespace Peanut\PeanutRiddler\services;
 
 use Peanut\PeanutPermissions\services\GetPermissionsCommand;
 use Tops\services\TServiceCommand;
+use Tops\sys\TL;
+use Tops\sys\TLanguage;
 
 /**
  * Class CheckAnswerCommand
@@ -39,28 +41,46 @@ class CheckAnswerCommand extends TServiceCommand
         }
         return trim($result);
     }
+    
+    private function getAnswers($answerKey,$data) {
+        $languageCode = TLanguage::getLanguageCode();
+        if (!empty($data["$answerKey-$languageCode"])) {
+            return $data["$answerKey-$languageCode"];
+        }
+        $parts = explode('-',$languageCode);
+        if (sizeof($parts) > 1) {
+            $language = $parts[0];
+            if (!empty($data["$answerKey-$language"])) {
+                return $data["$answerKey-$language"];
+            }
+        }
+        if (empty($data['$answerKey'])) {
+            return false;
+        }
+        return $data['$answerKey'];
+    }
 
     protected function run()
     {
         $request = $this->getRequest();
         if (empty($request)) {
-            $this->addErrorMessage('No request');
+            $this->addErrorMessage('no-request','No request');
             return;
         }
         if (!is_object($request)) {
-            $this->addErrorMessage('Invalid request');
+            $this->addErrorMessage('invalid-request','Invalid request');
             return;
         }
         if (empty($request->topic)) {
-            $this->addErrorMessage('No topic in request');
+            $this->addErrorMessage('no-request-topic','No topic in request');
             return;
         }
         if (empty($request->questionId)) {
-            $this->addErrorMessage('No questionId in request');
+            $this->addErrorMessage('no-question-id','No questionId in request');
             return;
         }
         if (empty($request->answer)) {
-            $this->addErrorMessage('No answer in request');
+            $this->addErrorMessage('no-request-answer','No answer in request');
             return;
         }
         $data = GetQuestionsCommand::loadDataFile($request->topic);
@@ -68,11 +88,14 @@ class CheckAnswerCommand extends TServiceCommand
             $this->addErrorMessage($data);
             return;
         }
+        
         $answerKey = 'answers-'.$request->questionId;
         if (!isset($data[$answerKey])) {
-            $this->addErrorMessage('No answers found for question #'.$request->questionId);
+            $noAnswers = TLanguage::text('no-answers-found','No answers found for question');
+            $this->addErrorMessage("$noAnswers #".$request->questionId,true);
         }
-        $answers = array_values($data[$answerKey]);
+        $answers = $this->getAnswers($answerKey, $data);
+        $answers = array_values($data[$answers]);
         $answer = $this->cleanAnswer($request->answer);
         $result = false;
         foreach ($answers as $correct) {

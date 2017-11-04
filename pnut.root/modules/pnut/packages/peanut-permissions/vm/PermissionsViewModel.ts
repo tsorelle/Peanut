@@ -25,6 +25,7 @@ namespace PeanutPermissions {
     interface IGetPermissionsResponse {
         permissions: IPermission[];
         roles: IUserRole[];
+        translations: string[];
     }
 
     export class PermissionsViewModel extends Peanut.ViewModelBase {
@@ -64,6 +65,7 @@ namespace PeanutPermissions {
                         let response = <IGetPermissionsResponse>serviceResponse.Value;
                         me.permissionsList(response.permissions);
                         me.roles = response.roles;
+                        me.addTranslations(response.translations);
                     }
                     if (finalFunction) {
                         finalFunction();

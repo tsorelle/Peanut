@@ -1,23 +1,51 @@
 The translate component presents translated text using the ViewModelBase translation functions.
 
+The translation component is registered in the start method of ViewModelBase, which subsequently calls the init() function.
 The translations must be registered prior to the initial component binding.
 Example:
     init(successFunction?: () => void) {
         let me = this;
         me.addTranslation('test','Un prueba de traducadora');
         let request = {translate: true};
-        me.application.registerComponents('@pnut/translate', () => {
-            me.services.executeService('initializeThisVm', request,
-                (serviceResponse: Peanut.IServiceResponse) => {
-                    me.application.hideWaiter();
-                    if (serviceResponse.Result == Peanut.serviceResultSuccess) {
-                        me.addTranslations(response.translations);
-                        me.bindDefaultSection();
-                        successFunction();
-                    }
+        me.services.executeService('initializeThisVm', request,
+            (serviceResponse: Peanut.IServiceResponse) => {
+                me.application.hideWaiter();
+                if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+                    me.addTranslations(response.translations);
+                    me.bindDefaultSection();
+                    successFunction();
                 }
-            }
+            });
     }
 
+Parameters:
+    code - lookup code to retrieve translation
+    default - text to use if translation is not found
+    translator - function returning an object that implements the ITranslator interface:
+            export interface ITranslator {
+                translate(code:string, defaultText:string);
+                setLanguage(code: string);
+                getLanguage();
+            }
+    
+        This is usually the parent view model, in which case 'getVmInstance' can be used
+
 Example markup:
-    <translate params="textCode:'test',defaultText:'A test of the translator',owner:getVmInstance"></translate></p>
+    <translate params="code:'test',default:'A test of the translator',translator:getVmInstance"></translate>
+
+Tips:
+    You can include some text such as " (needs transation)" in the default property.
+    Then you can tell if a translation is not found.
+
+    Translate component markup inside foreach loops require 'translator:$parent.getVmInstance'
+    Example
+        <tbody data-bind="foreach:permissionsList">
+            <tr>
+                <td>
+                    <a href="#" data-bind="click:$parent.showPermissionUpdateForm">
+                        <translate params="code:'edit-label',default:'Edit (needs transation)',translator:$parent.getVmInstance"></translate>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+'

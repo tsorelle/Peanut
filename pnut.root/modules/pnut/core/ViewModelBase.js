@@ -6,13 +6,17 @@ var Peanut;
             this.translations = [];
             this.start = function (application, successFunction) {
                 var me = _this;
+                me.language = me.getUserLanguage();
                 me.application = application;
                 me.services = Peanut.ServiceBroker.getInstance(application);
-                me.init(function () {
-                    successFunction(me);
+                me.application.registerComponents('@pnut/translate', function () {
+                    me.init(function () {
+                        successFunction(me);
+                    });
                 });
             };
             this.vmName = null;
+            this.language = 'en-us';
             this.setVmName = function (name) {
                 _this.vmName = name;
             };
@@ -62,10 +66,25 @@ var Peanut;
                     }
                 }
             };
+            this.setLanguage = function (code) {
+                var me = _this;
+                me.language = code;
+            };
+            this.getLanguage = function () {
+                var me = _this;
+                return me.language;
+            };
             this.getVmInstance = function () {
                 return _this;
             };
         }
+        ViewModelBase.prototype.getUserLanguage = function () {
+            var userLang = navigator.language || navigator.userLanguage;
+            if (userLang) {
+                return userLang.toLowerCase();
+            }
+            return 'en-us';
+        };
         return ViewModelBase;
     }());
     Peanut.ViewModelBase = ViewModelBase;

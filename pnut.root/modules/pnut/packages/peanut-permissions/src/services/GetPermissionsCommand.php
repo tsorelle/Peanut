@@ -9,6 +9,7 @@
 namespace Peanut\PeanutPermissions\services;
 
 use Tops\services\TServiceCommand;
+use Tops\sys\TLanguage;
 use Tops\sys\TPermissionsManager;
 
 class GetPermissionsCommand extends TServiceCommand
@@ -55,6 +56,7 @@ class GetPermissionsCommand extends TServiceCommand
             }
             $result[] = $item;
         }
+
         return $result;
 
     }
@@ -68,6 +70,15 @@ class GetPermissionsCommand extends TServiceCommand
         $result = new \stdClass();
         $result->roles = $manager->getRoles();
         $result->permissions = self::getPermissionsList($manager,$result->roles);
+        $result->translations = TLanguage::getTranslations(array(
+            'permission-name-title' => 'Permission name',
+            'edit-label' => 'Edit >>',
+            'update-permission-title' => 'Update Permission',
+            'assigned-roles-title' => 'Assigned Roles',
+            'available-roles-title' => 'Available Roles',
+            'save-changes-label' => 'Save changes'
+        ));
+
         $this->setReturnValue($result);
     }
 }
