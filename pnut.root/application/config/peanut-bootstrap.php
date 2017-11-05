@@ -8,6 +8,7 @@
 
 namespace Peanut;
 use Tops\sys\TConfiguration;
+use Tops\sys\TLanguage;
 use Tops\sys\TPath;
 use Tops\sys\TStrings;
 use Peanut\sys\ViewModelManager;
@@ -163,6 +164,8 @@ class Bootstrap
             $result->loggingMode = $settings['loggingMode'];
         }
         $result->optimize = $optimize;
+
+        $result->loadMessage = TLanguage::text('wait-loading','Loading. Please wait.');
 
         return $result;
     }
