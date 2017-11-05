@@ -76,7 +76,9 @@ class GetPermissionsCommand extends TServiceCommand
             'update-permission-title' ,
             'assigned-roles-title' ,
             'available-roles-title' ,
-            'save-changes-label' 
+            'save-changes-label',
+            'permission-wait-get',
+            'permission-wait-update'
         ));
 
         $this->setReturnValue($result);

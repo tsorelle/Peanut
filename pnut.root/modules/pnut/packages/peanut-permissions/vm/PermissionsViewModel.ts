@@ -40,6 +40,9 @@ namespace PeanutPermissions {
             changed: ko.observable(false)
         };
 
+        waitLabelGetPermissions = 'Getting permissions';
+        waitLabelUpdatePermissions = 'Updating permissions';
+
         init(successFunction?: () => void) {
             let me = this;
             console.log('VM Init');
@@ -57,7 +60,7 @@ namespace PeanutPermissions {
             let me = this;
             let request = {};
             me.application.hideServiceMessages();
-            me.application.showWaiter('Getting permissions...');
+            me.application.showWaiter(me.waitLabelGetPermissions+'...');
             me.services.executeService('peanut.peanut-permissions::GetPermissions', request,
                 function (serviceResponse: Peanut.IServiceResponse) {
                     me.application.hideWaiter();
@@ -66,6 +69,8 @@ namespace PeanutPermissions {
                         me.permissionsList(response.permissions);
                         me.roles = response.roles;
                         me.addTranslations(response.translations);
+                        me.waitLabelGetPermissions=response.translations['permission-wait-get'];
+                        me.waitLabelUpdatePermissions=response.translations['permission-wait-update'];
                     }
                     if (finalFunction) {
                         finalFunction();
@@ -85,7 +90,7 @@ namespace PeanutPermissions {
                 roles: me.permissionForm.assigned()
             };
             me.application.hideServiceMessages();
-            me.application.showWaiter('Updating permission...');
+            me.application.showWaiter(me.waitLabelUpdatePermissions);
             me.services.executeService('peanut.peanut-permissions::UpdatePermission', request,
                 function (serviceResponse: Peanut.IServiceResponse) {
                     me.application.hideWaiter();
