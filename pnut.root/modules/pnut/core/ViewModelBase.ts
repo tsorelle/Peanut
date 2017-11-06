@@ -14,6 +14,7 @@ namespace Peanut {
         public start = (application : IPeanutClient, successFunction?: (viewModel: IViewModel) => void)  => {
             let me = this;
             me.language = me.getUserLanguage();
+            me.addTranslations(Cookies.GetKvArray('peanutTranslations'));
             me.application = application;
             me.services = ServiceBroker.getInstance(application);
             me.application.registerComponents('@pnut/translate', () => {
@@ -28,6 +29,7 @@ namespace Peanut {
         public setVmName = (name: string) => {
             this.vmName = name;
         };
+
 
         protected getVmName = () => {
             return this.vmName;
@@ -113,6 +115,63 @@ namespace Peanut {
         // for use by components that must reference main view model.
         public getVmInstance = () => {
             return this;
+        };
+
+        protected getDefaultLoadMessage() {
+            let me = this;
+            return me.translate('wait-loading','...');
+        }
+    }
+
+    export class Cookies {
+        public static cleanCookieString(encodedString) {
+            let output = encodedString;
+            let binVal, thisString;
+            let myregexp = /(%[^%]{2})/;
+            let match = [];
+            while ((match = myregexp.exec(output)) != null
+            && match.length > 1
+            && match[1] != '') {
+                binVal = parseInt(match[1].substr(1),16);
+                thisString = String.fromCharCode(binVal);
+                output = output.replace(match[1], thisString);
+            }
+            return output;
+        }
+
+        public static kvObjectsToArray(kvArray: IKeyValuePair[]) {
+            let result = [];
+            for (let i=0;i<kvArray.length;i++) {
+                let obj = kvArray[i];
+                let value = obj.Value.split('+').join(' ');
+                result[obj.Key] = value.replace('[plus]','+');
+            }
+            return result;
+        }
+
+        public static kvCookieToArray(cookieString: string) {
+            let a = Cookies.cleanCookieString(cookieString);
+            let j = JSON.parse(a);
+            return Cookies.kvObjectsToArray(j);
+        }
+
+        public static Get(cookieName: string,index = 1) {
+            let cookie = document.cookie;
+            if (cookie) {
+                let match = cookie.match(new RegExp(cookieName + '=([^;]+)'));
+                if (match && match.length > index) {
+                    return match[index];
+                }
+            }
+            return '';
+        }
+
+        public static GetKvArray(cookieName: string, index = 1) {
+            let cookieString = Cookies.Get(cookieName,index);
+            if (cookieString) {
+                return Cookies.kvCookieToArray(cookieString);
+            }
+            return [];
         }
     }
 

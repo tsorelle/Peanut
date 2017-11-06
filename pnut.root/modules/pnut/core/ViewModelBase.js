@@ -7,6 +7,7 @@ var Peanut;
             this.start = function (application, successFunction) {
                 var me = _this;
                 me.language = me.getUserLanguage();
+                me.addTranslations(Cookies.GetKvArray('peanutTranslations'));
                 me.application = application;
                 me.services = Peanut.ServiceBroker.getInstance(application);
                 me.application.registerComponents('@pnut/translate', function () {
@@ -85,9 +86,66 @@ var Peanut;
             }
             return 'en-us';
         };
+        ViewModelBase.prototype.getDefaultLoadMessage = function () {
+            var me = this;
+            return me.translate('wait-loading', '...');
+        };
         return ViewModelBase;
     }());
     Peanut.ViewModelBase = ViewModelBase;
+    var Cookies = (function () {
+        function Cookies() {
+        }
+        Cookies.cleanCookieString = function (encodedString) {
+            var output = encodedString;
+            var binVal, thisString;
+            var myregexp = /(%[^%]{2})/;
+            var match = [];
+            while ((match = myregexp.exec(output)) != null
+                && match.length > 1
+                && match[1] != '') {
+                binVal = parseInt(match[1].substr(1), 16);
+                thisString = String.fromCharCode(binVal);
+                output = output.replace(match[1], thisString);
+            }
+            return output;
+        };
+        Cookies.kvObjectsToArray = function (kvArray) {
+            var result = [];
+            for (var i = 0; i < kvArray.length; i++) {
+                var obj = kvArray[i];
+                var value = obj.Value.split('+').join(' ');
+                result[obj.Key] = value.replace('[plus]', '+');
+            }
+            return result;
+        };
+        Cookies.kvCookieToArray = function (cookieString) {
+            var a = Cookies.cleanCookieString(cookieString);
+            var j = JSON.parse(a);
+            return Cookies.kvObjectsToArray(j);
+        };
+        Cookies.Get = function (cookieName, index) {
+            if (index === void 0) { index = 1; }
+            var cookie = document.cookie;
+            if (cookie) {
+                var match = cookie.match(new RegExp(cookieName + '=([^;]+)'));
+                if (match && match.length > index) {
+                    return match[index];
+                }
+            }
+            return '';
+        };
+        Cookies.GetKvArray = function (cookieName, index) {
+            if (index === void 0) { index = 1; }
+            var cookieString = Cookies.Get(cookieName, index);
+            if (cookieString) {
+                return Cookies.kvCookieToArray(cookieString);
+            }
+            return [];
+        };
+        return Cookies;
+    }());
+    Peanut.Cookies = Cookies;
     var HttpRequestVars = (function () {
         function HttpRequestVars() {
             this.requestvars = [];

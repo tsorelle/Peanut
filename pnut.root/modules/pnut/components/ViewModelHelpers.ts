@@ -5,8 +5,8 @@
 /// <reference path='../core/peanut.d.ts' />
 
 namespace Peanut {
-    export class KeyValueDTO implements INameValuePair {
-        public Name: string;
+    export class KeyValueDTO implements IKeyValuePair {
+        public Key: string;
         public Value: string;
     }
 

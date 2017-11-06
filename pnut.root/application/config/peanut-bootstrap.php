@@ -7,7 +7,7 @@
  */
 
 namespace Peanut;
-use Tops\sys\TConfiguration;
+use Tops\sys\TKeyValuePair;
 use Tops\sys\TLanguage;
 use Tops\sys\TPath;
 use Tops\sys\TStrings;
@@ -85,6 +85,14 @@ class Bootstrap
         // usually in module startup code.
         // session_start();
         // \Tops\sys\TSession::Initialize();
+
+        $translations = TLanguage::getTranslations(
+            array(
+                'wait-loading'
+            )
+        );
+
+        TKeyValuePair::CreateCookie($translations,'peanutTranslations');
 
         return $settings;
     }
@@ -164,8 +172,6 @@ class Bootstrap
             $result->loggingMode = $settings['loggingMode'];
         }
         $result->optimize = $optimize;
-
-        $result->loadMessage = TLanguage::text('wait-loading','Loading. Please wait.');
 
         return $result;
     }
