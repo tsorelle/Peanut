@@ -33,6 +33,7 @@ namespace Peanut {
         // call this funtions at end of page
         init(successFunction?: () => void) {
             let me = this;
+            me.showLoadWaiter();
             // setup messaging and other application initializations
             me.addTranslation('test','Un prueba de traducadora');
 
@@ -43,9 +44,11 @@ namespace Peanut {
             // me.application.registerComponentPrototype('@pnut/modal-confirm', () => {
             me.application.registerComponents('tests/intro-message,@pnut/modal-confirm', () => {
                 me.application.loadComponents('tests/message-constructor',() => {
-                    me.application.loadResources([
-                        'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'
-                        , '/application/assets/js/libraries/TestLib.js'
+
+                        me.application.loadResources([
+                            '@lib:fontawesome',
+                            'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'
+                        ,   '/application/assets/js/libraries/TestLib.js'
                         ], () => {
                             let test = _.head(['one','two','three']);
                             if (test === 'one') {
@@ -56,6 +59,7 @@ namespace Peanut {
                              let cvm = new messageConstructorComponent('Smoke Test Buttons:');
                              me.application.registerComponent('tests/message-constructor',cvm,() => {
                                 me.bindDefaultSection();
+                                me.application.hideWaiter();
                                 successFunction();
                             });
                         });
@@ -132,6 +136,23 @@ namespace Peanut {
         onShowSpinWaiter() {
             let count = 0;
             Peanut.WaitMessage.show("Hello " + (new Date()).toISOString());
+            let t = window.setInterval(function () {
+                if (count > 100) {
+                    clearInterval(t);
+                    Peanut.WaitMessage.hide();
+                }
+                else {
+                    Peanut.WaitMessage.setMessage('Counting ' + count);
+                    // Peanut.WaitMessage.setProgress(count,true);
+                }
+                count += 1;
+            }, 100);
+
+        }
+
+        onShowBannerWaiter() {
+            let count = 0;
+            Peanut.WaitMessage.show("Hello " + (new Date()).toISOString(),'banner-waiter');
             let t = window.setInterval(function () {
                 if (count > 100) {
                     clearInterval(t);

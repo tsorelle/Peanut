@@ -12,6 +12,7 @@ declare namespace Peanut {
         showWarning(messageText?:string): void;
         showWaiter(message?:string) : void;
         hideWaiter() : void;
+        showBannerWaiter(message?:string) : void;
         showProgress(message?: string) : void;
         setProgress(count: number) : void;
         loadResources(resourceList: any, successFunction?: () => void);

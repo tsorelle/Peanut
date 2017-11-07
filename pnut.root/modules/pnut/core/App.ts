@@ -33,9 +33,11 @@ namespace Peanut {
                 me.attachComponent('@pnut/service-messages', MessageManager.instance, function () {
                     me.loadWaitMessageTemplate('spin-waiter', function () {
                         me.loadWaitMessageTemplate('progress-waiter', function () {
-                            if (successFunction) {
-                                successFunction();
-                            }
+                            me.loadWaitMessageTemplate('banner-waiter',function() {
+                                if (successFunction) {
+                                    successFunction();
+                                }
+                            })
                         })
                     });
                 });
@@ -118,6 +120,10 @@ namespace Peanut {
 
         public hideWaiter() {
             WaitMessage.hide();
+        }
+
+        public showBannerWaiter(message: string = "Please wait . . .") {
+            WaitMessage.show(message, 'banner-waiter');
         }
 
         public showProgress(message: string = "Please wait . . .") {

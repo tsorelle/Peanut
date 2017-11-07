@@ -123,9 +123,11 @@ var Peanut;
                 me.attachComponent('@pnut/service-messages', MessageManager.instance, function () {
                     me.loadWaitMessageTemplate('spin-waiter', function () {
                         me.loadWaitMessageTemplate('progress-waiter', function () {
-                            if (successFunction) {
-                                successFunction();
-                            }
+                            me.loadWaitMessageTemplate('banner-waiter', function () {
+                                if (successFunction) {
+                                    successFunction();
+                                }
+                            });
                         });
                     });
                 });
@@ -137,6 +139,10 @@ var Peanut;
         };
         Application.prototype.hideWaiter = function () {
             Peanut.WaitMessage.hide();
+        };
+        Application.prototype.showBannerWaiter = function (message) {
+            if (message === void 0) { message = "Please wait . . ."; }
+            Peanut.WaitMessage.show(message, 'banner-waiter');
         };
         Application.prototype.showProgress = function (message) {
             if (message === void 0) { message = "Please wait . . ."; }
