@@ -30,15 +30,18 @@ namespace Peanut {
             PeanutLoader.checkConfig();
             me.koHelper = new KnockoutHelper();
             PeanutLoader.loadUiHelper(() => {
-                me.attachComponent('@pnut/service-messages', MessageManager.instance, function () {
-                    me.loadWaitMessageTemplate('spin-waiter', function () {
-                        me.loadWaitMessageTemplate('progress-waiter', function () {
-                            me.loadWaitMessageTemplate('banner-waiter',function() {
-                                if (successFunction) {
-                                    successFunction();
-                                }
+                let resources = Peanut.ui.helper.getResourceList();
+                me.loadResources(resources, () => {
+                    me.attachComponent('@pnut/service-messages', MessageManager.instance, function () {
+                        me.loadWaitMessageTemplate('spin-waiter', function () {
+                            me.loadWaitMessageTemplate('progress-waiter', function () {
+                                me.loadWaitMessageTemplate('banner-waiter', function () {
+                                    if (successFunction) {
+                                        successFunction();
+                                    }
+                                })
                             })
-                        })
+                        });
                     });
                 });
             });

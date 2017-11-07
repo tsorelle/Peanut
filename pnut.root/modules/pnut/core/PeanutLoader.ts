@@ -165,7 +165,8 @@ namespace Peanut {
             let scriptName = Config.values.peanutRootPath + 'extensions/' + extension + '/classes/' + className + '.js';
             PeanutLoader.loadScript(scriptName, () => {
                 let p = window['Peanut'];
-                let i = p['BootstrapUIHelper'];
+                // let i = p['BootstrapUIHelper'];
+                let i = p[className];
                 let inst = window['Peanut'][className];
                 let extInstance = new window['Peanut'][className];
                 final(extInstance);

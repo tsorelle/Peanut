@@ -120,13 +120,16 @@ var Peanut;
             Peanut.PeanutLoader.checkConfig();
             me.koHelper = new Peanut.KnockoutHelper();
             Peanut.PeanutLoader.loadUiHelper(function () {
-                me.attachComponent('@pnut/service-messages', MessageManager.instance, function () {
-                    me.loadWaitMessageTemplate('spin-waiter', function () {
-                        me.loadWaitMessageTemplate('progress-waiter', function () {
-                            me.loadWaitMessageTemplate('banner-waiter', function () {
-                                if (successFunction) {
-                                    successFunction();
-                                }
+                var resources = Peanut.ui.helper.getResourceList();
+                me.loadResources(resources, function () {
+                    me.attachComponent('@pnut/service-messages', MessageManager.instance, function () {
+                        me.loadWaitMessageTemplate('spin-waiter', function () {
+                            me.loadWaitMessageTemplate('progress-waiter', function () {
+                                me.loadWaitMessageTemplate('banner-waiter', function () {
+                                    if (successFunction) {
+                                        successFunction();
+                                    }
+                                });
                             });
                         });
                     });

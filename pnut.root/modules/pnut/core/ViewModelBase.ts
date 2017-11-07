@@ -72,10 +72,7 @@ namespace Peanut {
         protected showLoadWaiter =() => {
             let me = this;
             let message = me.translate('wait-loading');
-            me.application.loadResources('@lib:fontawesome', () => {
-                me.application.showBannerWaiter(message)
-            });
-
+            me.application.showBannerWaiter(message)
         };
 
         protected getRequestVar = (key : string, defaultValue : any = null) => {

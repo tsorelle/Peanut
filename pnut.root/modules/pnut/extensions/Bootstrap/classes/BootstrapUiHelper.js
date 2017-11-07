@@ -1,12 +1,5 @@
-/**
- * Created by Terry on 7/9/2017.
- */
-///<reference path="../../../../typings/jquery/jquery.d.ts"/>
 var Peanut;
 (function (Peanut) {
-    /**
-     *  Implementation class for Bootstrap dependencies
-     */
     var BootstrapUiHelper = (function () {
         function BootstrapUiHelper() {
             var _this = this;
@@ -27,8 +20,12 @@ var Peanut;
             this.hideModal = function (container) {
                 container.modal('hide');
             };
+            this.getResourceList = function () {
+                return [];
+            };
         }
         return BootstrapUiHelper;
     }());
     Peanut.BootstrapUiHelper = BootstrapUiHelper;
 })(Peanut || (Peanut = {}));
+//# sourceMappingURL=BootstrapUiHelper.js.map

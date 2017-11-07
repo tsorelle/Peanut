@@ -6,11 +6,12 @@ namespace Peanut {
     /**
      *  Implementation class for Bootstrap dependencies
      */
-    export class BootstrapUiHelper {
-        public showMessage = (message: string, id: string,  container : any ) => {
+    export class BootstrapFAUiHelper {
+        public showMessage = (message: string, id: string,  container : any, modal=true ) => {
             let span = container.find('#' + id);
             span.text(message);
             this.showModal(container);
+
         };
         public hideMessage = (container : any) => {
             this.hideModal(container);
@@ -28,7 +29,7 @@ namespace Peanut {
         };
 
         public getResourceList = () => {
-            return [];
+            return ['@lib:fontawesome'];
         }
     }
 }

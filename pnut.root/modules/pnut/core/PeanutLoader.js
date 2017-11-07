@@ -148,7 +148,7 @@ var Peanut;
             var scriptName = Config.values.peanutRootPath + 'extensions/' + extension + '/classes/' + className + '.js';
             PeanutLoader.loadScript(scriptName, function () {
                 var p = window['Peanut'];
-                var i = p['BootstrapUIHelper'];
+                var i = p[className];
                 var inst = window['Peanut'][className];
                 var extInstance = new window['Peanut'][className];
                 final(extInstance);

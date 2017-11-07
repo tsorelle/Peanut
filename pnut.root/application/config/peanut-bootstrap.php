@@ -160,7 +160,7 @@ class Bootstrap
         $result->mvvmPath = $mvvmPath . '/';
         $result->serviceUrl = empty($settings['serviceUrl']) ? '/peanut/service/execute' : $settings['serviceUrl'];
         $result->vmNamespace = empty($settings['vmNamespace']) ? 'Peanut' : $settings['vmNamespace'];
-        $result->uiExtension = empty($settings['uiExtension']) ? 'Bootstrap' : $settings['uiExtension'];
+        $result->uiExtension = empty($settings['uiExtension']) ? 'BootstrapFA' : $settings['uiExtension'];
         $result->srcLocation = $srcLocation;
         $result->topsLocation = empty($ini['locations']['tops']) ? "$srcLocation/tops" : $ini['locations']['tops'];
         $result->peanutSrcLocation = "$srcLocation/peanut";

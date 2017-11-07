@@ -46,7 +46,7 @@ namespace Peanut {
                 me.application.loadComponents('tests/message-constructor',() => {
 
                         me.application.loadResources([
-                            '@lib:fontawesome',
+                            // '@lib:fontawesome',
                             'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'
                         ,   '/application/assets/js/libraries/TestLib.js'
                         ], () => {

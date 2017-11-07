@@ -46,9 +46,7 @@ var Peanut;
             this.showLoadWaiter = function () {
                 var me = _this;
                 var message = me.translate('wait-loading');
-                me.application.loadResources('@lib:fontawesome', function () {
-                    me.application.showBannerWaiter(message);
-                });
+                me.application.showBannerWaiter(message);
             };
             this.getRequestVar = function (key, defaultValue) {
                 if (defaultValue === void 0) { defaultValue = null; }

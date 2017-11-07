@@ -73,6 +73,8 @@ declare namespace Peanut {
         hideMessage(container : any);
         showModal(container : any);
         hideModal(container: any);
+        getResourceList() : string[];
+
     }
 
     export interface IPeanutConfig {
