@@ -75,6 +75,7 @@ namespace Peanut {
             me.application.showBannerWaiter(message)
         };
 
+        // Assemble typical message like 'Updating mailbox, please wait...'
         protected getActionMessage = (action: string, entity: string) => {
             return this.translate('wait-action-'+action) + ' ' + this.translate(entity) + ', ' + this.translate('wait-please')+'...';
         };
