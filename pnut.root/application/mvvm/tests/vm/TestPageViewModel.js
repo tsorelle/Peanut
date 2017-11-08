@@ -74,6 +74,7 @@ var Peanut;
             var me = this;
             me.showLoadWaiter();
             me.addTranslation('test', 'Un prueba de traducadora');
+            me.addTranslation('thing-plural', 'thingies');
             me.application.registerComponents('tests/intro-message,@pnut/modal-confirm', function () {
                 me.application.loadComponents('tests/message-constructor', function () {
                     me.application.loadResources([
@@ -169,7 +170,7 @@ var Peanut;
         };
         TestPageViewModel.prototype.onShowActionWaiter = function () {
             var count = 0;
-            var message = this.showActionWaiterBanner('add', 'Thingies');
+            var message = this.showActionWaiterBanner('add', 'thing-plural');
             var t = window.setInterval(function () {
                 if (count > 50) {
                     clearInterval(t);

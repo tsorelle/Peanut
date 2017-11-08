@@ -49,7 +49,7 @@ var Peanut;
                 me.application.showBannerWaiter(message);
             };
             this.getActionMessage = function (action, entity) {
-                return _this.translate('wait-action-' + action) + ' ' + entity + ', ' + _this.translate('wait-please') + '...';
+                return _this.translate('wait-action-' + action) + ' ' + _this.translate(entity) + ', ' + _this.translate('wait-please') + '...';
             };
             this.showActionWaiter = function (action, entity, waiter) {
                 if (waiter === void 0) { waiter = 'spin-waiter'; }

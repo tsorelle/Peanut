@@ -76,7 +76,7 @@ namespace Peanut {
         };
 
         protected getActionMessage = (action: string, entity: string) => {
-            return this.translate('wait-action-'+action) + ' ' + entity + ', ' + this.translate('wait-please')+'...';
+            return this.translate('wait-action-'+action) + ' ' + this.translate(entity) + ', ' + this.translate('wait-please')+'...';
         };
 
         protected showActionWaiter = (action: string, entity: string,waiter: string = 'spin-waiter') => {

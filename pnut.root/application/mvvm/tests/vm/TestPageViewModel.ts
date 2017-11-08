@@ -36,6 +36,7 @@ namespace Peanut {
             me.showLoadWaiter();
             // setup messaging and other application initializations
             me.addTranslation('test','Un prueba de traducadora');
+            me.addTranslation('thing-plural','thingies');
 
             // for components inside the default secton (<div id='testpage-view-container>)
             // Call load component to load and register. Before calling showDefaultSection()
@@ -169,7 +170,7 @@ namespace Peanut {
 
         onShowActionWaiter() {
             let count = 0;
-            let message = this.showActionWaiterBanner('add','Thingies');
+            let message = this.showActionWaiterBanner('add','thing-plural');
             // Peanut.WaitMessage.show(message,'banner-waiter');
             let t = window.setInterval(function () {
                 if (count > 50) {
