@@ -71,8 +71,21 @@ namespace Peanut {
 
         protected showLoadWaiter =() => {
             let me = this;
-            let message = me.translate('wait-loading');
+            let message = me.translate('wait-action-loading')+ ', ' + me.translate('wait-please')+'...';
             me.application.showBannerWaiter(message)
+        };
+
+        protected getActionMessage = (action: string, entity: string) => {
+            return this.translate('wait-action-'+action) + ' ' + entity + ', ' + this.translate('wait-please')+'...';
+        };
+
+        protected showActionWaiter = (action: string, entity: string,waiter: string = 'spin-waiter') => {
+            let message = this.getActionMessage(action,entity);
+            Peanut.WaitMessage.show(message,waiter);
+        };
+
+        protected showActionWaiterBanner = (action: string, entity: string) => {
+            this.showActionWaiter(action,entity,'banner-waiter');
         };
 
         protected getRequestVar = (key : string, defaultValue : any = null) => {

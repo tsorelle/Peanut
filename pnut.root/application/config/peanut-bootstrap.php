@@ -88,7 +88,11 @@ class Bootstrap
 
         $translations = TLanguage::getTranslations(
             array(
-                'wait-loading'
+                'wait-please',
+                'wait-action-loading',
+                'wait-action-update',
+                'wait-action-add',
+                'wait-action-delete'
             )
         );
 

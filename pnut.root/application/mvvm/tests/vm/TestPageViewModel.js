@@ -167,6 +167,17 @@ var Peanut;
                 count += 1;
             }, 100);
         };
+        TestPageViewModel.prototype.onShowActionWaiter = function () {
+            var count = 0;
+            var message = this.showActionWaiterBanner('add', 'Thingies');
+            var t = window.setInterval(function () {
+                if (count > 50) {
+                    clearInterval(t);
+                    Peanut.WaitMessage.hide();
+                }
+                count += 1;
+            }, 100);
+        };
         TestPageViewModel.prototype.onShowWaiter = function () {
             var me = this;
             me.application.showWaiter();

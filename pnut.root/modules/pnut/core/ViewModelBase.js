@@ -45,8 +45,19 @@ var Peanut;
             };
             this.showLoadWaiter = function () {
                 var me = _this;
-                var message = me.translate('wait-loading');
+                var message = me.translate('wait-action-loading') + ', ' + me.translate('wait-please') + '...';
                 me.application.showBannerWaiter(message);
+            };
+            this.getActionMessage = function (action, entity) {
+                return _this.translate('wait-action-' + action) + ' ' + entity + ', ' + _this.translate('wait-please') + '...';
+            };
+            this.showActionWaiter = function (action, entity, waiter) {
+                if (waiter === void 0) { waiter = 'spin-waiter'; }
+                var message = _this.getActionMessage(action, entity);
+                Peanut.WaitMessage.show(message, waiter);
+            };
+            this.showActionWaiterBanner = function (action, entity) {
+                _this.showActionWaiter(action, entity, 'banner-waiter');
             };
             this.getRequestVar = function (key, defaultValue) {
                 if (defaultValue === void 0) { defaultValue = null; }

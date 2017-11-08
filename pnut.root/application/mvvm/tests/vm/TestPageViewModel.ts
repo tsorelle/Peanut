@@ -167,6 +167,21 @@ namespace Peanut {
 
         }
 
+        onShowActionWaiter() {
+            let count = 0;
+            let message = this.showActionWaiterBanner('add','Thingies');
+            // Peanut.WaitMessage.show(message,'banner-waiter');
+            let t = window.setInterval(function () {
+                if (count > 50) {
+                    clearInterval(t);
+                    Peanut.WaitMessage.hide();
+                }
+                count += 1;
+            }, 100);
+
+        }
+
+
         onShowWaiter() {
             let me = this;
             me.application.showWaiter();
