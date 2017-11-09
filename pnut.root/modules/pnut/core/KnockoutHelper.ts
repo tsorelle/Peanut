@@ -185,7 +185,10 @@ namespace Peanut {
                 if (key in config.libraries) {
                     return config.libraries[key];
                 }
-                console.error('Library "' + key + '" not in settings.ini')
+                console.log('Library "' + key + '" not in settings.ini. ' +
+                    'Will look in application/mvvm. If the libraray is preloaded, add the entry "' + name + '=preinstalled" ' +
+                    'to the "[libraries]" section"'
+                );
             }
             return false;
         }
