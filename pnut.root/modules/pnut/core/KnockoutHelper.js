@@ -286,7 +286,7 @@ var Peanut;
                     return config.libraries[key];
                 }
                 console.log('Library "' + key + '" not in settings.ini. ' +
-                    'Will look in application/mvvm. If the libraray is preloaded, add the entry "' + name + '=preinstalled" ' +
+                    'Will look in application/mvvm. If the library is preloaded, add the entry "' + key + '=preinstalled" ' +
                     'to the "[libraries]" section"');
             }
             return false;
