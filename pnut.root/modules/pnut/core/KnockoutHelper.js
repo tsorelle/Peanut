@@ -280,7 +280,21 @@ var Peanut;
             });
         };
         KnockoutHelper.prototype.getLibrary = function (name, config) {
-            if (name && name.substr(0, 5) == '@lib:') {
+            var prefix = name.substr(0, 5);
+            if (prefix == '@pkg:') {
+                var ext = 'js';
+                var p = name.lastIndexOf('.');
+                if (p == -1) {
+                    name = name + '.js';
+                }
+                else {
+                    ext = name.substr(p + 1);
+                }
+                var parts = name.substr(5).split('/');
+                var packageDir = parts.shift();
+                return config.packagePath + packageDir + '/' + ext + '/' + parts.join('/');
+            }
+            else if (prefix == '@lib:') {
                 var key = name.substr(5);
                 if (key in config.libraries) {
                     return config.libraries[key];

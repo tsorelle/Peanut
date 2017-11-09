@@ -180,7 +180,21 @@ namespace Peanut {
         }
 
         private getLibrary (name: string, config: IPeanutConfig) {
-            if (name && name.substr(0,5) == '@lib:') {
+            let prefix = name.substr(0,5);
+            if (prefix == '@pkg:') {
+                let ext = 'js';
+                let p = name.lastIndexOf('.');
+                if (p == -1) {
+                    name = name + '.js';
+                }
+                else {
+                    ext = name.substr(p+1);
+                }
+                let parts = name.substr(5).split('/');
+                let packageDir = parts.shift();
+                return config.packagePath + packageDir + '/'+ext+'/' + parts.join('/');
+            }
+            else if (prefix == '@lib:') {
                 let key = name.substr(5);
                 if (key in config.libraries) {
                     return config.libraries[key];
@@ -190,6 +204,7 @@ namespace Peanut {
                     'to the "[libraries]" section"'
                 );
             }
+
             return false;
         }
 
