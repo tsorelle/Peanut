@@ -271,7 +271,7 @@ var Peanut;
                     if (name_1) {
                         var path = (name_1.substr(0, 5) == '@lib:') ?
                             me.getLibrary(name_1, config) :
-                            me.expandFileName(name_1, config.mvvmPath);
+                            me.expandFileName(name_1, config.applicationPath);
                         if (path !== false) {
                             params.push(path);
                         }

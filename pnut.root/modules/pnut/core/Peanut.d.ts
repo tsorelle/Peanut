@@ -85,6 +85,7 @@ declare namespace Peanut {
         mvvmPath :             string;
         corePath :                string;
         modulePath:             string;
+        applicationPath:    string;
         serviceUrl:               string;
         dependencies:             string;
         vmNamespace:        string;

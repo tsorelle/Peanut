@@ -158,6 +158,7 @@ class Bootstrap
 
         $result->applicationVersionNumber = empty($settings['applicationVersionNumber']) ? '0.0' : $settings['applicationVersionNumber'];
         $result->commonRootPath = $root;
+        $result->applicationPath = $root.'application/';
         $result->peanutRootPath = $peanutPath . '/';
         $result->corePath = $peanutPath . '/core/';
         $result->packagePath = $packagePath . '/';

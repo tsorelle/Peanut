@@ -94,6 +94,7 @@ var Peanut;
                     Peanut.Config.values.loggingMode = data.loggingMode;
                     Peanut.Config.values.uiExtension = data.uiExtension;
                     Peanut.Config.values.libraries = data.libraries;
+                    Peanut.Config.values.applicationPath = data.applicationPath;
                     if (data.loggingMode == 'verbose') {
                         console.log('Namespace ' + Peanut.Config.values.vmNamespace);
                     }

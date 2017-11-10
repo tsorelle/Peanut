@@ -168,7 +168,7 @@ namespace Peanut {
                     if (name) {
                         let path = (name.substr(0, 5) == '@lib:') ?
                             me.getLibrary(name, config) :
-                            me.expandFileName(name, config.mvvmPath);
+                            me.expandFileName(name, config.applicationPath);
                         if (path !== false) {
                             params.push(path);
                         }
