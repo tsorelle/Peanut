@@ -86,6 +86,7 @@ declare namespace Peanut {
         corePath :                string;
         modulePath:             string;
         applicationPath:    string;
+        libraryPath:    string;
         serviceUrl:               string;
         dependencies:             string;
         vmNamespace:        string;

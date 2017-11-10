@@ -48,8 +48,13 @@ namespace Peanut {
 
                         me.application.loadResources([
                             // '@lib:fontawesome',
-                            'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'
-                        ,   '/application/assets/js/libraries/TestLib.js'
+                            '@lib:lodash',
+                            // 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js',
+                            '@lib:local/TestLib.js',
+                            // '/application/assets/js/libraries/TestLib.js',
+                            '@pnut/editPanel',
+                            '@pnut/searchListObservable',
+                            '@pnut/ViewModelHelpers'
                         ], () => {
                             let test = _.head(['one','two','three']);
                             if (test === 'one') {

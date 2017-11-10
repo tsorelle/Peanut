@@ -159,6 +159,7 @@ class Bootstrap
         $result->applicationVersionNumber = empty($settings['applicationVersionNumber']) ? '0.0' : $settings['applicationVersionNumber'];
         $result->commonRootPath = $root;
         $result->applicationPath = $root.'application/';
+        $result->libraryPath = empty($settings['libraryPath']) ?  $result->applicationPath."assets/js/libraries/" : $settings['libraryPath'].'/';
         $result->peanutRootPath = $peanutPath . '/';
         $result->corePath = $peanutPath . '/core/';
         $result->packagePath = $packagePath . '/';

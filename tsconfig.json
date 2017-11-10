@@ -8,6 +8,7 @@
     "pnut.root/tests/js/**/*",
     "pnut.root/modules/pnut/core/**/*",
     "pnut.root/modules/pnut/components/**/*",
+    "pnut.root/modules/pnut/js/**/*",
     "pnut.root/modules/pnut/packages/**/*",
     "pnut.root/modules/pnut/admin/**/*",
     "pnut.root/modules/pnut/extensions/**/*",

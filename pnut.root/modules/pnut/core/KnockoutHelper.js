@@ -282,6 +282,9 @@ var Peanut;
         };
         KnockoutHelper.prototype.getLibrary = function (name, config) {
             var key = name.substr(5);
+            if (key.substr(0, 6) == 'local/') {
+                return config.libraryPath + key.substr(6);
+            }
             if (key in config.libraries) {
                 return config.libraries[key];
             }
