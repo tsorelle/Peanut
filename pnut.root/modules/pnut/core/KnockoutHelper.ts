@@ -139,18 +139,16 @@ namespace Peanut {
                 return fileName;
             }
             let me = this;
-            let parsed = me.parseFileName(fileName,defaultPath);
-
-            let fileExtension = fileName.substr((fileName.lastIndexOf('.') + 1));
-            if (fileExtension) {
-                switch (fileExtension.toLowerCase()) {
-                    case 'css' :
-                        return parsed.root + 'css/' + parsed.name;
-                    case 'js' :
-                        return parsed.root + 'components/' + parsed.name;
-                }
+            let fileExtension = 'js';
+            let p = fileName.lastIndexOf('.');
+            if (p == -1) {
+                fileName = fileName + '.js';
             }
-            return fileName;
+            else {
+                fileExtension = fileName.substr(p + 1).toLowerCase();
+            }
+            let parsed = me.parseFileName(fileName,defaultPath);
+            return parsed.root + fileExtension + '/' + parsed.name;
         }
 
         /**
@@ -166,13 +164,14 @@ namespace Peanut {
             PeanutLoader.getConfig((config: IPeanutConfig) => {
                 let params = [];
                 for (let i = 0; i < resourceList.length; i++) {
-
-                    let path = me.getLibrary(resourceList[i],config);
-                    if (path === false) {
-                        path = me.expandFileName(resourceList[i],config.mvvmPath);
-                    }
-                    if (path !== 'preloaded') {
-                        params.push(path);
+                    let name = resourceList[i];
+                    if (name) {
+                        let path = (name.substr(0, 5) == '@lib:') ?
+                            me.getLibrary(name, config) :
+                            me.expandFileName(name, config.mvvmPath);
+                        if (path !== false) {
+                            params.push(path);
+                        }
                     }
                 }
                 PeanutLoader.load(params, successFunction);
@@ -180,35 +179,13 @@ namespace Peanut {
         }
 
         private getLibrary (name: string, config: IPeanutConfig) {
-            let prefix = name.substr(0,5);
-            if (prefix == '@pkg:') {
-                let ext = 'js';
-                let p = name.lastIndexOf('.');
-                if (p == -1) {
-                    name = name + '.js';
-                }
-                else {
-                    ext = name.substr(p+1);
-                }
-                let parts = name.substr(5).split('/');
-                let packageDir = parts.shift();
-                return config.packagePath + packageDir + '/'+ext+'/' + parts.join('/');
+            let key = name.substr(5);
+            if (key in config.libraries) {
+                return config.libraries[key];
             }
-            else if (prefix == '@lib:') {
-                let key = name.substr(5);
-                if (key in config.libraries) {
-                    return config.libraries[key];
-                }
-                console.log('Library "' + key + '" not in settings.ini. ' +
-                    'Will look in application/mvvm. If the library is preloaded, add the entry "' + key + '=preinstalled" ' +
-                    'to the "[libraries]" section"'
-                );
-            }
-
+            console.log('Library "' + key + '" not in settings.ini.');
             return false;
         }
-
-
 
         public loadViewModel = (vmName : string, final : (viewModel: IViewModel) => void) => {
             PeanutLoader.checkConfig();

@@ -250,17 +250,16 @@ var Peanut;
                 return fileName;
             }
             var me = this;
-            var parsed = me.parseFileName(fileName, defaultPath);
-            var fileExtension = fileName.substr((fileName.lastIndexOf('.') + 1));
-            if (fileExtension) {
-                switch (fileExtension.toLowerCase()) {
-                    case 'css':
-                        return parsed.root + 'css/' + parsed.name;
-                    case 'js':
-                        return parsed.root + 'components/' + parsed.name;
-                }
+            var fileExtension = 'js';
+            var p = fileName.lastIndexOf('.');
+            if (p == -1) {
+                fileName = fileName + '.js';
             }
-            return fileName;
+            else {
+                fileExtension = fileName.substr(p + 1).toLowerCase();
+            }
+            var parsed = me.parseFileName(fileName, defaultPath);
+            return parsed.root + fileExtension + '/' + parsed.name;
         };
         KnockoutHelper.prototype.loadResources = function (resourceList, successFunction) {
             var me = this;
@@ -268,41 +267,25 @@ var Peanut;
             Peanut.PeanutLoader.getConfig(function (config) {
                 var params = [];
                 for (var i = 0; i < resourceList.length; i++) {
-                    var path = me.getLibrary(resourceList[i], config);
-                    if (path === false) {
-                        path = me.expandFileName(resourceList[i], config.mvvmPath);
-                    }
-                    if (path !== 'preloaded') {
-                        params.push(path);
+                    var name_1 = resourceList[i];
+                    if (name_1) {
+                        var path = (name_1.substr(0, 5) == '@lib:') ?
+                            me.getLibrary(name_1, config) :
+                            me.expandFileName(name_1, config.mvvmPath);
+                        if (path !== false) {
+                            params.push(path);
+                        }
                     }
                 }
                 Peanut.PeanutLoader.load(params, successFunction);
             });
         };
         KnockoutHelper.prototype.getLibrary = function (name, config) {
-            var prefix = name.substr(0, 5);
-            if (prefix == '@pkg:') {
-                var ext = 'js';
-                var p = name.lastIndexOf('.');
-                if (p == -1) {
-                    name = name + '.js';
-                }
-                else {
-                    ext = name.substr(p + 1);
-                }
-                var parts = name.substr(5).split('/');
-                var packageDir = parts.shift();
-                return config.packagePath + packageDir + '/' + ext + '/' + parts.join('/');
+            var key = name.substr(5);
+            if (key in config.libraries) {
+                return config.libraries[key];
             }
-            else if (prefix == '@lib:') {
-                var key = name.substr(5);
-                if (key in config.libraries) {
-                    return config.libraries[key];
-                }
-                console.log('Library "' + key + '" not in settings.ini. ' +
-                    'Will look in application/mvvm. If the library is preloaded, add the entry "' + key + '=preinstalled" ' +
-                    'to the "[libraries]" section"');
-            }
+            console.log('Library "' + key + '" not in settings.ini.');
             return false;
         };
         KnockoutHelper.prototype.getHtmlTemplate = function (name, successFunction) {
