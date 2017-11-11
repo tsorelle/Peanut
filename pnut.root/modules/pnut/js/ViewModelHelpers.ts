@@ -6,7 +6,7 @@
 
 namespace Peanut {
     /**
-     * Constants for scym entities editState
+     * Constants for entity editState
      */
     export class editState {
         public static unchanged : number = 0;
