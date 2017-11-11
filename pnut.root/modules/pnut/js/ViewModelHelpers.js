@@ -1,11 +1,5 @@
 var Peanut;
 (function (Peanut) {
-    var KeyValueDTO = (function () {
-        function KeyValueDTO() {
-        }
-        return KeyValueDTO;
-    }());
-    Peanut.KeyValueDTO = KeyValueDTO;
     var editState = (function () {
         function editState() {
         }
