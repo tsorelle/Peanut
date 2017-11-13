@@ -133,7 +133,7 @@ namespace Peanut {
         }
 
         // for use by components that must reference main view model.
-        public getVmInstance = () => {
+        public self = () => {
             return this;
         };
 

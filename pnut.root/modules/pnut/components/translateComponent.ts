@@ -12,7 +12,7 @@ namespace Peanut {
                 throw('Paramiter "textCode" is required')
             }
             if (!params.translator) {
-                throw('owner parameter required:  "translator: getVmInstance"')
+                throw('owner parameter required:  "translator: self"')
             }
             let defaultText =  params.default ? params.default : params.code;
             let text = (<ViewModelBase>params.translator()).translate(params.code,defaultText);

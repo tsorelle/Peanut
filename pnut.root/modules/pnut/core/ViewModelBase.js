@@ -91,7 +91,7 @@ var Peanut;
                 var me = _this;
                 return me.language;
             };
-            this.getVmInstance = function () {
+            this.self = function () {
                 return _this;
             };
         }

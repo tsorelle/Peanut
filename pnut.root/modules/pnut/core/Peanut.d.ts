@@ -35,7 +35,7 @@ declare namespace Peanut {
      * -----------------------------------------
      * loadComponent(componentName: string, successFunction?: () => void);
      *    use registerComponents, registerComponentPrototype or registerComponent(name,null,finalFunction)
-     * loadComponentInstance(name: string, getVmInstance : () => any, finalFunction?: () => void);
+     * loadComponentInstance(name: string, self : () => any, finalFunction?: () => void);
      *     use registerComponent
      * bindComponent(name: string, vm: any, finalFunction?: () => void);
      *      use attachComponent attachComponentPrototype
@@ -162,6 +162,24 @@ declare namespace Peanut {
         init(successFunction?: () => void);
         setVmName(name: string);
         start(application : IPeanutClient, successFunction?: (viewModel: any) => void);
+    }
+
+    export interface IEditPanel {
+        viewState: KnockoutObservable<string>;
+        hasErrors : KnockoutObservable<boolean>;
+        isAssigned : KnockoutObservable<boolean>;
+        relationId : KnockoutObservable<any>;
+
+        edit(relationId?: any);
+        close();
+        search();
+        empty();
+        view();
+        setViewState(state);
+        clear() : any;
+        validate(): boolean;
+        clearValidations();
+        search()
     }
 
 }
