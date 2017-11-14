@@ -118,10 +118,13 @@ declare namespace Peanut {
         Value: any;
     }
 
+
     export interface ILookupItem {
-        Key: any;
-        Text: string;
-        Description: string;
+        id : any;
+        code: string;
+        name: string;
+        description : string;
+
     }
 
     export interface IListItem {
