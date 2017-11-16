@@ -113,11 +113,14 @@ declare namespace Peanut {
         Value: any;
     }
 
+    export interface ISelectListItem extends INameValuePair {
+        Description: string;
+    }
+
     export interface IKeyValuePair {
         Key: any;
         Value: any;
     }
-
 
     export interface ILookupItem {
         id : any;
