@@ -84,8 +84,6 @@ class ViewModelManager
             }
         }
 
-
-
         $key = strtolower($pathAlias);
         if (array_key_exists($key, self::$vmSettings)) {
             $item = self::$vmSettings[$key];
@@ -123,6 +121,7 @@ class ViewModelManager
                 TConfiguration::getValue('page-title','pages',$pathAlias) :
                 $item['page-title'];
 
+            $result->heading = empty($item['heading']) ? '' : '<h2>'.$item['heading'].'</h2>';
             $result->permissions = TStrings::ListToArray(@$item['permissions']);
             $result->roles = TStrings::ListToArray(@$item['roles']);
 

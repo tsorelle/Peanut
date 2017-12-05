@@ -20,4 +20,5 @@ class ViewModelInfo
     public $roles;
     public $permissions;
     public $pageTitle;
+    public $heading;
 }

@@ -41,7 +41,8 @@ class ViewModelPageBuilder
             'theme' => $theme,
             'loader' => $loader,
             'view' => $view,
-            'vmname' => $settings->vmName
+            'vmname' => $settings->vmName,
+            'heading' => $settings->heading
         ));
 
     }
