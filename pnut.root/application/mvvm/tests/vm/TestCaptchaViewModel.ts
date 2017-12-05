@@ -4,7 +4,7 @@
 
 // used for these test routines.
 /// <reference path='../../../../modules/pnut/core/WaitMessage.ts'/>
-/// <reference path='../components/testFormComponent.ts'/>
+/// <reference path='../js/testFormComponent.ts'/>
 /// <reference path='../components/messageConstructorComponent.ts'/>
 /// <reference path='../../../../modules/typings/lodash/index.d.ts'/>
 /// <reference path='../../../../application/assets/js/libraries/TestLib.ts'/>

@@ -51,9 +51,13 @@ var Peanut;
                 console.log('Show form component');
                 var me = _this;
                 _this.application.attachComponent('tests/test-form', function (returnFuncton) {
-                    console.log('accachComponent - returnFunction');
-                    _this.application.loadResources('tests/testFormComponent.js', function () {
+                    console.log('attachComponent - returnFunction');
+                    _this.application.loadComponents('@app/tests/test-form', function () {
                         console.log('instatiate testForm component');
+                        if (!Peanut.testFormComponent) {
+                            console.log('Test form component not loaded.');
+                            return;
+                        }
                         me.testForm = new Peanut.testFormComponent();
                         me.testForm.setMessage('Watch this space.');
                         me.messagePanel('form');
@@ -80,7 +84,6 @@ var Peanut;
                     me.application.loadResources([
                         '@lib:lodash',
                         '@lib:local/TestLib.js',
-                        '@pnut/editPanel',
                         '@pnut/searchListObservable',
                         '@pnut/ViewModelHelpers'
                     ], function () {

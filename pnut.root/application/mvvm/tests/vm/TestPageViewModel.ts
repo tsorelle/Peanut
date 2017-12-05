@@ -52,7 +52,6 @@ namespace Peanut {
                             // 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js',
                             '@lib:local/TestLib.js',
                             // '/application/assets/js/libraries/TestLib.js',
-                            '@pnut/editPanel',
                             '@pnut/searchListObservable',
                             '@pnut/ViewModelHelpers'
                         ], () => {
@@ -270,9 +269,13 @@ namespace Peanut {
 
                 // vm factory function
                 (returnFuncton: (vm: any) => void) => {
-                    console.log('accachComponent - returnFunction');
-                    this.application.loadResources('tests/testFormComponent.js', () => {
+                    console.log('attachComponent - returnFunction');
+                    this.application.loadComponents('@app/tests/test-form', () => {
                         console.log('instatiate testForm component');
+                        if (!Peanut.testFormComponent) {
+                            console.log('Test form component not loaded.');
+                            return;
+                        }
                         me.testForm = new Peanut.testFormComponent();
                         me.testForm.setMessage('Watch this space.');
                         me.messagePanel('form');
