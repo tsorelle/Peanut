@@ -42,27 +42,7 @@ class CheckAnswerCommand extends TServiceCommand
         return trim($result);
     }
     
-    private function getAnswers($answerKey,$data) {
-        $languageCodes = TLanguage::getLanguageCodes();
-        foreach ($languageCodes as $languageCode) {
-            if (!empty($data["$answerKey-$languageCode"])) {
-                return $data["$answerKey-$languageCode"];
-            }
-            $parts = explode('-',$languageCode);
-            if (sizeof($parts) > 1) {
-                $language = $parts[0];
-                if (!empty($data["$answerKey-$language"])) {
-                    return $data["$answerKey-$language"];
-                }
-            }
-        }
-        if (empty($data[$answerKey])) {
-            return false;
-        }
-        return $data[$answerKey];
-    }
-
-    protected function run()
+     protected function run()
     {
         $request = $this->getRequest();
         if (empty($request)) {
@@ -96,13 +76,18 @@ class CheckAnswerCommand extends TServiceCommand
             $noAnswers = TLanguage::text('no-answers-found','No answers found for question');
             $this->addErrorMessage("$noAnswers #".$request->questionId,true);
         }
-        $answers = $this->getAnswers($answerKey, $data);
-        $answer = $this->cleanAnswer($request->answer);
         $result = false;
-        foreach ($answers as $correct) {
-            if ($answer == $correct) {
-                $result = true;
-                break;
+        if (empty($data[$answerKey])) {
+            $this->addErrorMessage('No answer section found.');
+        }
+        else {
+            $answer = $this->cleanAnswer($request->answer);
+            $answers = $data[$answerKey];
+            foreach ($answers as $correct) {
+                if ($answer == $correct) {
+                    $result = true;
+                    break;
+                }
             }
         }
 

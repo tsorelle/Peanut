@@ -56,31 +56,15 @@ class GetQuestionsCommand extends TServiceCommand
         return $data;
     }
 
-    private function getQuestions(array $data) {
-        $languageCodes = TLanguage::getLanguageCodes();
-        foreach ($languageCodes as $languageCode) {
-            if (!empty($data["questions-$languageCode"])) {
-                return $data["questions-$languageCode"];
-            }
-            $parts = explode('-',$languageCode);
-            if (sizeof($parts) > 1) {
-                $language = $parts[0];
-                if (!empty($data["questions-$language"])) {
-                    return $data["questions-$language"];
-                }
-            }
-        }
-        if (empty($data['questions'])) {
-            return false;
-        }
-        return $data['questions'];
-    }
-
     protected function run()
     {
+        $response = new \stdClass();
+        $response->questions = [];
+        $response->translations =  [];
+
         if ($this->getUser()->isAuthenticated()) {
             // empty array with no errors indicates do riddle needed.
-            $this->setReturnValue(array());
+            $this->setReturnValue($response);
             return;
         }
         $topic = $this->getRequest();
@@ -89,12 +73,11 @@ class GetQuestionsCommand extends TServiceCommand
             $this->addErrorMessage($data);
             return;
         }
-
-        $questions = $this->getQuestions($data);
-        if ($questions === false) {
+        if (empty($data['questions'])) {
             $this->addErrorMessage("$topic.ini file invalid. No questions section");
             return;
         }
+        $questions = $data['questions'];
         $result = array();
 
         foreach ($questions as $key => $value) {
@@ -104,7 +87,6 @@ class GetQuestionsCommand extends TServiceCommand
             $result[] = $item;
         }
 
-        $response = new \stdClass();
         $response->questions = $result;
         $response->translations =  TLanguage::getTranslations(
           array(
