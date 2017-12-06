@@ -74,29 +74,27 @@ class GetQuestionsCommand extends TServiceCommand
         if ($this->getUser()->isAuthenticated()) {
             // empty array with no errors indicates do riddle needed.
             $response->questions = [];
-        }
-        else {
-        $topic = $this->getRequest();
-        $data = self::loadDataFile($topic);
-        if (!is_array($data)) {
-            $this->addErrorMessage($data);
-            return;
-        }
+        } else {
+            $topic = $this->getRequest();
+            $data = self::loadDataFile($topic);
+            if (!is_array($data)) {
+                $this->addErrorMessage($data);
+                return;
+            }
+            if (empty($data['questions'])) {
+                $this->addErrorMessage("$topic.ini file invalid. No questions section");
+                return;
+            }
+            $questions = $data['questions'];
+            $result = array();
 
-            $questions = $this->getQuestions($data);
-            if ($questions === false) {
-            $this->addErrorMessage("$topic.ini file invalid. No questions section");
-            return;
-        }
-
-        foreach ($questions as $key => $value) {
-            $item = new \stdClass();
-            $item->id = $key;
-            $item->question = $value;
-            $result[] = $item;
-        }
-
-        $response->questions = $result;
+            foreach ($questions as $key => $value) {
+                $item = new \stdClass();
+                $item->id = $key;
+                $item->question = $value;
+                $result[] = $item;
+            }
+            $response->questions = $result;
         }
         $this->setReturnValue($response);
     }
