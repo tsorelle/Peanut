@@ -59,26 +59,35 @@ class GetQuestionsCommand extends TServiceCommand
     protected function run()
     {
         $response = new \stdClass();
-        $response->questions = [];
-        $response->translations =  [];
+        $response->translations = TLanguage::getTranslations(
+            array(
+                'riddler-header',
+                'riddler-guess-limit',
+                'riddler-sys-error1',
+                'riddler-sys-error2',
+                'riddler-error-no-answer',
+                'riddler-error-bad-answer',
+                'riddler-wait-check-answer'
+            )
+        );
 
         if ($this->getUser()->isAuthenticated()) {
             // empty array with no errors indicates do riddle needed.
-            $this->setReturnValue($response);
-            return;
+            $response->questions = [];
         }
+        else {
         $topic = $this->getRequest();
         $data = self::loadDataFile($topic);
         if (!is_array($data)) {
             $this->addErrorMessage($data);
             return;
         }
-        if (empty($data['questions'])) {
+
+            $questions = $this->getQuestions($data);
+            if ($questions === false) {
             $this->addErrorMessage("$topic.ini file invalid. No questions section");
             return;
         }
-        $questions = $data['questions'];
-        $result = array();
 
         foreach ($questions as $key => $value) {
             $item = new \stdClass();
@@ -88,18 +97,7 @@ class GetQuestionsCommand extends TServiceCommand
         }
 
         $response->questions = $result;
-        $response->translations =  TLanguage::getTranslations(
-          array(
-              'riddler-header',
-              'riddler-guess-limit',
-              'riddler-sys-error1',
-              'riddler-sys-error2',
-              'riddler-error-no-answer',
-              'riddler-error-bad-answer',
-              'riddler-wait-check-answer'
-          )
-        );
-
+        }
         $this->setReturnValue($response);
     }
 }
