@@ -12,23 +12,25 @@
     <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
     <script src="/[[loader]]"></script>
+    [[head]]
 
 </head>
 
 <body>
-[[navbar]]
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12" id='service-messages-container'><service-messages></service-messages></div>
-        </div>
-        <div>
-            [[heading]]
-            [[view]]
-        </div>
+[[bodyheader]]
+<div class="container">
+    [[navbar]]
+    <h1>[[heading]]</h1>
+    <div class="row">
+        <div class="col-md-12" id='service-messages-container'><service-messages></service-messages></div>
     </div>
+    <div>
+        [[content]]
+    </div>
+</div>
 
 </body>
-    <script>
-        Peanut.PeanutLoader.startApplication('[[vmname]]');
-    </script>
+<script>
+    Peanut.PeanutLoader.startApplication('[[vmname]]');
+</script>
 </html>

@@ -26,7 +26,8 @@ class ViewModelPageBuilder
         $this->templateManager = new TTemplateManager();
     }
 
-    public function buildPageContent(ViewModelInfo $settings, $content, $navbarContent='') {
+    public function buildPageContent(ViewModelInfo $settings, $content,
+                                     $navbarContent='',$headContent='',$bodyHeaderContent='') {
         $view = @file_get_contents($settings->view);
         if ($view === false) {
             return false;
@@ -40,9 +41,12 @@ class ViewModelPageBuilder
             'navbar' => $navbarContent,
             'theme' => $theme,
             'loader' => $loader,
-            'view' => $view,
+            'content' => $view,
             'vmname' => $settings->vmName,
-            'heading' => $settings->heading
+            'heading' => $settings->heading,
+            'head' => $headContent,
+            'bodyheader' => $bodyHeaderContent,
+
         ));
 
     }
@@ -55,13 +59,25 @@ class ViewModelPageBuilder
     }
 
     public function buildView(ViewModelInfo $settings, $templatePath = null) {
-        $templateName = empty($settings->template) ?  TConfiguration::getValue('template','templates','default-page.html')
+        $templateName = empty($settings->template) ?  TConfiguration::getValue('view','templates','default-page.html')
             : $settings->template;
         $pageContent = $this->getTemplate($templateName,$templatePath);
-        $navbar = TConfiguration::getValue('navbar','pages','default');
-        $navbarContent = $this->getTemplate("navbar-$navbar.html",$templatePath);
+        $navbar = TConfiguration::getValue('navbar','templates','default');
 
-        return $this->buildPageContent($settings, $pageContent,$navbarContent);
+
+        $navbarContent =  $navbar == 'none' || empty($navbar) ? '' : $this->getTemplate("navbar-$navbar.html",$templatePath);
+        $headContent = $this->getOptionalTemplateContent('head',$templatePath);
+        $bodyheader = $this->getOptionalTemplateContent('bodyheader',$templatePath);
+
+        return $this->buildPageContent($settings, $pageContent,$navbarContent,$headContent,$bodyheader);
+    }
+
+    private function getOptionalTemplateContent($key, $templatePath) {
+        $templateName = TConfiguration::getValue($key,'templates');
+        if (empty($templateName)) {
+            return '';
+        }
+        return $this->getTemplate($templateName.'.html',$templatePath);
     }
 
     private function buildMessage($message, $content, $title, $alert,$templatePath) {
@@ -69,12 +85,16 @@ class ViewModelPageBuilder
         $navbar = TConfiguration::getValue('navbar','pages','default');
         $navbarContent = $this->getTemplate("navbar-$navbar.html",$templatePath);
         $theme = PeanutSettings::GetThemeName();
+        $head = $this->getOptionalTemplateContent('head',$templatePath);
+        $bodyheader = $this->getOptionalTemplateContent('bodyheader',$templatePath);
         return $this->templateManager->replaceTokens($template,array(
             'theme' => $theme,
             'navbar' => $navbarContent,
             'title' => $title,
             'alert' => $alert,
             'message' => $message,
+            'head' => $head,
+            'bodyheader' => $bodyheader,
             'content' => $content
         ));
     }
@@ -85,10 +105,14 @@ class ViewModelPageBuilder
         $navbar = TConfiguration::getValue('navbar','pages','default');
         $navbarContent = $this->getTemplate("navbar-$navbar.html",$templatePath);
         $theme = PeanutSettings::GetThemeName();
+        $head = $this->getOptionalTemplateContent('head',$templatePath);
+        $bodyheader = $this->getOptionalTemplateContent('bodyheader',$templatePath);
         return $this->templateManager->replaceTokens($template,array(
             'theme' => $theme,
             'navbar' => $navbarContent,
             'title' => $title,
+            'head' => $head,
+            'bodyheader' => $bodyheader,
             'content' => $content
         ));
     }
