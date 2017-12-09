@@ -21,7 +21,7 @@ $loader = $settings->optimize ?  '../..'.$settings->peanutRootPath.'dist/loader.
 
     <title>Peanut Package Installer</title>
 
-    <link rel="stylesheet" type="text/css"href="../assets/themes/cerulean/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css"href="../assets/themes/bootstrap/bootstrap.min.css" />
     <!-- link rel="stylesheet" type="text/css"href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css"/ -->
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.load.min.js"></script>

@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class ViewModelPageBuilderTest extends TestCase
 {
     public function testBuildPageContent() {
-        $expected = 'theme:cerulean; view: view content here; vmname: tesViewModel';
+        $expected = 'theme:bootstrap; view: view content here; vmname: tesViewModel';
         $template = 'theme:[[theme]]; view: [[view]]; vmname: [[vmname]]';
         $settings = new \Peanut\sys\ViewModelInfo();
         $settings->vmName='tesViewModel';
@@ -23,7 +23,7 @@ class ViewModelPageBuilderTest extends TestCase
     }
 
     public function testBuildPage() {
-        $expected = 'theme:cerulean; view: view content here; vmname: testViewModel';
+        $expected = 'theme:bootstrap; view: view content here; vmname: testViewModel';
         $templatePath = realpath( __DIR__.'/../../pnut.root/application/assets/templates');
         $settings = new \Peanut\sys\ViewModelInfo();
         $settings->vmName='testViewModel';
