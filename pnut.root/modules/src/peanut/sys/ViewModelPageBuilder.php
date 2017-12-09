@@ -26,95 +26,79 @@ class ViewModelPageBuilder
         $this->templateManager = new TTemplateManager();
     }
 
-    public function buildPageContent(ViewModelInfo $settings, $content,
-                                     $navbarContent='',$headContent='',$bodyHeaderContent='') {
-        $view = @file_get_contents($settings->view);
-        if ($view === false) {
-            return false;
+    private function getTemplateComponents($templatePath=null) {
+        if($templatePath == null) {
+            $templatePath = TPath::fromFileRoot('application/assets/templates');
         }
-        $view = trim($view);
         $theme = PeanutSettings::GetThemeName();
-        $loader = PeanutSettings::GetPeanutLoaderScript();
-
-        return $this->templateManager->replaceTokens($content,array(
-            'title' => $settings->pageTitle,
-            'navbar' => $navbarContent,
+        return [
             'theme' => $theme,
-            'loader' => $loader,
-            'content' => $view,
-            'vmname' => $settings->vmName,
-            'heading' => $settings->heading,
-            'head' => $headContent,
-            'bodyheader' => $bodyHeaderContent,
+            'head' => $this->getTemplate('head',$templatePath),
+            'css' => $this->getCssOverrides($theme),
+            'navbar' =>  $this->getTemplate("navbar.html",$templatePath),
+            'bodyheader' => $this->getTemplate('bodyheader',$templatePath),
+        ];
+    }
 
-        ));
-
+    private function getCssOverrides($theme) {
+        $themeDir = TPath::fromFileRoot('application/assets/themes/'.$theme);
+        return (file_exists($themeDir.'/style.css')) ?
+            '<link rel="stylesheet" type="text/css" href="/application/assets/themes/'.$theme.'/style.css" />' :
+            '';
     }
 
     private function getTemplate($templateName,$templatePath=null) {
         if (empty($templatePath)) {
             $templatePath = TPath::getFileRoot().'application/assets/templates';
         }
-        return $this->templateManager->getContent($templateName,$templatePath);
+        $content = $this->templateManager->getContent($templateName,$templatePath);
+        return $content === false ? '' : $content;
     }
 
     public function buildView(ViewModelInfo $settings, $templatePath = null) {
         $templateName = empty($settings->template) ?  TConfiguration::getValue('view','templates','default-page.html')
             : $settings->template;
         $pageContent = $this->getTemplate($templateName,$templatePath);
-        $navbar = TConfiguration::getValue('navbar','templates','default');
-
-
-        $navbarContent =  $navbar == 'none' || empty($navbar) ? '' : $this->getTemplate("navbar-$navbar.html",$templatePath);
-        $headContent = $this->getOptionalTemplateContent('head',$templatePath);
-        $bodyheader = $this->getOptionalTemplateContent('bodyheader',$templatePath);
-
-        return $this->buildPageContent($settings, $pageContent,$navbarContent,$headContent,$bodyheader);
-    }
-
-    private function getOptionalTemplateContent($key, $templatePath) {
-        $templateName = TConfiguration::getValue($key,'templates');
-        if (empty($templateName)) {
-            return '';
+        $view = @file_get_contents($settings->view);
+        if ($view === false) {
+            return false;
         }
-        return $this->getTemplate($templateName.'.html',$templatePath);
+        $view = trim($view);
+        $templateComponents = $this->getTemplateComponents($templatePath);
+
+        return $this->templateManager->replaceTokens($pageContent,
+            array_merge($templateComponents,
+                [
+                    'title' => $settings->pageTitle,
+                    'heading' => $settings->heading,
+                    'loader' => PeanutSettings::GetPeanutLoaderScript(),
+                    'content' => $view,
+                    'vmname' => $settings->vmName
+                ]));
+
     }
 
     private function buildMessage($message, $content, $title, $alert,$templatePath) {
         $template = $this->getTemplate('message-page.html',$templatePath);
-        $navbar = TConfiguration::getValue('navbar','pages','default');
-        $navbarContent = $this->getTemplate("navbar-$navbar.html",$templatePath);
-        $theme = PeanutSettings::GetThemeName();
-        $head = $this->getOptionalTemplateContent('head',$templatePath);
-        $bodyheader = $this->getOptionalTemplateContent('bodyheader',$templatePath);
-        return $this->templateManager->replaceTokens($template,array(
-            'theme' => $theme,
-            'navbar' => $navbarContent,
+        $templateComponents = $this->getTemplateComponents($templatePath);
+        return $this->templateManager->replaceTokens($template,
+            array_merge($templateComponents, [
             'title' => $title,
             'alert' => $alert,
             'message' => $message,
-            'head' => $head,
-            'bodyheader' => $bodyheader,
             'content' => $content
-        ));
+            ]));
     }
 
     // public for unit testing
     public function buildPage($content, $title, $templatePath=null) {
         $template = $this->getTemplate('static-page.html',$templatePath);
-        $navbar = TConfiguration::getValue('navbar','pages','default');
-        $navbarContent = $this->getTemplate("navbar-$navbar.html",$templatePath);
-        $theme = PeanutSettings::GetThemeName();
-        $head = $this->getOptionalTemplateContent('head',$templatePath);
-        $bodyheader = $this->getOptionalTemplateContent('bodyheader',$templatePath);
-        return $this->templateManager->replaceTokens($template,array(
-            'theme' => $theme,
-            'navbar' => $navbarContent,
-            'title' => $title,
-            'head' => $head,
-            'bodyheader' => $bodyheader,
-            'content' => $content
-        ));
+        $templateComponents = $this->getTemplateComponents($templatePath);
+        return $this->templateManager->replaceTokens($template,
+            array_merge($templateComponents, [
+                'title' => $title,
+                'content' => $content
+            ]));
     }
 
     public static function Build($pagePath,$templatePath = null,$authorize=true)
