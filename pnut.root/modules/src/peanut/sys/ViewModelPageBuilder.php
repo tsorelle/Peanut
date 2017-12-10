@@ -11,6 +11,7 @@ namespace Peanut\sys;
 
 use Tops\sys\TConfiguration;
 use Tops\sys\TIniSettings;
+use Tops\sys\TLanguage;
 use Tops\sys\TPath;
 use Tops\sys\TTemplateManager;
 
@@ -35,7 +36,7 @@ class ViewModelPageBuilder
             'theme' => $theme,
             'head' => $this->getTemplate('head',$templatePath),
             'css' => $this->getCssOverrides($theme),
-            'navbar' =>  $this->getTemplate("navbar.html",$templatePath),
+            'navbar' =>  $this->getTemplate("navbar",$templatePath),
             'bodyheader' => $this->getTemplate('bodyheader',$templatePath),
         ];
     }
@@ -51,12 +52,12 @@ class ViewModelPageBuilder
         if (empty($templatePath)) {
             $templatePath = TPath::getFileRoot().'application/assets/templates';
         }
-        $content = $this->templateManager->getContent($templateName,$templatePath);
+        $content = $this->templateManager->getContent($templateName.'.html',$templatePath);
         return $content === false ? '' : $content;
     }
 
     public function buildView(ViewModelInfo $settings, $templatePath = null) {
-        $templateName = empty($settings->template) ?  TConfiguration::getValue('view','templates','default-page.html')
+        $templateName = empty($settings->template) ?  TConfiguration::getValue('view','pages','default-page')
             : $settings->template;
         $pageContent = $this->getTemplate($templateName,$templatePath);
         $view = @file_get_contents($settings->view);
@@ -92,7 +93,7 @@ class ViewModelPageBuilder
 
     // public for unit testing
     public function buildPage($content, $title, $templatePath=null) {
-        $template = $this->getTemplate('static-page.html',$templatePath);
+        $template = $this->getTemplate('static-page',$templatePath);
         $templateComponents = $this->getTemplateComponents($templatePath);
         return $this->templateManager->replaceTokens($template,
             array_merge($templateComponents, [
@@ -119,7 +120,7 @@ class ViewModelPageBuilder
     {
         $builder = new ViewModelPageBuilder();
         if ($title==null) {
-            $title = TConfiguration::getValue('page-title','templates','Peanut');
+            $title = TConfiguration::getValue('page-title','pages','Peanut');
         }
         return $builder->buildPage($content,$title,$templatePath);
     }
@@ -128,24 +129,23 @@ class ViewModelPageBuilder
     {
         $builder = new ViewModelPageBuilder();
         if ($title == null) {
-            $title = 'Not authorized';
+            $title = TLanguage::text('error-not-authorized-title');
         }
-        switch ($message) {
+        $errcode = $message;
+        $title   = TLanguage::text('page-error-'.$errcode.'-title');
+        $message = TLanguage::text('page-error-'.$errcode.'-message');
+        $content = TLanguage::text('page-error-'.$errcode.'-content');
+
+        switch ($errcode) {
             case 'not-authorized' :
-                $title = 'Not authorized';
-                $message = 'Sorry, you are not authorized to access this page. Please contact the site administrator.';
-                $content = "<strong><a href='/'>Please return to home page >></a></strong>";
+                $content = "<strong><a href='/'>$content >></a></strong>";
                 break;
             case 'not-authenticated' :
-                $title = 'Please sign in';
-                $message = 'You must sign in to your account to access the page.';
                 $href = PeanutSettings::GetLoginPage();
-                $content = "<strong><a href='/$href'>Please sign in or create an account >></a></strong>";
+                $content = "<strong><a href='/$href'>$content >></a></strong>";
                 break;
             case 'page-not-found' :
-                $title = 'Page not found';
-                $message = 'Your page was not found.';
-                $content = "<h2>Sorry, your page is not available.</h2>";
+                $content = "<h2>$content</h2>";
                 break;
         }
 

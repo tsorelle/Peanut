@@ -184,6 +184,9 @@ namespace Peanut {
                 return config.libraryPath + key.substr(6);
             }
             if (key in config.libraries) {
+                if (config.libraries[key] === 'installed') {
+                    return false; // library is preinstalled in CMS
+                }
                 return config.libraries[key];
             }
             console.log('Library "' + key + '" not in settings.ini.');
