@@ -12,6 +12,7 @@ namespace Peanut\sys;
 use Tops\services\TServiceCommand;
 use Tops\sys\IUser;
 use Tops\sys\TConfiguration;
+use Tops\sys\TLanguage;
 use Tops\sys\TPath;
 use Tops\sys\TStrings;
 use Tops\sys\TUser;
@@ -121,7 +122,9 @@ class ViewModelManager
                 TConfiguration::getValue('page-title','pages',$pathAlias) :
                 $item['page-title'];
 
-            $result->heading = empty($item['heading']) ? '' : '<h2>'.$item['heading'].'</h2>';
+            $result->heading = empty($item['heading']) ? '' : '<h2>'.
+                TLanguage::text($item['heading'])
+                .'</h2>';
             $result->permissions = TStrings::ListToArray(@$item['permissions']);
             $result->roles = TStrings::ListToArray(@$item['roles']);
 
