@@ -94,6 +94,12 @@ var Peanut;
             this.self = function () {
                 return _this;
             };
+            this.getApplication = function () {
+                return _this.application;
+            };
+            this.getServices = function () {
+                return _this.services;
+            };
         }
         ViewModelBase.prototype.getUserLanguage = function () {
             var userLang = navigator.language || navigator.userLanguage;

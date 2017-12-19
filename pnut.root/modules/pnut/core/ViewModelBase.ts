@@ -85,7 +85,7 @@ namespace Peanut {
             Peanut.WaitMessage.show(message,waiter);
         };
 
-        protected showActionWaiterBanner = (action: string, entity: string) => {
+        public showActionWaiterBanner = (action: string, entity: string) => {
             this.showActionWaiter(action,entity,'banner-waiter');
         };
 
@@ -105,7 +105,7 @@ namespace Peanut {
             let me = this;
             me.translations[code] = text;
         };
-        protected addTranslations = (translations : string[]) => {
+        public addTranslations = (translations : string[]) => {
             let me = this;
             if (translations) {
                 for (let code in translations) {
@@ -141,6 +141,16 @@ namespace Peanut {
             let me = this;
             return me.translate('wait-loading','...');
         }
+
+        public  getApplication = () => {
+            return this.application;
+        };
+        public  getServices = () => {
+            return this.services;
+        };
+
+
+
     }
 
     export class Cookies {
