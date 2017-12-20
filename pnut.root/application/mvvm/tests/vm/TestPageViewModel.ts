@@ -33,7 +33,7 @@ namespace Peanut {
         // call this funtions at end of page
         init(successFunction?: () => void) {
             let me = this;
-            me.showLoadWaiter();
+            // me.showLoadWaiter();
             // setup messaging and other application initializations
             me.addTranslation('test','Un prueba de traducadora');
             me.addTranslation('thing-plural','thingies');
@@ -45,7 +45,6 @@ namespace Peanut {
             // me.application.registerComponentPrototype('@pnut/modal-confirm', () => {
             me.application.registerComponents('tests/intro-message,@pnut/modal-confirm', () => {
                 me.application.loadComponents('tests/message-constructor',() => {
-
                         me.application.loadResources([
                             // '@lib:fontawesome',
                             '@lib:lodash',
@@ -62,14 +61,13 @@ namespace Peanut {
 
                             Testing.Test.sayHello();
                              let cvm = new messageConstructorComponent('Smoke Test Buttons:');
-                             me.application.registerComponent('tests/message-constructor',cvm,() => {
-                                me.bindDefaultSection();
-                                me.application.hideWaiter();
-                                successFunction();
+                                me.application.registerComponent('tests/message-constructor',cvm,() => {
+                                    me.bindDefaultSection();
+                                    successFunction();
+                                });
                             });
                         });
                     });
-                });
             //});
             // });
 

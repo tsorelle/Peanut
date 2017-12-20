@@ -57,15 +57,23 @@ namespace Peanut {
          */
         protected bindDefaultSection = () => {
             let sectionName = this.getSectionName();
+            jQuery('#load-message').hide();
             this.application.bindSection(sectionName,this);
         };
 
-        protected attachComponent = (componentName: string, section?: string) => {
+        protected attach = (componentName: string, finalFunction? : () => void) => {
+            this.attachComponent(componentName,null,finalFunction);
+        };
+
+        protected attachComponent = (componentName: string, section?: string, finalFunction? : () => void) => {
             this.application.registerComponentPrototype(componentName,() => {
                 if (!section) {
                     section =  componentName.split('/').pop() + '-container';
                 }
-                this.application.bindSection(section,this)
+                this.application.bindSection(section,this);
+                if (finalFunction) {
+                    finalFunction();
+                }
             });
         };
 

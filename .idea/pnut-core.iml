@@ -11,6 +11,7 @@
       <sourceFolder url="file://$MODULE_DIR$/tests/lib" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/pnut.root/modules/pnut/packages/permissions/src" isTestSource="false" packagePrefix="Peanut\Permissions" />
       <sourceFolder url="file://$MODULE_DIR$/pnut.root/modules/pnut/packages/riddler/src" isTestSource="false" packagePrefix="Peanut\Riddler" />
+      <excludeFolder url="file://$MODULE_DIR$/backup" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />

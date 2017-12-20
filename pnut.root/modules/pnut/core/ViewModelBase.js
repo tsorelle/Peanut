@@ -33,14 +33,21 @@ var Peanut;
             };
             this.bindDefaultSection = function () {
                 var sectionName = _this.getSectionName();
+                jQuery('#load-message').hide();
                 _this.application.bindSection(sectionName, _this);
             };
-            this.attachComponent = function (componentName, section) {
+            this.attach = function (componentName, finalFunction) {
+                _this.attachComponent(componentName, null, finalFunction);
+            };
+            this.attachComponent = function (componentName, section, finalFunction) {
                 _this.application.registerComponentPrototype(componentName, function () {
                     if (!section) {
                         section = componentName.split('/').pop() + '-container';
                     }
                     _this.application.bindSection(section, _this);
+                    if (finalFunction) {
+                        finalFunction();
+                    }
                 });
             };
             this.showLoadWaiter = function () {

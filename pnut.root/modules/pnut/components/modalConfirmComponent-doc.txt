@@ -25,3 +25,9 @@ Documentation for modal-confirm component
          }
      );
   }
+
+Additional Parameters:
+    case - use to alter the case of the translation:  'upper', 'lower' or 'ucfirst'
+           'ucfirst' uppercases the first letter only.
+     example:
+        <translate params="code:'mailbox-entity-plural',case:'ucfirst',translator:self"></translate>

@@ -76,7 +76,6 @@ var Peanut;
         }
         TestPageViewModel.prototype.init = function (successFunction) {
             var me = this;
-            me.showLoadWaiter();
             me.addTranslation('test', 'Un prueba de traducadora');
             me.addTranslation('thing-plural', 'thingies');
             me.application.registerComponents('tests/intro-message,@pnut/modal-confirm', function () {
@@ -95,7 +94,6 @@ var Peanut;
                         var cvm = new Peanut.messageConstructorComponent('Smoke Test Buttons:');
                         me.application.registerComponent('tests/message-constructor', cvm, function () {
                             me.bindDefaultSection();
-                            me.application.hideWaiter();
                             successFunction();
                         });
                     });
