@@ -69,7 +69,7 @@ namespace Peanut {
             });
         };
 
-        protected showLoadWaiter =() => {
+        public showLoadWaiter =() => {
             let me = this;
             let message = me.translate('wait-action-loading')+ ', ' + me.translate('wait-please')+'...';
             me.application.showBannerWaiter(message)
@@ -80,7 +80,7 @@ namespace Peanut {
             return this.translate('wait-action-'+action) + ' ' + this.translate(entity) + ', ' + this.translate('wait-please')+'...';
         };
 
-        protected showActionWaiter = (action: string, entity: string,waiter: string = 'spin-waiter') => {
+        public showActionWaiter = (action: string, entity: string,waiter: string = 'spin-waiter') => {
             let message = this.getActionMessage(action,entity);
             Peanut.WaitMessage.show(message,waiter);
         };
@@ -89,7 +89,7 @@ namespace Peanut {
             this.showActionWaiter(action,entity,'banner-waiter');
         };
 
-        protected getRequestVar = (key : string, defaultValue : any = null) => {
+        public getRequestVar = (key : string, defaultValue : any = null) => {
             return HttpRequestVars.Get(key,defaultValue);
         };
 
