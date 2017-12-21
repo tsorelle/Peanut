@@ -48,16 +48,25 @@ namespace Peanut {
          *  Use this when the view only contains components.
          */
         protected showDefaultSection = () => {
-            let sectionName = this.getSectionName();
+            let me = this;
+            let sectionName = me.getSectionName();
             jQuery("#" + sectionName).show();
+            me.hideLoadMessage();
+        };
+
+
+        private hideLoadMessage = () => {
+            let loadMessage = '#' + this.getVmName().toLowerCase() + '-load-message';
+            jQuery(loadMessage).hide();
         };
 
         /**
          *  Bind and display the default section
          */
         protected bindDefaultSection = () => {
-            let sectionName = this.getSectionName();
-            jQuery('#load-message').hide();
+            let me = this;
+            let sectionName = me.getSectionName();
+            me.hideLoadMessage();
             this.application.bindSection(sectionName,this);
         };
 

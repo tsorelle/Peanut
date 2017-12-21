@@ -28,12 +28,19 @@ var Peanut;
                 return _this.getVmName().toLowerCase() + '-view-container';
             };
             this.showDefaultSection = function () {
-                var sectionName = _this.getSectionName();
+                var me = _this;
+                var sectionName = me.getSectionName();
                 jQuery("#" + sectionName).show();
+                me.hideLoadMessage();
+            };
+            this.hideLoadMessage = function () {
+                var loadMessage = '#' + _this.getVmName().toLowerCase() + '-load-message';
+                jQuery(loadMessage).hide();
             };
             this.bindDefaultSection = function () {
-                var sectionName = _this.getSectionName();
-                jQuery('#load-message').hide();
+                var me = _this;
+                var sectionName = me.getSectionName();
+                me.hideLoadMessage();
                 _this.application.bindSection(sectionName, _this);
             };
             this.attach = function (componentName, finalFunction) {
