@@ -197,4 +197,9 @@ class FakeUser extends TAbstractUser
     {
         // TODO: Implement loadProfile() method.
     }
+
+    public function signIn($username, $password = null)
+    {
+        return true;
+    }
 }
