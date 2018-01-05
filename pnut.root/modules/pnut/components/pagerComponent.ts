@@ -5,6 +5,7 @@ namespace Peanut {
         // observables
         currentPage : KnockoutObservable<number>;
         maxPages : KnockoutObservable<number>;
+        showSpinner : KnockoutObservable<boolean>;
 
         forwardLabel = ko.observable('Next');
         backwardLabel = ko.observable('Previous');
@@ -43,6 +44,12 @@ namespace Peanut {
             }
             me.maxPages = params.max;
 
+            if (params.waiter) {
+                me.showSpinner = params.waiter;
+            }
+            else {
+                me.showSpinner = ko.observable(false);
+            }
             if (params.owner) {
                 let translator = <ITranslator>params.owner();
                 me.forwardLabel(
