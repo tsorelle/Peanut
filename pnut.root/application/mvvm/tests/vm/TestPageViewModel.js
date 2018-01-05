@@ -72,13 +72,19 @@ var Peanut;
                 _this.attachComponent('tests/test-message');
                 _this.messageButtonVisible(false);
             };
+            _this.currentPage = ko.observable(1);
+            _this.maxPages = ko.observable(10);
+            _this.changePage = function (move) {
+                var current = _this.currentPage() + move;
+                _this.currentPage(current);
+            };
             return _this;
         }
         TestPageViewModel.prototype.init = function (successFunction) {
             var me = this;
             me.addTranslation('test', 'Un prueba de traducadora');
             me.addTranslation('thing-plural', 'thingies');
-            me.application.registerComponents('tests/intro-message,@pnut/modal-confirm', function () {
+            me.application.registerComponents('tests/intro-message,@pnut/modal-confirm,@pnut/pager', function () {
                 me.application.loadComponents('tests/message-constructor', function () {
                     me.application.loadResources([
                         '@lib:lodash',

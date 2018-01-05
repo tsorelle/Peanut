@@ -11,9 +11,16 @@ namespace Peanut {
             let me = this;
 
             if (!params) {
-                throw('Params not defined in modalConfirmComponent');
+                console.error('componentnameComponent: Params not defined in translateComponent');
+                return;
             }
             // initialize observavles and variables from params
+            /* Example:
+                if (!params.parameterName) {
+                    console.error('componentnameComponent: Parameter "parameterName" is required');
+                    return;
+                }
+            */
 
         }
     }

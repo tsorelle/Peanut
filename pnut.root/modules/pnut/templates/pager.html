@@ -1,0 +1,12 @@
+<div class="pager-buttons" data-bind="visible:maxPages() > 1">
+    <span  style="margin-right:10px">
+        <span data-bind="visible:currentPage()==1" style="margin-right:43px"></span>
+        <button  class="btn btn-link"  data-bind="click:prevPage,visible:currentPage()>1,attr:{title:backwardLabel}" >
+            <span class="fa fa-backward"></span>
+        </button>
+        <span data-bind="text:pageLabel"></span> <span data-bind="text:currentPage"></span> <span data-bind="text:ofLabel"></span> <span data-bind="text:maxPages"></span>
+        <button class="btn btn-link"  data-bind="click:nextPage,visible:maxPages() > currentPage(),attr:{title:forwardLabel}" style="margin-left:1px" >
+            <span class="fa fa-forward"></span>
+        </button>
+    </span>
+</div>

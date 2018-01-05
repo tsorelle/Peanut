@@ -43,7 +43,7 @@ namespace Peanut {
             // final block must bind any view models (main or component) and call the success function.
 
             // me.application.registerComponentPrototype('@pnut/modal-confirm', () => {
-            me.application.registerComponents('tests/intro-message,@pnut/modal-confirm', () => {
+            me.application.registerComponents('tests/intro-message,@pnut/modal-confirm,@pnut/pager', () => {
                 me.application.loadComponents('tests/message-constructor',() => {
                         me.application.loadResources([
                             // '@lib:fontawesome',
@@ -296,6 +296,12 @@ namespace Peanut {
             this.messageButtonVisible(false);
         };
 
+        currentPage = ko.observable(1);
+        maxPages = ko.observable(10);
+        changePage = (move: number) => {
+            let current = this.currentPage() + move;
+            this.currentPage(current);
+        }
     }
 
 
