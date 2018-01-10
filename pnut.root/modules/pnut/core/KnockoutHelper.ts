@@ -518,6 +518,16 @@ namespace Peanut {
             ko.applyBindings(context, container);
             jQuery("#" + containerName).show();
         };
+
+        public static GetInputValue(oValue : KnockoutObservable<string>) {
+            if (oValue !== null) {
+                let value = oValue();
+                if (value !== null) {
+                    return value.trim();
+                }
+            }
+            return '';
+        }
     }
 
 

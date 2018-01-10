@@ -323,6 +323,15 @@ var Peanut;
             }
             return container;
         };
+        KnockoutHelper.GetInputValue = function (oValue) {
+            if (oValue !== null) {
+                var value = oValue();
+                if (value !== null) {
+                    return value.trim();
+                }
+            }
+            return '';
+        };
         return KnockoutHelper;
     }());
     Peanut.KnockoutHelper = KnockoutHelper;
