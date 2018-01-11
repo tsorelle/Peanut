@@ -31,7 +31,8 @@ namespace Peanut {
             if (!email || email.trim() == '') {
                 return false;
             }
-            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+            let valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+            return valid;
         }
 
         public static validatePositiveWholeNumber(text: string,maxValue = null, emptyOk: boolean = true) {

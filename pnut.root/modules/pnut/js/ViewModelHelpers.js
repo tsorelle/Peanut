@@ -22,7 +22,8 @@ var Peanut;
             if (!email || email.trim() == '') {
                 return false;
             }
-            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+            var valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+            return valid;
         };
         Helper.validatePositiveWholeNumber = function (text, maxValue, emptyOk) {
             if (maxValue === void 0) { maxValue = null; }
