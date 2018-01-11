@@ -188,4 +188,22 @@ declare namespace Peanut {
         search()
     }
 
+    export interface IEntityObject {
+        id   :any;
+        active: any;
+    }
+
+    export interface ITimeStamp {
+        createdby : string;
+        createdon : string;
+        changedby : string;
+        changedon : string;
+    }
+
+    export interface INamedEntity extends IEntityObject {
+        name        : string;
+        code        : string;
+        description : string;
+    }
+
 }
