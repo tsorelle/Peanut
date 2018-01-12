@@ -57,7 +57,7 @@ class PeanutSettings
     }
 
     public static function GetThemeName() {
-        return TConfiguration::getValue('default','pages','bootstrap');
+        return TConfiguration::getValue('theme','pages','bootstrap');
     }
 
     public static function GetLoginPage() {

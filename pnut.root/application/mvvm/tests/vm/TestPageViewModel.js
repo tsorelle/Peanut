@@ -165,12 +165,13 @@ var Peanut;
             }, 100);
         };
         TestPageViewModel.prototype.onShowBannerWaiter = function () {
+            var me = this;
             var count = 0;
-            Peanut.WaitMessage.show("Hello " + (new Date()).toISOString(), 'banner-waiter');
+            me.application.showBannerWaiter('test');
             var t = window.setInterval(function () {
-                if (count > 100) {
+                if (count > 10) {
                     clearInterval(t);
-                    Peanut.WaitMessage.hide();
+                    me.application.hideWaiter();
                 }
                 else {
                     Peanut.WaitMessage.setMessage('Counting ' + count);

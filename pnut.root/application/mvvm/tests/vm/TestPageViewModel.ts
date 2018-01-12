@@ -154,12 +154,16 @@ namespace Peanut {
         }
 
         onShowBannerWaiter() {
+            let me = this;
             let count = 0;
-            Peanut.WaitMessage.show("Hello " + (new Date()).toISOString(),'banner-waiter');
+            me.application.showBannerWaiter('test');
+            // Peanut.WaitMessage.show("Hello " + (new Date()).toISOString(),'banner-waiter');
             let t = window.setInterval(function () {
-                if (count > 100) {
+                // if (count > 100) {
+                if (count > 10) {
                     clearInterval(t);
-                    Peanut.WaitMessage.hide();
+                    me.application.hideWaiter();
+                    // Peanut.WaitMessage.hide();
                 }
                 else {
                     Peanut.WaitMessage.setMessage('Counting ' + count);

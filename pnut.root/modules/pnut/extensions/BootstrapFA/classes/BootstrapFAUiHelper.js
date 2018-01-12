@@ -16,7 +16,7 @@ var Peanut;
                 if (navigator.appName == 'Microsoft Internet Explorer') {
                     container.removeClass('fade');
                 }
-                container.modal();
+                container.modal('show');
             };
             this.hideModal = function (container) {
                 container.modal('hide');
