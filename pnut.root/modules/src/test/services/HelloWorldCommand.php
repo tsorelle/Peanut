@@ -27,10 +27,10 @@ class HelloWorldCommand extends \Tops\services\TServiceCommand
         $this->addInfoMessage('Hello World from: '.$request->tester);
         $responseValue = new \stdClass();
         $responseValue->message = "Greatings earthlings.";
-        $responseValue->translations =  TLanguage::getTranslations(array(
+        $responseValue->translations =  array(
             'hello' => 'Hola',
             'world' => 'Mundo'
-        ));
+        );
         $this->setReturnValue($responseValue);
     }
 }

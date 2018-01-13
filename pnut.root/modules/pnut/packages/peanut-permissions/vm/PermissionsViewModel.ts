@@ -63,7 +63,7 @@ namespace PeanutPermissions {
             me.application.showWaiter(me.waitLabelGetPermissions+'...');
             me.services.executeService('peanut.peanut-permissions::GetPermissions', request,
                 function (serviceResponse: Peanut.IServiceResponse) {
-                    me.application.hideWaiter();
+                    // me.application.hideWaiter();
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         let response = <IGetPermissionsResponse>serviceResponse.Value;
                         me.permissionsList(response.permissions);
@@ -78,6 +78,7 @@ namespace PeanutPermissions {
                 }
             ).fail(function () {
                 let trace = me.services.getErrorInformation();
+            }).always(() => {
                 me.application.hideWaiter();
             });
         };

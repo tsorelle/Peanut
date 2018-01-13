@@ -247,7 +247,6 @@ namespace Peanut {
             // me.services.executeService('admin.HelloWorld', request,
             me.services.executeService('PeanutTest::HelloWorld', request,
                 function (serviceResponse: Peanut.IServiceResponse) {
-                    me.application.hideWaiter();
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         let response = serviceResponse.Value;
                         alert(response.message);
@@ -257,7 +256,22 @@ namespace Peanut {
                     }
                 }
             ).fail(function () {
+                let trace = me.services.getErrorInformation();
+            }).always(() => {
                 me.application.hideWaiter();
+/*
+
+                let count =5;
+                let t = window.setInterval(function () {
+                    if (count > 100) {
+                        clearInterval(t);
+                        me.application.hideWaiter();
+                    }
+                    count += 1;
+                }, 100);
+
+*/
+
             });
 
         };

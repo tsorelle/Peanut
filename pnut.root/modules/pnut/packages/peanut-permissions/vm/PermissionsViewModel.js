@@ -30,7 +30,6 @@ var PeanutPermissions;
                 me.application.hideServiceMessages();
                 me.application.showWaiter(me.waitLabelGetPermissions + '...');
                 me.services.executeService('peanut.peanut-permissions::GetPermissions', request, function (serviceResponse) {
-                    me.application.hideWaiter();
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         var response = serviceResponse.Value;
                         me.permissionsList(response.permissions);
@@ -44,6 +43,7 @@ var PeanutPermissions;
                     }
                 }).fail(function () {
                     var trace = me.services.getErrorInformation();
+                }).always(function () {
                     me.application.hideWaiter();
                 });
             };

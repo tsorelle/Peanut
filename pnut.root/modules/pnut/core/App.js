@@ -139,7 +139,12 @@ var Peanut;
         };
         Application.prototype.showWaiter = function (message) {
             if (message === void 0) { message = "Please wait . . ."; }
-            Peanut.WaitMessage.show(message);
+            MessageManager.instance.showBannerMessage(message);
+        };
+        Application.prototype.hideWaitMessage = function () {
+            if (Peanut.WaitMessage) {
+                Peanut.WaitMessage.hide();
+            }
         };
         Application.prototype.hideWaiter = function () {
             if (MessageManager.instance.waiterVisible) {
@@ -306,12 +311,12 @@ var Peanut;
             var container = jQuery('#waiter-message');
             var span = container.find('#peanut-toast-message');
             span.text(message || '');
-            container.show(100);
+            container.show();
             me.waiterVisible = true;
         };
         MessageManager.prototype.hideWaitMessage = function () {
             var me = this;
-            jQuery('#waiter-message').hide(100);
+            jQuery('#waiter-message').hide();
             me.waiterVisible = false;
         };
         MessageManager.instance = new MessageManager();

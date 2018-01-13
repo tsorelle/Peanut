@@ -119,7 +119,13 @@ namespace Peanut {
         };
 
         public showWaiter(message: string = "Please wait . . .") {
-            WaitMessage.show(message);
+            MessageManager.instance.showBannerMessage(message);
+        }
+
+        public hideWaitMessage() {
+            if (WaitMessage) {
+                WaitMessage.hide();
+            }
         }
 
         public hideWaiter() {
@@ -132,7 +138,6 @@ namespace Peanut {
         }
 
         public showBannerWaiter(message: string = "Please wait . . .") {
-            // WaitMessage.show(message, 'banner-waiter');
             MessageManager.instance.showBannerMessage(message);
         }
 
@@ -503,13 +508,13 @@ namespace Peanut {
             let container = jQuery('#waiter-message');
             let span = container.find('#peanut-toast-message');
             span.text(message || '');
-            container.show(100);
+            container.show();
             me.waiterVisible = true;
         }
 
         public hideWaitMessage() {
             let me = this;
-            jQuery('#waiter-message').hide(100);
+            jQuery('#waiter-message').hide();
             me.waiterVisible = false;
         }
     }

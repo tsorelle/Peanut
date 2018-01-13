@@ -35,7 +35,6 @@ var Peanut;
                 me.application.hideServiceMessages();
                 me.application.showWaiter('Testing service...');
                 me.services.executeService('PeanutTest::HelloWorld', request, function (serviceResponse) {
-                    me.application.hideWaiter();
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         var response = serviceResponse.Value;
                         alert(response.message);
@@ -44,6 +43,8 @@ var Peanut;
                         me.languageB(me.translate('world'));
                     }
                 }).fail(function () {
+                    var trace = me.services.getErrorInformation();
+                }).always(function () {
                     me.application.hideWaiter();
                 });
             };
