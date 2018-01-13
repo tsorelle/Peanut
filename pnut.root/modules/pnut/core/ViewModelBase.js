@@ -4,15 +4,24 @@ var Peanut;
         function ViewModelBase() {
             var _this = this;
             this.translations = [];
+            this.bootstrapVersion = ko.observable(3);
+            this.fontSet = ko.observable('');
             this.start = function (application, successFunction) {
                 var me = _this;
                 me.language = me.getUserLanguage();
                 me.addTranslations(Cookies.GetKvArray('peanutTranslations'));
                 me.application = application;
                 me.services = Peanut.ServiceBroker.getInstance(application);
-                me.application.registerComponents('@pnut/translate', function () {
-                    me.init(function () {
-                        successFunction(me);
+                Peanut.PeanutLoader.loadUiHelper(function () {
+                    if (Peanut.ui.helper.getFramework() === 'Bootstrap') {
+                        me.bootstrapVersion(Peanut.ui.helper.getVersion());
+                        me.fontSet(Peanut.ui.helper.getFontSet());
+                    }
+                    me.fontSet(Peanut.ui.helper.getFontSet());
+                    me.application.registerComponents('@pnut/translate', function () {
+                        me.init(function () {
+                            successFunction(me);
+                        });
                     });
                 });
             };
@@ -68,7 +77,12 @@ var Peanut;
             this.showActionWaiter = function (action, entity, waiter) {
                 if (waiter === void 0) { waiter = 'spin-waiter'; }
                 var message = _this.getActionMessage(action, entity);
-                Peanut.WaitMessage.show(message, waiter);
+                if (waiter == 'banner-waiter') {
+                    _this.application.showBannerWaiter(message);
+                }
+                else {
+                    Peanut.WaitMessage.show(message, waiter);
+                }
             };
             this.showActionWaiterBanner = function (action, entity) {
                 _this.showActionWaiter(action, entity, 'banner-waiter');

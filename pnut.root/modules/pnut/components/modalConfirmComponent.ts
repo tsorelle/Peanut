@@ -12,6 +12,7 @@ namespace Peanut {
         public modalId : KnockoutObservable<string>;
         public okLabel : KnockoutObservable<string>;
         public cancelLabel : KnockoutObservable<string>;
+        public bootstrapVersion : KnockoutObservable<number>;
         showOkButton : KnockoutObservable<boolean>;
         constructor(params : any) {
             let me = this;
@@ -50,6 +51,10 @@ namespace Peanut {
                     }
                     break;
             }
+            me.bootstrapVersion = ko.observable(3);
+            PeanutLoader.loadUiHelper(() => {
+                me.bootstrapVersion(Peanut.ui.helper.getVersion());
+            });
         }
     }
 }

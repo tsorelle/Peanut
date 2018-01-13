@@ -30,6 +30,7 @@ namespace Peanut {
             PeanutLoader.checkConfig();
             me.koHelper = new KnockoutHelper();
             PeanutLoader.loadUiHelper(() => {
+                MessageManager.instance.fontSet(Peanut.ui.helper.getFontSet());
                 let resources = Peanut.ui.helper.getResourceList();
                 me.loadResources(resources, () => {
                     me.attachComponent('@pnut/service-messages', MessageManager.instance, function () {
@@ -122,11 +123,17 @@ namespace Peanut {
         }
 
         public hideWaiter() {
-            WaitMessage.hide();
+            if (MessageManager.instance.waiterVisible) {
+                MessageManager.instance.hideWaitMessage();
+            }
+            else if (WaitMessage) {
+                WaitMessage.hide();
+            }
         }
 
         public showBannerWaiter(message: string = "Please wait . . .") {
-            WaitMessage.show(message, 'banner-waiter');
+            // WaitMessage.show(message, 'banner-waiter');
+            MessageManager.instance.showBannerMessage(message);
         }
 
         public showProgress(message: string = "Please wait . . .") {
@@ -400,7 +407,7 @@ namespace Peanut {
         };
     }
 
-    class MessageManager  {
+    export class MessageManager  {
         static instance: MessageManager = new MessageManager();
         static errorClass: string = "service-message-error";
         static infoClass: string = "service-message-information";
@@ -409,6 +416,10 @@ namespace Peanut {
         public errorMessages = ko.observableArray([]);
         public infoMessages = ko.observableArray([]);
         public warningMessages = ko.observableArray([]);
+
+        public fontSet = ko.observable('');
+
+        public waiterVisible = false;
 
 
         public addMessage = (message: string, messageType: number): void => {
@@ -487,6 +498,20 @@ namespace Peanut {
             this.infoMessages(infoArray);
         };
 
+        public showBannerMessage(message? : string) {
+            let me = this;
+            let container = jQuery('#waiter-message');
+            let span = container.find('#peanut-toast-message');
+            span.text(message || '');
+            container.show(100);
+            me.waiterVisible = true;
+        }
+
+        public hideWaitMessage() {
+            let me = this;
+            jQuery('#waiter-message').hide(100);
+            me.waiterVisible = false;
+        }
     }
 
 } // end namespace

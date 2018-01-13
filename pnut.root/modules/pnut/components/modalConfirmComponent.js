@@ -37,6 +37,10 @@ var Peanut;
                     }
                     break;
             }
+            me.bootstrapVersion = ko.observable(3);
+            Peanut.PeanutLoader.loadUiHelper(function () {
+                me.bootstrapVersion(Peanut.ui.helper.getVersion());
+            });
         }
         return modalConfirmComponent;
     }());

@@ -9,6 +9,8 @@ namespace Peanut {
         protected services: ServiceBroker;
         protected application: IPeanutClient;
         protected translations: string[] = [];
+        public bootstrapVersion = ko.observable(3);
+        public fontSet = ko.observable('');
 
         abstract init(successFunction?: () => void);
         public start = (application : IPeanutClient, successFunction?: (viewModel: IViewModel) => void)  => {
@@ -17,9 +19,16 @@ namespace Peanut {
             me.addTranslations(Cookies.GetKvArray('peanutTranslations'));
             me.application = application;
             me.services = ServiceBroker.getInstance(application);
-            me.application.registerComponents('@pnut/translate', () => {
-                me.init(() => {
-                    successFunction(me);
+            PeanutLoader.loadUiHelper(() => {
+                if (Peanut.ui.helper.getFramework() === 'Bootstrap') {
+                    me.bootstrapVersion(Peanut.ui.helper.getVersion());
+                    me.fontSet(Peanut.ui.helper.getFontSet());
+                }
+                me.fontSet(Peanut.ui.helper.getFontSet());
+                me.application.registerComponents('@pnut/translate', () => {
+                    me.init(() => {
+                        successFunction(me);
+                    });
                 });
             });
         };
@@ -99,7 +108,12 @@ namespace Peanut {
 
         public showActionWaiter = (action: string, entity: string,waiter: string = 'spin-waiter') => {
             let message = this.getActionMessage(action,entity);
-            Peanut.WaitMessage.show(message,waiter);
+            if (waiter == 'banner-waiter') {
+                this.application.showBannerWaiter(message);
+            }
+            else {
+                Peanut.WaitMessage.show(message,waiter);
+            }
         };
 
         public showActionWaiterBanner = (action: string, entity: string) => {

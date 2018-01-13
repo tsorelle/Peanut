@@ -24,6 +24,15 @@ var Peanut;
             this.getResourceList = function () {
                 return ['@lib:fontawesome'];
             };
+            this.getFramework = function () {
+                return 'Bootstrap';
+            };
+            this.getVersion = function () {
+                return 3;
+            };
+            this.getFontSet = function () {
+                return 'FA';
+            };
         }
         return BootstrapFAUiHelper;
     }());

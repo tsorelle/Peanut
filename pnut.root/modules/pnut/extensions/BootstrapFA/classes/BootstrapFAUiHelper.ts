@@ -30,6 +30,19 @@ namespace Peanut {
 
         public getResourceList = () => {
             return ['@lib:fontawesome'];
+        };
+
+        public getFramework = () => {
+            return 'Bootstrap'
+        };
+
+        public getVersion = () => {
+            return 3;
+        };
+
+        public getFontSet = () => {
+            return 'FA';
         }
+
     }
 }

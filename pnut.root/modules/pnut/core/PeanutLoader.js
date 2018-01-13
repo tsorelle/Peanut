@@ -35,6 +35,10 @@ var Peanut;
             });
         };
         PeanutLoader.loadUiHelper = function (final) {
+            if (Peanut.ui.helper) {
+                final();
+                return;
+            }
             var uiExtension = Peanut.Config.values.uiExtension;
             var uiClass = uiExtension + 'UiHelper';
             PeanutLoader.loadExtensionClass(uiExtension, uiClass, function (helperInstance) {

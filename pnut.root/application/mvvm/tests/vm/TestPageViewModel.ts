@@ -137,11 +137,14 @@ namespace Peanut {
         }
 
         onShowSpinWaiter() {
+            let me = this;
             let count = 0;
             Peanut.WaitMessage.show("Hello " + (new Date()).toISOString());
             let t = window.setInterval(function () {
-                if (count > 100) {
+                if (count > 50) {
                     clearInterval(t);
+                    // me.application.hideWaiter();
+                    // alert('done');
                     Peanut.WaitMessage.hide();
                 }
                 else {
@@ -156,17 +159,17 @@ namespace Peanut {
         onShowBannerWaiter() {
             let me = this;
             let count = 0;
-            me.application.showBannerWaiter('test');
+            me.application.showBannerWaiter('Wait a few seconds, please.');
             // Peanut.WaitMessage.show("Hello " + (new Date()).toISOString(),'banner-waiter');
             let t = window.setInterval(function () {
                 // if (count > 100) {
-                if (count > 10) {
+                if (count > 20) {
                     clearInterval(t);
-                    me.application.hideWaiter();
+                    // me.application.hideWaiter();
                     // Peanut.WaitMessage.hide();
                 }
                 else {
-                    Peanut.WaitMessage.setMessage('Counting ' + count);
+                    // Peanut.WaitMessage.setMessage('Counting ' + count);
                     // Peanut.WaitMessage.setProgress(count,true);
                 }
                 count += 1;
@@ -176,12 +179,13 @@ namespace Peanut {
 
         onShowActionWaiter() {
             let count = 0;
+            let me = this;
             let message = this.showActionWaiterBanner('add','thing-plural');
             // Peanut.WaitMessage.show(message,'banner-waiter');
             let t = window.setInterval(function () {
                 if (count > 50) {
                     clearInterval(t);
-                    Peanut.WaitMessage.hide();
+                    me.application.hideWaiter();
                 }
                 count += 1;
             }, 100);

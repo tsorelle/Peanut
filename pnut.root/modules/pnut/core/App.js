@@ -120,6 +120,7 @@ var Peanut;
             Peanut.PeanutLoader.checkConfig();
             me.koHelper = new Peanut.KnockoutHelper();
             Peanut.PeanutLoader.loadUiHelper(function () {
+                MessageManager.instance.fontSet(Peanut.ui.helper.getFontSet());
                 var resources = Peanut.ui.helper.getResourceList();
                 me.loadResources(resources, function () {
                     me.attachComponent('@pnut/service-messages', MessageManager.instance, function () {
@@ -141,11 +142,16 @@ var Peanut;
             Peanut.WaitMessage.show(message);
         };
         Application.prototype.hideWaiter = function () {
-            Peanut.WaitMessage.hide();
+            if (MessageManager.instance.waiterVisible) {
+                MessageManager.instance.hideWaitMessage();
+            }
+            else if (Peanut.WaitMessage) {
+                Peanut.WaitMessage.hide();
+            }
         };
         Application.prototype.showBannerWaiter = function (message) {
             if (message === void 0) { message = "Please wait . . ."; }
-            Peanut.WaitMessage.show(message, 'banner-waiter');
+            MessageManager.instance.showBannerMessage(message);
         };
         Application.prototype.showProgress = function (message) {
             if (message === void 0) { message = "Please wait . . ."; }
@@ -222,6 +228,8 @@ var Peanut;
             this.errorMessages = ko.observableArray([]);
             this.infoMessages = ko.observableArray([]);
             this.warningMessages = ko.observableArray([]);
+            this.fontSet = ko.observable('');
+            this.waiterVisible = false;
             this.addMessage = function (message, messageType) {
                 switch (messageType) {
                     case Peanut.errorMessageType:
@@ -293,11 +301,25 @@ var Peanut;
                 _this.infoMessages(infoArray);
             };
         }
+        MessageManager.prototype.showBannerMessage = function (message) {
+            var me = this;
+            var container = jQuery('#waiter-message');
+            var span = container.find('#peanut-toast-message');
+            span.text(message || '');
+            container.show(100);
+            me.waiterVisible = true;
+        };
+        MessageManager.prototype.hideWaitMessage = function () {
+            var me = this;
+            jQuery('#waiter-message').hide(100);
+            me.waiterVisible = false;
+        };
         MessageManager.instance = new MessageManager();
         MessageManager.errorClass = "service-message-error";
         MessageManager.infoClass = "service-message-information";
         MessageManager.warningClass = "service-message-warning";
         return MessageManager;
     }());
+    Peanut.MessageManager = MessageManager;
 })(Peanut || (Peanut = {}));
 //# sourceMappingURL=App.js.map

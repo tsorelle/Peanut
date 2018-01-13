@@ -3,6 +3,7 @@
 <div id="testpage-load-message"><span class="fa fa-spinner fa-pulse fa-2x" style="color:gray"></span></div>
 <div class="row">
     <div id="testpage-view-container" class="col-md-6" style="display: none">
+        <p>Bootstrap version: <span data-bind="text:bootstrapVersion"></span></p>
         <h3>Main Panel</h3>
         <div>
             <b>pager:</b>
@@ -59,8 +60,9 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button data-bind="visible:bootstrapVersion() !== 4" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">Test Modal</h4>
+                        <button data-bind="visible:bootstrapVersion() === 4" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
                             <p>This is a test view model</p>

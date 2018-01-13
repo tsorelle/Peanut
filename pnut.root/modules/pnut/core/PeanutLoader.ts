@@ -45,6 +45,10 @@ namespace Peanut {
 
 
         public static loadUiHelper(final: () => void) {
+            if (Peanut.ui.helper) {
+                final();
+                return;
+            }
             let uiExtension = Peanut.Config.values.uiExtension;
             let uiClass = uiExtension + 'UiHelper';
             PeanutLoader.loadExtensionClass(uiExtension, uiClass, (helperInstance : any) => {

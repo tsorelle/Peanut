@@ -23,6 +23,15 @@ var Peanut;
             this.getResourceList = function () {
                 return [];
             };
+            this.getFramework = function () {
+                return 'Bootstrap';
+            };
+            this.getVersion = function () {
+                return 3;
+            };
+            this.getFontSet = function () {
+                return 'Glyphicons';
+            };
         }
         return BootstrapUiHelper;
     }());

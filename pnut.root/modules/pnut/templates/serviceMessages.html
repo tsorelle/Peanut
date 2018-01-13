@@ -10,5 +10,18 @@
 <div id="info-message"  data-bind="visible:infoMessages().length" class="alert alert-success" role="alert">
 <button class="close" aria-label="Close" data-bind="click: clearInfoMessages"><span aria-hidden="true">&times;</span></button>
 <ul data-bind="foreach: infoMessages"><li><span data-bind="text: text"></span></li></ul></div>
+
+<div id="waiter-message" style="padding-left:5px; padding-right:5px; width:100%;height:100%; position:fixed;top:0; left:0; bottom: 0; z-index: 999; display: none;" >
+    <div style="border: 1px solid black; background: white; padding: 10px; padding-left: 20px;">
+    <span style="font-size: small; font-weight: bold;" id="peanut-toast-message">Please wait . . .</span>
+    <span style="padding-right: 10px"><i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></span>
+    <span style="float:right"><a href="#"  style="text-decoration: none" onclick="Peanut.MessageManager.instance.hideWaitMessage()">
+        <i class="fa fa-times" data-bind="visible:fontSet()=='FA'"></i>
+        <stong data-bind="visible:fontSet()!=='FA'">close</stong>
+    </a>
+    </span>
+    </div>
+</div>
+
 </div>
 

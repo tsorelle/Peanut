@@ -74,7 +74,9 @@ declare namespace Peanut {
         showModal(container : any);
         hideModal(container: any);
         getResourceList() : string[];
-
+        getFramework(): string;
+        getVersion(): number;
+        getFontSet(): string;
     }
 
     export interface IPeanutConfig {

@@ -29,6 +29,18 @@ namespace Peanut {
 
         public getResourceList = () => {
             return [];
+        };
+
+        public getFramework = () => {
+            return 'Bootstrap'
+        };
+
+        public getVersion = () => {
+            return 3;
+        };
+
+        public getFontSet = () => {
+            return 'Glyphicons';
         }
     }
 }

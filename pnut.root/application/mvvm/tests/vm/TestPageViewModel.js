@@ -151,10 +151,11 @@ var Peanut;
             me.messageText('');
         };
         TestPageViewModel.prototype.onShowSpinWaiter = function () {
+            var me = this;
             var count = 0;
             Peanut.WaitMessage.show("Hello " + (new Date()).toISOString());
             var t = window.setInterval(function () {
-                if (count > 100) {
+                if (count > 50) {
                     clearInterval(t);
                     Peanut.WaitMessage.hide();
                 }
@@ -167,25 +168,24 @@ var Peanut;
         TestPageViewModel.prototype.onShowBannerWaiter = function () {
             var me = this;
             var count = 0;
-            me.application.showBannerWaiter('test');
+            me.application.showBannerWaiter('Wait a few seconds, please.');
             var t = window.setInterval(function () {
-                if (count > 10) {
+                if (count > 20) {
                     clearInterval(t);
-                    me.application.hideWaiter();
                 }
                 else {
-                    Peanut.WaitMessage.setMessage('Counting ' + count);
                 }
                 count += 1;
             }, 100);
         };
         TestPageViewModel.prototype.onShowActionWaiter = function () {
             var count = 0;
+            var me = this;
             var message = this.showActionWaiterBanner('add', 'thing-plural');
             var t = window.setInterval(function () {
                 if (count > 50) {
                     clearInterval(t);
-                    Peanut.WaitMessage.hide();
+                    me.application.hideWaiter();
                 }
                 count += 1;
             }, 100);
