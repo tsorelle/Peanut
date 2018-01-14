@@ -137,9 +137,15 @@ var Peanut;
                 });
             });
         };
-        Application.prototype.showWaiter = function (message) {
+        Application.prototype.showWaiter = function (message, waiterType) {
             if (message === void 0) { message = "Please wait . . ."; }
-            MessageManager.instance.showBannerMessage(message);
+            if (waiterType === void 0) { waiterType = 'banner-waiter'; }
+            if (waiterType === 'banner-waiter') {
+                MessageManager.instance.showBannerMessage(message);
+            }
+            else {
+                Peanut.WaitMessage.show(message, waiterType);
+            }
         };
         Application.prototype.hideWaitMessage = function () {
             if (Peanut.WaitMessage) {
@@ -149,9 +155,6 @@ var Peanut;
         Application.prototype.hideWaiter = function () {
             if (MessageManager.instance.waiterVisible) {
                 MessageManager.instance.hideWaitMessage();
-            }
-            else if (Peanut.WaitMessage) {
-                Peanut.WaitMessage.hide();
             }
         };
         Application.prototype.showBannerWaiter = function (message) {

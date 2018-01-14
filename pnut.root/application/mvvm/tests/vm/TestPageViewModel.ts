@@ -180,7 +180,7 @@ namespace Peanut {
         onShowActionWaiter() {
             let count = 0;
             let me = this;
-            let message = this.showActionWaiterBanner('add','thing-plural');
+            let message = this.showActionWaiter('add','thing-plural');
             // Peanut.WaitMessage.show(message,'banner-waiter');
             let t = window.setInterval(function () {
                 if (count > 50) {
@@ -243,13 +243,14 @@ namespace Peanut {
             let me = this;
             let request = {"tester" : 'Terry SoRelle'};
             me.application.hideServiceMessages();
+            // me.application.showWaiter('Testing service...','spin-waiter');
             me.application.showWaiter('Testing service...');
             // me.services.executeService('admin.HelloWorld', request,
             me.services.executeService('PeanutTest::HelloWorld', request,
                 function (serviceResponse: Peanut.IServiceResponse) {
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         let response = serviceResponse.Value;
-                        alert(response.message);
+                        // alert(response.message);
                         me.addTranslations(response.translations);
                         me.languageA(me.translate('hello','Hello'));
                         me.languageB(me.translate('world'));
@@ -259,19 +260,6 @@ namespace Peanut {
                 let trace = me.services.getErrorInformation();
             }).always(() => {
                 me.application.hideWaiter();
-/*
-
-                let count =5;
-                let t = window.setInterval(function () {
-                    if (count > 100) {
-                        clearInterval(t);
-                        me.application.hideWaiter();
-                    }
-                    count += 1;
-                }, 100);
-
-*/
-
             });
 
         };

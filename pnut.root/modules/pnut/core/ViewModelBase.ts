@@ -106,7 +106,7 @@ namespace Peanut {
             return this.translate('wait-action-'+action) + ' ' + this.translate(entity) + ', ' + this.translate('wait-please')+'...';
         };
 
-        public showActionWaiter = (action: string, entity: string,waiter: string = 'spin-waiter') => {
+        public showActionWaiter = (action: string, entity: string,waiter: string = 'banner-waiter') => {
             let message = this.getActionMessage(action,entity);
             if (waiter == 'banner-waiter') {
                 this.application.showBannerWaiter(message);

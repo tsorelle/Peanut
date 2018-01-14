@@ -37,7 +37,6 @@ var Peanut;
                 me.services.executeService('PeanutTest::HelloWorld', request, function (serviceResponse) {
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         var response = serviceResponse.Value;
-                        alert(response.message);
                         me.addTranslations(response.translations);
                         me.languageA(me.translate('hello', 'Hello'));
                         me.languageB(me.translate('world'));
@@ -182,7 +181,7 @@ var Peanut;
         TestPageViewModel.prototype.onShowActionWaiter = function () {
             var count = 0;
             var me = this;
-            var message = this.showActionWaiterBanner('add', 'thing-plural');
+            var message = this.showActionWaiter('add', 'thing-plural');
             var t = window.setInterval(function () {
                 if (count > 50) {
                     clearInterval(t);

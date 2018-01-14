@@ -75,7 +75,7 @@ var Peanut;
                 return _this.translate('wait-action-' + action) + ' ' + _this.translate(entity) + ', ' + _this.translate('wait-please') + '...';
             };
             this.showActionWaiter = function (action, entity, waiter) {
-                if (waiter === void 0) { waiter = 'spin-waiter'; }
+                if (waiter === void 0) { waiter = 'banner-waiter'; }
                 var message = _this.getActionMessage(action, entity);
                 if (waiter == 'banner-waiter') {
                     _this.application.showBannerWaiter(message);

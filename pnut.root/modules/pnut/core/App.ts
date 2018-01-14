@@ -118,8 +118,18 @@ namespace Peanut {
             });
         };
 
-        public showWaiter(message: string = "Please wait . . .") {
-            MessageManager.instance.showBannerMessage(message);
+        // public showServiceWaiter(message: string = "Please wait . . .", onShown: () => void, waiterType='spin-waiter') {
+        //     WaitMessage.show(message,waiterType);
+        //     WaitMessage.on('shown.bs.modal',onShown);
+        // };
+
+        public showWaiter(message: string = "Please wait . . .",waiterType='banner-waiter') {
+            if (waiterType === 'banner-waiter') {
+                MessageManager.instance.showBannerMessage(message);
+            }
+            else {
+                WaitMessage.show(message,waiterType);
+            }
         }
 
         public hideWaitMessage() {
@@ -131,9 +141,6 @@ namespace Peanut {
         public hideWaiter() {
             if (MessageManager.instance.waiterVisible) {
                 MessageManager.instance.hideWaitMessage();
-            }
-            else if (WaitMessage) {
-                WaitMessage.hide();
             }
         }
 
@@ -518,5 +525,6 @@ namespace Peanut {
             me.waiterVisible = false;
         }
     }
+
 
 } // end namespace

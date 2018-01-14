@@ -10,7 +10,7 @@ declare namespace Peanut {
         initialize(successFunction?:() => void);
         showMessage(messageText?:string): void;
         showWarning(messageText?:string): void;
-        showWaiter(message?:string) : void;
+        showWaiter(message?:string,waiterType?:string) : void;
         hideWaiter() : void;
         showBannerWaiter(message?:string) : void;
         showProgress(message?: string) : void;
