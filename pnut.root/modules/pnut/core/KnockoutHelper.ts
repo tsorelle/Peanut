@@ -180,14 +180,21 @@ namespace Peanut {
 
         private getLibrary (name: string, config: IPeanutConfig) {
             let key = name.substr(5);
-            if (key.substr(0,6) == 'local/') {
+
+            if (key.substr(0,6) == 'local/') { // deprecated convention but kept for backward compatibility
                 return config.libraryPath + key.substr(6);
             }
             if (key in config.libraries) {
-                if (config.libraries[key] === 'installed') {
-                    return false; // library is preinstalled in CMS
+                let path = config.libraries[key];
+                if (path === 'installed') {
+                    return false; // library is preloaded in CMS or theme
                 }
-                return config.libraries[key];
+                if (path.substr(0,1) == '/' || path.substr(0,5) == 'http:' || path.substr(0,6) == 'https:') {
+                    // absolute path or external CDN
+                    return path;
+                }
+                // located in library directory
+                return config.libraryPath + path;
             }
             console.log('Library "' + key + '" not in settings.ini.');
             return false;

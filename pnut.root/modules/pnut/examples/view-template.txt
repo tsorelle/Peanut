@@ -1,8 +1,11 @@
-<h2>Page Title</h2>
-
+<div id="viewname-load-message"><span class="fa fa-spinner fa-pulse fa-2x" style="color:lightgrey"></span></div>
 <div id="viewname-view-container" class="row" style="display: none">
     <div class="col-md-12">
-        <!-- view model bindings -->
-        <h1 data-bind="text:test"></h1>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- view model bindings -->
+            </div>
+        </div>
     </div>
 </div>
+

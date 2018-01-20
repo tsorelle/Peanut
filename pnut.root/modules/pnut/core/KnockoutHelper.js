@@ -286,10 +286,14 @@ var Peanut;
                 return config.libraryPath + key.substr(6);
             }
             if (key in config.libraries) {
-                if (config.libraries[key] === 'installed') {
+                var path = config.libraries[key];
+                if (path === 'installed') {
                     return false;
                 }
-                return config.libraries[key];
+                if (path.substr(0, 1) == '/' || path.substr(0, 5) == 'http:' || path.substr(0, 6) == 'https:') {
+                    return path;
+                }
+                return config.libraryPath + path;
             }
             console.log('Library "' + key + '" not in settings.ini.');
             return false;
