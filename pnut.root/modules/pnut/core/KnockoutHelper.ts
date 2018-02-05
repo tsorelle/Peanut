@@ -193,7 +193,7 @@ namespace Peanut {
                         return;
                     }
                     else if (path.substr(0, 5) == '@lib:') {
-                        path = me.getLibrary(name, config);
+                        path = me.getLibrary(path, config);
                     }
                     else if (path.substr(0,1) == '@') {
                         path = me.expandFileName(path, config.applicationPath);
