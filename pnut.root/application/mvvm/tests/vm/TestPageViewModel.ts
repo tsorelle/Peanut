@@ -28,6 +28,8 @@ namespace Peanut {
         languageA = ko.observable('');
         languageB = ko.observable('');
 
+        lowdash: any;
+
         private testForm : testFormComponent;
 
         // call this funtions at end of page
@@ -55,7 +57,9 @@ namespace Peanut {
                             '@pnut/searchListObservable',
                             '@pnut/ViewModelHelpers'
                         ], () => {
-                            let test = _.head(['one','two','three']);
+                            me.lowdash = _.noConflict();
+                            // let test = _.head(['one','two','three']);
+                            let test = me.lowdash.head(['one','two','three']);
                             if (test === 'one') {
                                 console.log('Lodash installed')
                             }
