@@ -3,6 +3,23 @@ var Peanut;
     var KnockoutHelper = (function () {
         function KnockoutHelper() {
             var _this = this;
+            this.loadCss = function (path, media) {
+                if (media === void 0) { media = null; }
+                if (path) {
+                    var fileref = document.createElement("link");
+                    fileref.setAttribute("rel", "stylesheet");
+                    fileref.setAttribute("type", "text/css");
+                    fileref.setAttribute("href", path);
+                    if (media) {
+                        fileref.setAttribute('media', media);
+                    }
+                    if (typeof fileref === "undefined") {
+                        console.error('Failed to load stylesheet ' + path);
+                    }
+                    document.getElementsByTagName("head")[0].appendChild(fileref);
+                    console.log('Loaded stylesheet: ' + path);
+                }
+            };
             this.loadViewModel = function (vmName, final) {
                 Peanut.PeanutLoader.checkConfig();
                 var me = _this;
@@ -278,6 +295,34 @@ var Peanut;
                     }
                 }
                 Peanut.PeanutLoader.load(params, successFunction);
+            });
+        };
+        KnockoutHelper.prototype.loadStyleSheets = function (resourceList) {
+            var me = this;
+            Peanut.PeanutLoader.checkConfig();
+            Peanut.PeanutLoader.getConfig(function (config) {
+                for (var i = 0; i < resourceList.length; i++) {
+                    var parts = resourceList[i].split(' media=');
+                    var path = parts.shift().trim();
+                    var media = parts.shift();
+                    media = media ? media.trim() : null;
+                    if (path.substring(0, 1) === '/' || path.substring(0, 5) === 'http:' || path.substring(0, 6) === 'https:') {
+                        me.loadCss(path, media);
+                        return;
+                    }
+                    else if (path.substr(0, 5) == '@lib:') {
+                        path = me.getLibrary(name, config);
+                    }
+                    else if (path.substr(0, 1) == '@') {
+                        path = me.expandFileName(path, config.applicationPath);
+                    }
+                    else {
+                        path = config.stylesPath + path;
+                    }
+                    if (path) {
+                        me.loadCss(path, media);
+                    }
+                }
             });
         };
         KnockoutHelper.prototype.getLibrary = function (name, config) {

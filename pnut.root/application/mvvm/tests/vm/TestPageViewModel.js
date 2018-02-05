@@ -22,6 +22,24 @@ var Peanut;
             _this.messageButtonVisible = ko.observable(true);
             _this.languageA = ko.observable('');
             _this.languageB = ko.observable('');
+            _this.loadcss = function (path, media) {
+                if (media === void 0) { media = null; }
+                if (path) {
+                    path = '/application/assets/styles/' + path;
+                    var fileref = document.createElement("link");
+                    fileref.setAttribute("rel", "stylesheet");
+                    fileref.setAttribute("type", "text/css");
+                    fileref.setAttribute("href", path);
+                    if (media) {
+                        fileref.setAttribute('media', media);
+                    }
+                    if (typeof fileref === "undefined") {
+                        console.error('Failed to load stylesheet ' + path);
+                    }
+                    document.getElementsByTagName("head")[0].appendChild(fileref);
+                    console.log('Loaded stylesheet: ' + path);
+                }
+            };
             _this.save = function () {
                 jQuery("#confirm-save-modal").modal('hide');
                 alert('you saved');
@@ -82,6 +100,7 @@ var Peanut;
         }
         TestPageViewModel.prototype.init = function (successFunction) {
             var me = this;
+            me.application.loadStyleSheets('test.css media=print');
             me.addTranslation('test', 'Un prueba de traducadora');
             me.addTranslation('thing-plural', 'thingies');
             me.application.registerComponents('tests/intro-message,@pnut/modal-confirm,@pnut/pager', function () {

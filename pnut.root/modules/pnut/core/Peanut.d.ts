@@ -17,6 +17,7 @@ declare namespace Peanut {
         setProgress(count: number) : void;
         loadResources(resourceList: any, successFunction?: () => void);
         loadComponents(componentList: any, finalFunction?: () => void);
+        loadStyleSheets(resourceList: any) : void;
         registerComponents(componentList: any,finalFunction: ()=> void);
         registerComponentPrototype(componentName: string, finalFunction?: () => void);
         registerComponent(componentName: string, vmInstance: any, finalFunction?: () => void);
@@ -89,6 +90,7 @@ declare namespace Peanut {
         modulePath:             string;
         applicationPath:    string;
         libraryPath:    string;
+        stylesPath:    string;
         serviceUrl:               string;
         dependencies:             string;
         vmNamespace:        string;

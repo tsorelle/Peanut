@@ -137,6 +137,13 @@ var Peanut;
                 });
             });
         };
+        Application.prototype.loadStyleSheets = function (resourceList) {
+            var names = resourceList;
+            if (!(resourceList instanceof Array)) {
+                resourceList = resourceList.split(',');
+            }
+            this.koHelper.loadStyleSheets(resourceList);
+        };
         Application.prototype.showWaiter = function (message, waiterType) {
             if (message === void 0) { message = "Please wait . . ."; }
             if (waiterType === void 0) { waiterType = 'banner-waiter'; }

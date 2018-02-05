@@ -88,6 +88,14 @@ namespace Peanut {
             });
         };
 
+        public loadStyleSheets(resourceList: any) {
+            let names = resourceList;
+            if (!(resourceList instanceof Array)) {
+                resourceList = resourceList.split(',');
+            }
+            this.koHelper.loadStyleSheets(resourceList);
+        }
+
 
         /**********************************
          * Wait messages

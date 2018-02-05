@@ -160,6 +160,7 @@ class Bootstrap
         $result->commonRootPath = $root;
         $result->applicationPath = $root.'application/';
         $result->libraryPath = empty($settings['libraryPath']) ?  $result->applicationPath."assets/js/libraries/" : $settings['libraryPath'].'/';
+        $result->stylesPath = empty($settings['stylesPath']) ?  $result->applicationPath."assets/styles/" : $settings['stylesPath'].'/';
         $result->peanutRootPath = $peanutPath . '/';
         $result->corePath = $peanutPath . '/core/';
         $result->packagePath = $packagePath . '/';

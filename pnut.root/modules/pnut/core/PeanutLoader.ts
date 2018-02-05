@@ -112,6 +112,7 @@ namespace Peanut {
                     Peanut.Config.values.libraries = data.libraries;
                     Peanut.Config.values.applicationPath = data.applicationPath;
                     Peanut.Config.values.libraryPath = data.libraryPath;
+                    Peanut.Config.values.stylesPath = data.stylesPath;
 
                     if (data.loggingMode == 'verbose') {
                         console.log('Namespace ' + Peanut.Config.values.vmNamespace);

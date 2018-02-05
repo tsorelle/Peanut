@@ -33,6 +33,7 @@ namespace Peanut {
         // call this funtions at end of page
         init(successFunction?: () => void) {
             let me = this;
+            me.application.loadStyleSheets('test.css media=print');// ,'print');
             // me.showLoadWaiter();
             // setup messaging and other application initializations
             me.addTranslation('test','Un prueba de traducadora');
@@ -72,6 +73,24 @@ namespace Peanut {
             // });
 
         }
+
+        loadcss = (path,media=null) => {
+            if (path) {
+                path = '/application/assets/styles/' + path;
+                let fileref = document.createElement("link");
+                fileref.setAttribute("rel", "stylesheet");
+                fileref.setAttribute("type", "text/css");
+                fileref.setAttribute("href", path);
+                if (media) {
+                    fileref.setAttribute('media', media)
+                }
+                if (typeof fileref === "undefined") {
+                    console.error('Failed to load stylesheet ' + path);
+                }
+                document.getElementsByTagName("head")[0].appendChild(fileref);
+                console.log('Loaded stylesheet: ' + path);
+            }
+        };
 
         onGetItem() {
             let me = this;
