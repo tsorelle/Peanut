@@ -28,7 +28,7 @@ namespace Peanut {
         languageA = ko.observable('');
         languageB = ko.observable('');
 
-        lowdash: any;
+        _ : any; // lodash no conflict reference.
 
         private testForm : testFormComponent;
 
@@ -57,9 +57,9 @@ namespace Peanut {
                             '@pnut/searchListObservable',
                             '@pnut/ViewModelHelpers'
                         ], () => {
-                            me.lowdash = _.noConflict();
+                            me._ = _.noConflict();
                             // let test = _.head(['one','two','three']);
-                            let test = me.lowdash.head(['one','two','three']);
+                            let test = me._.head(['one','two','three']);
                             if (test === 'one') {
                                 console.log('Lodash installed')
                             }

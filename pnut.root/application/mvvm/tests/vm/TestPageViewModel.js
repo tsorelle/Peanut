@@ -111,8 +111,8 @@ var Peanut;
                         '@pnut/searchListObservable',
                         '@pnut/ViewModelHelpers'
                     ], function () {
-                        me.lowdash = _.noConflict();
-                        var test = me.lowdash.head(['one', 'two', 'three']);
+                        me._ = _.noConflict();
+                        var test = me._.head(['one', 'two', 'three']);
                         if (test === 'one') {
                             console.log('Lodash installed');
                         }
