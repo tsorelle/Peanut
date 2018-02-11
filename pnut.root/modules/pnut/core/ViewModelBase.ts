@@ -5,6 +5,22 @@
 ///<reference path="Peanut.d.ts"/>
 ///<reference path="../../typings/jquery/jquery.d.ts"/>
 namespace Peanut {
+    export class Environment {
+        public static getDeviceSize() {
+            let width = window.screen.width;
+            if (width >= 1200) {
+                return 4;
+            }
+            if (width >= 992) {
+                return 3;
+            }
+            if (width >= 768) {
+                return 2;
+            }
+            return 1;
+        }
+
+    }
     export abstract class ViewModelBase implements IViewModel, ITranslator{
         protected services: ServiceBroker;
         protected application: IPeanutClient;
@@ -12,10 +28,14 @@ namespace Peanut {
         public bootstrapVersion = ko.observable(3);
         public fontSet = ko.observable('');
 
+        public deviceSize = ko.observable(4);
+
         abstract init(successFunction?: () => void);
         public start = (application : IPeanutClient, successFunction?: (viewModel: IViewModel) => void)  => {
             let me = this;
+
             me.language = me.getUserLanguage();
+            me.deviceSize(Environment.getDeviceSize());
             me.addTranslations(Cookies.GetKvArray('peanutTranslations'));
             me.application = application;
             me.services = ServiceBroker.getInstance(application);

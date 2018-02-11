@@ -1,14 +1,35 @@
 var Peanut;
 (function (Peanut) {
+    var Environment = (function () {
+        function Environment() {
+        }
+        Environment.getDeviceSize = function () {
+            var width = window.screen.width;
+            if (width >= 1200) {
+                return 4;
+            }
+            if (width >= 992) {
+                return 3;
+            }
+            if (width >= 768) {
+                return 2;
+            }
+            return 1;
+        };
+        return Environment;
+    }());
+    Peanut.Environment = Environment;
     var ViewModelBase = (function () {
         function ViewModelBase() {
             var _this = this;
             this.translations = [];
             this.bootstrapVersion = ko.observable(3);
             this.fontSet = ko.observable('');
+            this.deviceSize = ko.observable(4);
             this.start = function (application, successFunction) {
                 var me = _this;
                 me.language = me.getUserLanguage();
+                me.deviceSize(Environment.getDeviceSize());
                 me.addTranslations(Cookies.GetKvArray('peanutTranslations'));
                 me.application = application;
                 me.services = Peanut.ServiceBroker.getInstance(application);
