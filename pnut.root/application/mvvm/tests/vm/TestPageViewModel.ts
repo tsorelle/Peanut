@@ -40,6 +40,7 @@ namespace Peanut {
             // setup messaging and other application initializations
             me.addTranslation('test','Un prueba de traducadora');
             me.addTranslation('thing-plural','thingies');
+            me.addTranslation('save-modal-message','Do you want to save changes now?');
 
             // for components inside the default secton (<div id='testpage-view-container>)
             // Call load component to load and register. Before calling showDefaultSection()

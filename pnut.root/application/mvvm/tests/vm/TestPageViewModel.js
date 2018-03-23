@@ -103,6 +103,7 @@ var Peanut;
             me.application.loadStyleSheets('test.css media=print');
             me.addTranslation('test', 'Un prueba de traducadora');
             me.addTranslation('thing-plural', 'thingies');
+            me.addTranslation('save-modal-message', 'Do you want to save changes now?');
             me.application.registerComponents('tests/intro-message,@pnut/modal-confirm,@pnut/pager', function () {
                 me.application.loadComponents('tests/message-constructor', function () {
                     me.application.loadResources([
