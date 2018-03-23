@@ -84,7 +84,7 @@ namespace Peanut {
         };
 
 
-        private hideLoadMessage = () => {
+        public hideLoadMessage = () => {
             let loadMessage = '#' + this.getVmName().toLowerCase() + '-load-message';
             jQuery(loadMessage).hide();
         };
