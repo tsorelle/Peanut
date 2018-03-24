@@ -195,6 +195,18 @@ namespace Peanut {
                     else if (path.substr(0, 5) == '@lib:') {
                         path = me.getLibrary(path, config);
                     }
+                    else if (path.substr(0,5) == '@pkg:') {
+                        let pathParts =  path.substring(5).split('/');
+                        let pkgName = pathParts.shift();
+                        let fileName = '/css/styles.css';
+                        if (parts.length > 0) {
+                            fileName = parts.pop();
+                            let subdir = parts.length ? '/' + parts.join('/') + '/' : '/css/';
+                            fileName = subdir + fileName;
+                        }
+
+                        path = Peanut.Config.values.packagePath + pkgName + fileName;
+                    }
                     else if (path.substr(0,1) == '@') {
                         path = me.expandFileName(path, config.applicationPath);
                     }
