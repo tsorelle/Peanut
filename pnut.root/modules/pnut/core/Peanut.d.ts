@@ -210,4 +210,16 @@ declare namespace Peanut {
         description : string;
     }
 
+    export interface IEntityPropertyDefinition {
+        id : any;
+        entityCode : string;
+        key: string;
+        order : any;
+        valueCount : any;
+        lookup : string;
+        required : boolean;
+        defaultValue : any;
+        datatype:  string;
+    }
+
 }
