@@ -3,9 +3,8 @@ namespace Peanut {
     export class entityPropertiesController {
         public controls: IPropertyControl[] = [];
 
-        constructor(properties: IPropertyDefinition[],lookups : any[], translator: ITranslator) {
+        constructor(properties: IPropertyDefinition[],lookups : any[], selectText : string = 'Select') {
             let me=this;
-            let selectText = translator.translate('select-caption');
 
             for (let i = 0; i< properties.length; i++) {
                 let property = properties[i];

@@ -90,7 +90,7 @@ namespace Peanut {
             ];
 
             me.application.registerComponents('@pnut/entity-properties', () => {
-                this.propertiesController = new entityPropertiesController(defs,lookups,me);
+                this.propertiesController = new entityPropertiesController(defs,lookups,'(any)');
                 me.bindDefaultSection();
                 successFunction();
             });
