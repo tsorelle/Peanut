@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+<h2>Property Form Test</h2>
+<div id="testpropertyform-load-message"><span class="fa fa-spinner fa-pulse fa-2x" style="color:gray"></span></div>
+<div id="testpropertyform-view-container">
+    <form>
+        <entity-properties params="controller:propertiesController, columns:2"></entity-properties>
+        <div>
+            <p>
+                <button data-bind="click:getValues">Get</button>&nbsp;<button data-bind="click:setValues">Set</button>
+            </p>
+            <ul data-bind="foreach:valuesView">
+                <li><span data-bind="text:key"></span> = <span data-bind="text:value"></span> </li>
+            </ul>
+        </div>
+    </form>
+</div>
+</div>
+</div>
+</div>
+<!-- /div -->

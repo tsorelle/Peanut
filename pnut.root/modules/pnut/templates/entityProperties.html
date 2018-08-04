@@ -1,0 +1,9 @@
+<div data-bind="foreach:propertyRows">
+    <div data-bind="foreach:$data" class="row">
+        <div  data-bind="css:cssColumn" class="form-group">
+            <label data-bind="text:label"></label>
+            <select class="form-control"
+                data-bind="options: lookup,optionsText:'name',value:selected,optionsCaption:caption"></select>
+        </div>
+    </div>
+</div>

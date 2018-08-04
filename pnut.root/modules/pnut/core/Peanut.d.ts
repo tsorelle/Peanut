@@ -210,16 +210,20 @@ declare namespace Peanut {
         description : string;
     }
 
-    export interface IEntityPropertyDefinition {
-        id : any;
-        entityCode : string;
+    export interface IPropertyDefinition {
         key: string;
-        order : any;
-        valueCount : any;
+        defaultValue: any;
         lookup : string;
-        required : boolean;
-        defaultValue : any;
-        datatype:  string;
+        label: string;
+        required: boolean;
+    }
+
+    export interface IPropertyControl {
+        key: string;
+        selected: KnockoutObservable<any>;
+        lookup: KnockoutObservableArray<ILookupItem>;
+        caption: string;
+        label: string;
     }
 
 }
