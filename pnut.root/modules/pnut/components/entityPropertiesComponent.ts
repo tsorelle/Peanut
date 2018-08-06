@@ -2,6 +2,7 @@
 namespace Peanut {
     export class entityPropertiesController {
         public controls: IPropertyControl[] = [];
+        private defaults = [];
 
         constructor(properties: IPropertyDefinition[],lookups : any[], selectText : string = 'Select') {
             let me=this;
@@ -18,6 +19,7 @@ namespace Peanut {
                     // caption: (property.value && property.required) || (!property.required) ? null : selectText
                     caption: (property.required && property.defaultValue) ? null : selectText
                 };
+                me.defaults[property.key] = property.defaultValue;
             }
         }
 
@@ -44,6 +46,10 @@ namespace Peanut {
                 me.setValue(key,values[key]);
             }
         }
+        clearValues = () => {
+            this.setValues(this.defaults);
+        };
+
         getValues() {
             let me = this;
             let result = [];

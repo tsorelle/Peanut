@@ -113,5 +113,9 @@ namespace Peanut {
             values['item5'] = 2;
             this.propertiesController.setValues(values);
         };
+
+        clearValues = () => {
+            this.propertiesController.clearValues();
+        };
     }
 }
