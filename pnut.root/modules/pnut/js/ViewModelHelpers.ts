@@ -130,6 +130,14 @@ namespace Peanut {
             }
         };
 
+        public static getSelectedFiles(elementId: string) {
+            let element = <any>jQuery(elementId);
+            if (element && element.length && element[0].files) {
+                return element[0].files;
+            }
+            return null;
+        }
+
     }
 
 }  // end namespace

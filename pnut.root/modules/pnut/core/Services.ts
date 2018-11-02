@@ -222,6 +222,67 @@ namespace Peanut {
             return result;
         };
 
+        postForm = (serviceName: string, parameters: any = "",
+                    files: any,
+                    progressFunction?: (progress: any) => void,
+                    successFunction?: (serviceResponse: IServiceResponse) => void,
+                    errorFunction?: (errorMessage: any) => void) : JQueryPromise<any> => {
+
+            // This method is typically used when one or more files must be uploaded as part of a service
+            let me = this;
+            me.errorMessage = '';
+            me.errorInfo = '';
+
+            // peanut controller requires parameter as a string.
+            if (!parameters)
+                parameters = "";
+            else  {
+                parameters = JSON.stringify(parameters);
+            }
+
+            let formData = new FormData();
+            formData.append("serviceCode",serviceName);
+            formData.append("topsSecurityToken",me.securityToken);
+            formData.append("request",parameters);
+            if (files && files.length) {
+                //todo: YAGNI this supports only one file upload, maybe change later for multiple files
+                formData.append('file',files[0]);
+            }
+
+            // todo: support progress function
+
+            let result =
+                jQuery.ajax({
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    cache: false,
+                    url: Peanut.Config.values.serviceUrl,
+                    contentType: false,
+                    processData: false,
+
+                })
+                    .done(
+                        function(serviceResponse) {
+                            me.showServiceMessages(serviceResponse);
+                            if (successFunction) {
+                                successFunction(serviceResponse);
+                            }
+                        }
+                    )
+                    .fail(
+                        function(jqXHR, textStatus ) {
+                            me.errorMessage = this.showExceptionMessage(jqXHR);
+                            me.errorInfo = (jqXHR) ? jqXHR.responseText : '';
+                            if (errorFunction) {
+                                errorFunction({'message' : me.errorMessage, 'details' : me.errorInfo});
+                            }
+                        });
+
+            return result;
+        };
+
+
 
         // Execute a peanut service and handle Service Response.
         executeService = (serviceName: string, parameters: any = "",
