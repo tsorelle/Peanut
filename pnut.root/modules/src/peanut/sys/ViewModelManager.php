@@ -57,6 +57,27 @@ class ViewModelManager
         return self::$packagePath;
     }
 
+    public static function getVmUrl($vmName,$package='') {
+
+        if (empty($package)) {
+            $iniPath = TPath::getConfigPath().'viewmodels.ini';
+        }
+        else {
+            $iniPath = TPath::getFileRoot();
+            $iniPath .= self::getPackagePath()."/$package/config/viewmodels.ini";
+        }
+        $settings = @parse_ini_file($iniPath, true);
+        if (!empty($settings)) {
+            foreach ($settings as $name => $section) {
+                if (array_key_exists('vm',$section) && $section['vm'] === $vmName) {
+                    return $name;
+                }
+            }
+        }
+        return false;
+
+    }
+
     /**
      * @param $pathAlias
      * @return bool|ViewModelInfo
