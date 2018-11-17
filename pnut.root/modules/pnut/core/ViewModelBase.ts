@@ -183,6 +183,60 @@ namespace Peanut {
             return 'en-us';
         }
 
+        public getTodayString = (language :string = null) => {
+            if (!language) {
+                language = this.getLanguage();
+            }
+            let format = language.split('-').pop();
+            let today = new Date();
+            let dd : any = today.getDate();
+            let mm : any = today.getMonth()+1; //January is 0!
+
+            let yyyy = today.getFullYear();
+            if(dd<10){
+                dd='0'+dd;
+            }
+            if(mm<10){
+                mm='0'+mm;
+            }
+            return format === 'us' ?  mm+'/'+dd+'/'+yyyy : yyyy+ '-' + mm +'-' + dd;
+        };
+
+        public isoToShortDate = (dateString: string, language : string = null) => {
+            if (!language) {
+                language = this.getLanguage();
+            }
+            let format = language.split('-').pop();
+            if (!dateString) {
+                return '';
+            }
+            if (format !== 'us') {
+                console.log('Warning: Simple date formatting for ' + format + 'is not supported. Using ISO.');
+                return dateString;
+            }
+            let parts = dateString.split('-');
+            if (parts.length !== 3) {
+                console.error('Invalid ISO date string: ' + dateString)
+            }
+            return parts[1] + '/' + parts[2] + '/' + parts[0];
+        };
+
+        public shortDateToIso(dateString) {
+            if (!dateString) {
+                return '';
+            }
+            let parts = dateString.split('/');
+            if (parts.length !== 3) {
+                return dateString; // not US short format, return input
+            }
+            let m = parts[0];
+            let d = parts[1];
+            let y = parts[2];
+            return y + '-' +
+                (m.length < 2 ? '0' + m.toString() : m) + '-' +
+                (d.length < 2 ? '0' + d.toString() : d);
+        }
+
         // for use by components that must reference main view model.
         public self = () => {
             return this;

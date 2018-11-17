@@ -4,3 +4,4 @@ tests/temp
 doc/local
 pnut.root/assets/js/libraries/**/*
 /pnut.root/modules/src/tops/
+/pnut.root/**/*.js.map

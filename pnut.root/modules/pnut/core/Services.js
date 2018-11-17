@@ -76,6 +76,47 @@ var Peanut;
                 });
                 return result;
             };
+            this.postForm = function (serviceName, parameters, files, progressFunction, successFunction, errorFunction) {
+                if (parameters === void 0) { parameters = ""; }
+                var me = _this;
+                me.errorMessage = '';
+                me.errorInfo = '';
+                if (!parameters)
+                    parameters = "";
+                else {
+                    parameters = JSON.stringify(parameters);
+                }
+                var formData = new FormData();
+                formData.append("serviceCode", serviceName);
+                formData.append("topsSecurityToken", me.securityToken);
+                formData.append("request", parameters);
+                if (files && files.length) {
+                    formData.append('file', files[0]);
+                }
+                var result = jQuery.ajax({
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    cache: false,
+                    url: Peanut.Config.values.serviceUrl,
+                    contentType: false,
+                    processData: false
+                })
+                    .done(function (serviceResponse) {
+                    me.showServiceMessages(serviceResponse);
+                    if (successFunction) {
+                        successFunction(serviceResponse);
+                    }
+                })
+                    .fail(function (jqXHR, textStatus) {
+                    me.errorMessage = me.showExceptionMessage(jqXHR);
+                    me.errorInfo = (jqXHR) ? jqXHR.responseText : '';
+                    if (errorFunction) {
+                        errorFunction({ 'message': me.errorMessage, 'details': me.errorInfo });
+                    }
+                });
+                return result;
+            };
             this.executeService = function (serviceName, parameters, successFunction, errorFunction) {
                 if (parameters === void 0) { parameters = ""; }
                 return _this.executeRPC("POST", serviceName, parameters, successFunction, errorFunction);

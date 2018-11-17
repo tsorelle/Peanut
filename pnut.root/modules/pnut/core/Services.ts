@@ -272,7 +272,7 @@ namespace Peanut {
                     )
                     .fail(
                         function(jqXHR, textStatus ) {
-                            me.errorMessage = this.showExceptionMessage(jqXHR);
+                            me.errorMessage = me.showExceptionMessage(jqXHR);
                             me.errorInfo = (jqXHR) ? jqXHR.responseText : '';
                             if (errorFunction) {
                                 errorFunction({'message' : me.errorMessage, 'details' : me.errorInfo});

@@ -1,23 +1,25 @@
 /// <reference path='../../typings/knockout/knockout.d.ts' />
 namespace Peanut {
+
+    import IKeyValuePair = Peanut.IKeyValuePair;
+
     export class entityPropertiesController {
         public controls: IPropertyControl[] = [];
         private defaults = [];
 
-        constructor(properties: IPropertyDefinition[],lookups : any[], selectText : string = 'Select') {
+        constructor(properties: IPropertyDefinition[],lookups : any[], selectText : string = 'Select', clearValues: boolean = false) {
             let me=this;
 
             for (let i = 0; i< properties.length; i++) {
                 let property = properties[i];
                 let lookup = lookups[property.lookup];
-
+                let defaultItem = me.getLookupValue(property.defaultValue,lookup);
                 me.controls[property.key] = <IPropertyControl>{
                     lookup: lookup,
-                    // selected : ko.observable(me.getLookupValue(property.value,lookup)),
-                    selected : ko.observable(property.defaultValue),
+                    selected : ko.observable(defaultItem),
                     label : property.label,
-                    // caption: (property.value && property.required) || (!property.required) ? null : selectText
-                    caption: (property.required && property.defaultValue) ? null : selectText
+                    caption: ((property.required && property.defaultValue) && !clearValues) ? null : selectText,
+                    displayText: defaultItem ?  defaultItem.name : ''
                 };
                 me.defaults[property.key] = property.defaultValue;
             }
@@ -37,17 +39,33 @@ namespace Peanut {
             let me = this;
             let control = me.controls[key];
             let item = me.getLookupValue(value, control.lookup);
+            me.controls[key].displayText = item ? item.name : '';
             me.controls[key].selected(item);
         }
 
-        setValues(values : any[]) {
+        setAssociatedValues(values : any[]) {
             let me = this;
             for(let key in values) {
                 me.setValue(key,values[key]);
             }
         }
+
+        setValues(values : IKeyValuePair[]) {
+            let me = this;
+            for(let i=0;i<values.length;i++) {
+                me.setValue(values[i].Key, values[i].Value);
+            }
+        }
+
         clearValues = () => {
-            this.setValues(this.defaults);
+            this.setAssociatedValues(this.defaults);
+        };
+
+        // todo: update peanut core
+        getValue = (key: string) => {
+            let item = this.controls[key];
+            let value = item.selected();
+            return value || null;
         };
 
         getValues() {
@@ -56,7 +74,12 @@ namespace Peanut {
             for(let key in me.controls) {
                 let item = me.controls[key];
                 let value = item.selected();
-                result[key] =  value ? value.id : null;
+                if (value) {
+                    result.push(<IKeyValuePair>{
+                        Key: key,
+                        Value: value.id
+                    });
+                }
             }
             return result;
         }
@@ -66,6 +89,8 @@ namespace Peanut {
         // observables
         propertyRows =  ko.observableArray([]);
         // propertyControls =  ko.observableArray([]);
+
+        readOnly = ko.observable(false);
 
         constructor(params: any) {
             let me = this;
@@ -79,6 +104,12 @@ namespace Peanut {
                 console.error('entityPropertiesComponent: Parameter "controller" is required');
                 return;
             }
+
+
+            me.readOnly(params.readOnly == 1);
+            let test = me.readOnly();
+
+            let clearValues = params.clearValues;
 
             let columnCount = 3;
             let columnWidth = 'md';
@@ -103,7 +134,8 @@ namespace Peanut {
                     lookup: lookup,
                     selected: control.selected,
                     caption: control.caption,
-                    cssColumn: columnClass
+                    cssColumn: columnClass,
+                    displayText: control.displayText
                 });
                 if (++i === columnCount) {
                     rows.push(ko.observableArray(controls));
@@ -113,7 +145,7 @@ namespace Peanut {
             if (controls.length > 0) {
                 rows.push(ko.observableArray(controls));
             }
-           me.propertyRows(rows);
+            me.propertyRows(rows);
 
         }
     }

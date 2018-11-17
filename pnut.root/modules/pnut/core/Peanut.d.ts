@@ -224,6 +224,7 @@ declare namespace Peanut {
         lookup: KnockoutObservableArray<ILookupItem>;
         caption: string;
         label: string;
+        displayText: string;
     }
 
 }

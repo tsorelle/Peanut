@@ -5,6 +5,7 @@
 /// <reference path='../core/peanut.d.ts' />
 
 namespace Peanut {
+
     /**
      * Constants for entity editState
      */

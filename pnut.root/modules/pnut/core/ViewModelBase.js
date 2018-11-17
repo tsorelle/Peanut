@@ -140,6 +140,43 @@ var Peanut;
                 var me = _this;
                 return me.language;
             };
+            this.getTodayString = function (language) {
+                if (language === void 0) { language = null; }
+                if (!language) {
+                    language = _this.getLanguage();
+                }
+                var format = language.split('-').pop();
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth() + 1;
+                var yyyy = today.getFullYear();
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+                return format === 'us' ? mm + '/' + dd + '/' + yyyy : yyyy + '-' + mm + '-' + dd;
+            };
+            this.isoToShortDate = function (dateString, language) {
+                if (language === void 0) { language = null; }
+                if (!language) {
+                    language = _this.getLanguage();
+                }
+                var format = language.split('-').pop();
+                if (!dateString) {
+                    return '';
+                }
+                if (format !== 'us') {
+                    console.log('Warning: Simple date formatting for ' + format + 'is not supported. Using ISO.');
+                    return dateString;
+                }
+                var parts = dateString.split('-');
+                if (parts.length !== 3) {
+                    console.error('Invalid ISO date string: ' + dateString);
+                }
+                return parts[1] + '/' + parts[2] + '/' + parts[0];
+            };
             this.self = function () {
                 return _this;
             };
@@ -156,6 +193,21 @@ var Peanut;
                 return userLang.toLowerCase();
             }
             return 'en-us';
+        };
+        ViewModelBase.prototype.shortDateToIso = function (dateString) {
+            if (!dateString) {
+                return '';
+            }
+            var parts = dateString.split('/');
+            if (parts.length !== 3) {
+                return dateString;
+            }
+            var m = parts[0];
+            var d = parts[1];
+            var y = parts[2];
+            return y + '-' +
+                (m.length < 2 ? '0' + m.toString() : m) + '-' +
+                (d.length < 2 ? '0' + d.toString() : d);
         };
         ViewModelBase.prototype.getDefaultLoadMessage = function () {
             var me = this;

@@ -3,7 +3,10 @@
         <div  data-bind="css:cssColumn" class="form-group">
             <label data-bind="text:label"></label>
             <select class="form-control"
-                data-bind="options: lookup,optionsText:'name',value:selected,optionsCaption:caption"></select>
+                    data-bind="visible: !$parents[1].readOnly(), options: lookup,optionsText:'name',value:selected,optionsCaption:caption"></select>
+            <div data-bind="visible: $parents[1].readOnly">
+                <span data-bind="text:displayText"></span>
+            </div>
         </div>
     </div>
 </div>

@@ -117,6 +117,13 @@ var Peanut;
             }
         };
         ;
+        Helper.getSelectedFiles = function (elementId) {
+            var element = jQuery(elementId);
+            if (element && element.length && element[0].files) {
+                return element[0].files;
+            }
+            return null;
+        };
         return Helper;
     }());
     Peanut.Helper = Helper;
