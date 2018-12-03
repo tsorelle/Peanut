@@ -22,7 +22,7 @@ class PeanutSettings
         $modulePath = TConfiguration::getValue('modulePath','peanut','modules');
         return $modulePath;
     }
-// todo: update core
+
     public static function FromSrcPath($srcFile) {
         $modulePath = self::GetModulePath();
         $modulePath = TPath::fromFileRoot($modulePath);
