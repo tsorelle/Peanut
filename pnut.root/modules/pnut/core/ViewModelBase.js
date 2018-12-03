@@ -87,9 +87,15 @@ var Peanut;
                     }
                 });
             };
-            this.showLoadWaiter = function () {
+            this.setPageHeading = function (text) {
+                text = _this.translate(text);
+                jQuery('h1:first').html(text);
+                jQuery('h1:first').show();
+            };
+            this.showLoadWaiter = function (message) {
+                if (message === void 0) { message = 'wait-action-loading'; }
                 var me = _this;
-                var message = me.translate('wait-action-loading') + ', ' + me.translate('wait-please') + '...';
+                message = me.translate('wait-action-loading') + ', ' + me.translate('wait-please') + '...';
                 me.application.showBannerWaiter(message);
             };
             this.getActionMessage = function (action, entity) {
@@ -160,9 +166,13 @@ var Peanut;
             };
             this.isoToShortDate = function (dateString, language) {
                 if (language === void 0) { language = null; }
+                if (!dateString) {
+                    return '';
+                }
                 if (!language) {
                     language = _this.getLanguage();
                 }
+                dateString = dateString.split(' ').shift().trim();
                 var format = language.split('-').pop();
                 if (!dateString) {
                     return '';
@@ -174,6 +184,7 @@ var Peanut;
                 var parts = dateString.split('-');
                 if (parts.length !== 3) {
                     console.error('Invalid ISO date string: ' + dateString);
+                    return 'error';
                 }
                 return parts[1] + '/' + parts[2] + '/' + parts[0];
             };
@@ -185,6 +196,9 @@ var Peanut;
             };
             this.getServices = function () {
                 return _this.services;
+            };
+            this.hideServiceMessages = function () {
+                _this.application.hideServiceMessages();
             };
         }
         ViewModelBase.prototype.getUserLanguage = function () {
@@ -212,6 +226,8 @@ var Peanut;
         ViewModelBase.prototype.getDefaultLoadMessage = function () {
             var me = this;
             return me.translate('wait-loading', '...');
+        };
+        ViewModelBase.prototype.handleEvent = function (eventName, data) {
         };
         return ViewModelBase;
     }());

@@ -38,9 +38,9 @@ namespace Peanut {
             me.application.loadStyleSheets('test.css media=print');// ,'print');
             // me.showLoadWaiter();
             // setup messaging and other application initializations
-            me.addTranslation('test','Un prueba de traducadora');
-            me.addTranslation('thing-plural','thingies');
-            me.addTranslation('save-modal-message','Do you want to save changes now?');
+            me.addTranslation('test', 'Un prueba de traducadora');
+            me.addTranslation('thing-plural', 'thingies');
+            me.addTranslation('save-modal-message', 'Do you want to save changes now?');
 
             // for components inside the default secton (<div id='testpage-view-container>)
             // Call load component to load and register. Before calling showDefaultSection()
@@ -48,32 +48,32 @@ namespace Peanut {
 
             // me.application.registerComponentPrototype('@pnut/modal-confirm', () => {
             me.application.registerComponents('tests/intro-message,@pnut/modal-confirm,@pnut/pager', () => {
-                me.application.loadComponents('tests/message-constructor',() => {
-                        me.application.loadResources([
-                            // '@lib:fontawesome',
-                            '@lib:lodash',
-                            // 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js',
-                            '@lib:local/TestLib.js',
-                            // '/application/assets/js/libraries/TestLib.js',
-                            '@pnut/searchListObservable',
-                            '@pnut/ViewModelHelpers'
-                        ], () => {
-                            me._ = _.noConflict();
-                            // let test = _.head(['one','two','three']);
-                            let test = me._.head(['one','two','three']);
-                            if (test === 'one') {
-                                console.log('Lodash installed')
-                            }
+                me.application.loadComponents('tests/message-constructor', () => {
+                    me.application.loadResources([
+                        // '@lib:fontawesome',
+                        '@lib:lodash',
+                        // 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js',
+                        '@lib:local/TestLib.js',
+                        // '/application/assets/js/libraries/TestLib.js',
+                        '@pnut/searchListObservable',
+                        '@pnut/ViewModelHelpers'
+                    ], () => {
+                        me._ = _.noConflict();
+                        // let test = _.head(['one','two','three']);
+                        let test = me._.head(['one', 'two', 'three']);
+                        if (test === 'one') {
+                            console.log('Lodash installed')
+                        }
 
-                            Testing.Test.sayHello();
-                             let cvm = new messageConstructorComponent('Smoke Test Buttons:');
-                                me.application.registerComponent('tests/message-constructor',cvm,() => {
-                                    me.bindDefaultSection();
-                                    successFunction();
-                                });
-                            });
+                        Testing.Test.sayHello();
+                        let cvm = new messageConstructorComponent('Smoke Test Buttons:');
+                        me.application.registerComponent('tests/message-constructor', cvm, () => {
+                            me.bindDefaultSection();
+                            successFunction();
                         });
                     });
+                });
+            });
             //});
             // });
 

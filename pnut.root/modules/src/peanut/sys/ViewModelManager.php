@@ -70,7 +70,8 @@ class ViewModelManager
         if (!empty($settings)) {
             foreach ($settings as $name => $section) {
                 if (array_key_exists('vm',$section) && $section['vm'] === $vmName) {
-                    return $name;
+                    $subpath = PeanutSettings::GetPeanutUrl();
+                    return empty($subpath) ? '/'.$name : '/' .$subpath.'/'.$name;
                 }
             }
         }
@@ -143,9 +144,9 @@ class ViewModelManager
                 TConfiguration::getValue('page-title','pages',$pathAlias) :
                 $item['page-title'];
 
-            $result->heading = empty($item['heading']) ? '' : '<h2>'.
-                TLanguage::text($item['heading'])
-                .'</h2>';
+            $result->heading = empty($item['heading']) ? '' :
+                '<h1>'.TLanguage::text($item['heading']).'</h1>'
+            ;
             $result->permissions = TStrings::ListToArray(@$item['permissions']);
             $result->roles = TStrings::ListToArray(@$item['roles']);
 

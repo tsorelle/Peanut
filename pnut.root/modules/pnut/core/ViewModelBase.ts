@@ -115,9 +115,18 @@ namespace Peanut {
             });
         };
 
-        public showLoadWaiter =() => {
+
+        public setPageHeading = (text: string) => {
+            text = this.translate(text);
+            jQuery('h1:first').html(text);
+            jQuery('h1:first').show();
+        };
+
+
+
+        public showLoadWaiter =(message = 'wait-action-loading') => {
             let me = this;
-            let message = me.translate('wait-action-loading')+ ', ' + me.translate('wait-please')+'...';
+            message = me.translate('wait-action-loading')+ ', ' + me.translate('wait-please')+'...';
             me.application.showBannerWaiter(message)
         };
 
@@ -203,9 +212,13 @@ namespace Peanut {
         };
 
         public isoToShortDate = (dateString: string, language : string = null) => {
+            if (!dateString) {
+                return '';
+            }
             if (!language) {
                 language = this.getLanguage();
             }
+            dateString = dateString.split(' ').shift().trim();
             let format = language.split('-').pop();
             if (!dateString) {
                 return '';
@@ -216,7 +229,8 @@ namespace Peanut {
             }
             let parts = dateString.split('-');
             if (parts.length !== 3) {
-                console.error('Invalid ISO date string: ' + dateString)
+                console.error('Invalid ISO date string: ' + dateString);
+                return 'error';
             }
             return parts[1] + '/' + parts[2] + '/' + parts[0];
         };
@@ -254,7 +268,13 @@ namespace Peanut {
             return this.services;
         };
 
+        public handleEvent(eventName: string, data?: any) {
+            // override in sub-class
+        }
 
+        public hideServiceMessages = () => {
+            this.application.hideServiceMessages();
+        }
 
     }
 
