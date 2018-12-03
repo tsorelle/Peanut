@@ -22,6 +22,14 @@ class PeanutSettings
         $modulePath = TConfiguration::getValue('modulePath','peanut','modules');
         return $modulePath;
     }
+// todo: update core
+    public static function FromSrcPath($srcFile) {
+        $modulePath = self::GetModulePath();
+        $modulePath = TPath::fromFileRoot($modulePath);
+        $srcPath = TPath::combine($modulePath,'src');
+        return TPath::combine($srcPath,$srcFile);
+        // return realpath($file);
+    }
 
     public static function FromPeanutRoot($path) {
         $root = TPath::fromFileRoot(self::GetPeanutRoot());
@@ -65,7 +73,7 @@ class PeanutSettings
     }
 
     public static function GetPeanutUrl() {
-        return TConfiguration::getValue('peanutUrl','pages','peanut');
+        return TConfiguration::getValue('peanutUrl','pages','');
     }
 
     public static function getNavBar() {
