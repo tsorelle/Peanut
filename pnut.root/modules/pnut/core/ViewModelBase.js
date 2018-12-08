@@ -87,10 +87,25 @@ var Peanut;
                     }
                 });
             };
-            this.setPageHeading = function (text) {
+            this.setPageHeading = function (text, textCase) {
+                if (textCase === void 0) { textCase = 'none'; }
+                if (text) {
+                    text = _this.translate(text);
+                    text = _this.changeCase(text, textCase);
+                    jQuery('h1:first').html(text);
+                    jQuery('h1:first').show();
+                    if (_this.pageTitle === null) {
+                        _this.setPageTitle(text);
+                    }
+                }
+            };
+            this.pageTitle = null;
+            this.setPageTitle = function (text, textCase) {
+                if (textCase === void 0) { textCase = 'none'; }
                 text = _this.translate(text);
-                jQuery('h1:first').html(text);
-                jQuery('h1:first').show();
+                text = _this.changeCase(text, textCase);
+                _this.pageTitle = text;
+                document.title = text;
             };
             this.showLoadWaiter = function (message) {
                 if (message === void 0) { message = 'wait-action-loading'; }
@@ -201,6 +216,22 @@ var Peanut;
                 _this.application.hideServiceMessages();
             };
         }
+        ViewModelBase.prototype.changeCase = function (text, textCase) {
+            switch (textCase) {
+                case 'ucfirst':
+                    var textLength = text.length;
+                    text = text.substr(0, 1).toLocaleUpperCase() +
+                        (textLength > 1 ? text.substr(1, textLength) : '');
+                    break;
+                case 'upper':
+                    text = text.toLocaleUpperCase();
+                    break;
+                case 'lower':
+                    text = text.toLocaleLowerCase();
+                    break;
+            }
+            return text;
+        };
         ViewModelBase.prototype.getUserLanguage = function () {
             var userLang = navigator.language || navigator.userLanguage;
             if (userLang) {

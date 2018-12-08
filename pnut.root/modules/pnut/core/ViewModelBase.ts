@@ -115,14 +115,42 @@ namespace Peanut {
             });
         };
 
+        public changeCase(text: string, textCase) {
+            switch (textCase) {
+                case 'ucfirst' :
+                    let textLength = text.length;
+                    text = text.substr(0, 1).toLocaleUpperCase() +
+                        (textLength > 1 ? text.substr(1,textLength) : '');
+                    break;
+                case 'upper' :
+                    text = text.toLocaleUpperCase();
+                    break;
+                case 'lower' :
+                    text = text.toLocaleLowerCase();
+                    break;
+            }
+            return text;
+        }
 
-        public setPageHeading = (text: string) => {
+        public setPageHeading = (text: string, textCase: string = 'none') => {
+            if (text) {
             text = this.translate(text);
+                text = this.changeCase(text, textCase);
             jQuery('h1:first').html(text);
             jQuery('h1:first').show();
+                if (this.pageTitle === null) {
+                    this.setPageTitle(text);
+                }
+            }
         };
 
-
+        private pageTitle = null;
+        public setPageTitle = (text: string, textCase: string = 'none') => {
+            text = this.translate(text);
+            text = this.changeCase(text,textCase);
+            this.pageTitle = text;
+            document.title = text;
+        };
 
         public showLoadWaiter =(message = 'wait-action-loading') => {
             let me = this;
