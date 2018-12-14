@@ -3,6 +3,13 @@ var Peanut;
     var KnockoutHelper = (function () {
         function KnockoutHelper() {
             var _this = this;
+            this.loadList = {
+                css: [],
+                templates: [],
+                components: [],
+                scripts: [],
+                bindings: []
+            };
             this.loadCss = function (path, media) {
                 if (media === void 0) { media = null; }
                 if (path) {
@@ -80,10 +87,14 @@ var Peanut;
                 }
             };
             this.loadAndRegisterComponentPrototype = function (componentName, finalFunction) {
+                var me = _this;
                 var componentPath = _this.parseComponentName(componentName);
+                if (me.alreadyLoaded(componentName, 'component')) {
+                    finalFunction(componentPath);
+                }
                 _this.loadComponentTemplate(componentPath, function (template) {
                     _this.loadComponentPrototype(componentPath, function (vm) {
-                        ko.components.register(componentPath.componentName, {
+                        me.registerKoComponent(componentName, componentPath.componentName, {
                             viewModel: vm,
                             template: template
                         });
@@ -94,10 +105,11 @@ var Peanut;
                 });
             };
             this.registerComponentPrototype = function (componentName, finalFunction) {
+                var me = _this;
                 var componentPath = _this.parseComponentName(componentName);
                 _this.loadComponentTemplate(componentPath, function (template) {
                     var vm = _this.getComponentPrototype(componentPath);
-                    ko.components.register(componentPath.componentName, {
+                    me.registerKoComponent(componentName, componentPath.componentName, {
                         viewModel: vm,
                         template: template
                     });
@@ -106,11 +118,20 @@ var Peanut;
                     }
                 });
             };
+            this.registerKoComponent = function (componentAlias, componentName, parameters) {
+                ko.components.register(componentName, parameters);
+                _this.loadList.components.push(componentAlias);
+            };
             this.registerComponentInstance = function (componentName, vmInstance, finalFunction) {
+                var me = _this;
+                if (me.alreadyLoaded(componentName, 'component')) {
+                    finalFunction(null, null);
+                    return;
+                }
                 var componentPath = _this.parseComponentName(componentName);
                 _this.loadComponentTemplate(componentPath, function (template) {
                     _this.getViewModelInstance(componentPath, vmInstance, function (vm) {
-                        ko.components.register(componentPath.componentName, {
+                        me.registerKoComponent(componentName, componentPath.componentName, {
                             viewModel: { instance: vm },
                             template: template
                         });
@@ -121,28 +142,26 @@ var Peanut;
                 });
             };
             this.registerAndBindComponentInstance = function (componentName, vmInstance, finalFunction) {
-                _this.registerComponentInstance(componentName, vmInstance, function (componentPath, vm) {
-                    _this.bindSection(componentPath.componentName + '-container', vm);
-                    if (finalFunction) {
-                        finalFunction();
-                    }
-                });
-            };
-            this.componentIsRetistered = function (name) {
-                for (var i = 0; i < KnockoutHelper.componentsRegistered.length; i++) {
-                    if (KnockoutHelper.componentsRegistered[i] === name) {
-                        return true;
-                    }
+                if (_this.alreadyLoaded(componentName, 'component')) {
+                    finalFunction();
                 }
-                return false;
+                else {
+                    _this.registerComponentInstance(componentName, vmInstance, function (componentPath, vm) {
+                        if (componentPath !== null) {
+                            _this.bindSection(componentPath.componentName + '-container', vm);
+                        }
+                        if (finalFunction) {
+                            finalFunction();
+                        }
+                    });
+                }
             };
             this.registerComponents = function (componentList, finalFunction) {
                 var componentName = componentList.shift();
                 var me = _this;
-                if (componentName && !me.componentIsRetistered(componentName)) {
+                if (componentName && !me.alreadyLoaded(componentName, 'component')) {
                     me.loadAndRegisterComponentPrototype(componentName, function () {
                         me.registerComponents(componentList, function () {
-                            KnockoutHelper.componentsRegistered.push(componentName);
                             finalFunction();
                         });
                     });
@@ -154,7 +173,7 @@ var Peanut;
             this.loadComponentPrototypes = function (componentList, finalFunction) {
                 var me = _this;
                 var componentName = componentList.shift();
-                if (componentName) {
+                if (componentName && !me.alreadyLoaded(componentName, 'scripts')) {
                     var componentPath = _this.parseComponentName(componentName);
                     var src = componentPath.root + 'components/' + componentPath.className + '.js';
                     Peanut.PeanutLoader.load(src, function () {
@@ -166,23 +185,59 @@ var Peanut;
                 }
             };
             this.bindNode = function (containerName, context) {
-                var container = _this.getContainerNode(containerName);
-                if (container !== null) {
-                    ko.applyBindingsToNode(container, null, context);
+                if (!_this.alreadyLoaded(containerName, 'binding')) {
+                    var container = _this.getContainerNode(containerName);
+                    if (container !== null) {
+                        ko.applyBindingsToNode(container, null, context);
+                    }
+                    _this.loadList.bindings.push(containerName);
                 }
             };
             this.bindSection = function (containerName, context) {
-                var container = _this.getContainerNode(containerName);
-                if (container === null) {
-                    return;
+                if (!_this.alreadyLoaded(containerName, 'binding')) {
+                    var container = _this.getContainerNode(containerName);
+                    if (container === null) {
+                        return;
+                    }
+                    if (Peanut.Config.values.loggingMode == 'verbose') {
+                        console.log('bind section: ' + containerName);
+                    }
+                    ko.applyBindings(context, container);
+                    _this.loadList.bindings.push(containerName);
                 }
-                if (Peanut.Config.values.loggingMode == 'verbose') {
-                    console.log('bind section: ' + containerName);
-                }
-                ko.applyBindings(context, container);
                 jQuery("#" + containerName).show();
             };
         }
+        KnockoutHelper.prototype.alreadyLoaded = function (name, type) {
+            if (type === void 0) { type = 'component'; }
+            var list = null;
+            var me = this;
+            var loaded = false;
+            switch (type) {
+                case 'css':
+                    loaded = me.loadList.css.indexOf(name) > -1;
+                    break;
+                case 'template':
+                    loaded = me.loadList.templates.indexOf(name) > -1;
+                    break;
+                case 'component':
+                    loaded = me.loadList.components.indexOf(name) > -1;
+                    break;
+                case 'script':
+                    loaded = me.loadList.scripts.indexOf(name) > -1;
+                    break;
+                case 'binding':
+                    loaded = me.loadList.bindings.indexOf(name) > -1;
+                    break;
+                default:
+                    console.log('Warning invalid resource type ' + name);
+                    return false;
+            }
+            if (loaded && Peanut.Config.values.loggingMode == 'verbose') {
+                console.log("Skipped, already loaded " + name);
+            }
+            return loaded;
+        };
         KnockoutHelper.prototype.toCamelCase = function (name, seperator, casingType) {
             if (seperator === void 0) { seperator = '-'; }
             if (casingType === void 0) { casingType = 'pascal'; }
@@ -297,11 +352,12 @@ var Peanut;
                 var params = [];
                 for (var i = 0; i < resourceList.length; i++) {
                     var name_1 = resourceList[i];
-                    if (name_1) {
+                    if (name_1 && (!me.alreadyLoaded(name_1, 'script'))) {
                         var path = (name_1.substr(0, 5) == '@lib:') ?
                             me.getLibrary(name_1, config) :
                             me.expandFileName(name_1, config.applicationPath);
                         if (path !== false) {
+                            me.loadList.scripts.push(name_1);
                             params.push(path);
                         }
                     }
@@ -314,7 +370,12 @@ var Peanut;
             Peanut.PeanutLoader.checkConfig();
             Peanut.PeanutLoader.getConfig(function (config) {
                 for (var i = 0; i < resourceList.length; i++) {
-                    var parts = resourceList[i].split(' media=');
+                    var resourceName = resourceList[i];
+                    if (me.alreadyLoaded(resourceName, 'css')) {
+                        continue;
+                    }
+                    me.loadList.css.push(resourceName);
+                    var parts = resourceName.split(' media=');
                     var path = parts.shift().trim();
                     var media = parts.shift();
                     media = media ? media.trim() : null;
@@ -368,12 +429,18 @@ var Peanut;
         };
         KnockoutHelper.prototype.getHtmlTemplate = function (name, successFunction) {
             var me = this;
-            Peanut.PeanutLoader.checkConfig();
-            var parsed = me.parseFileName(name, Peanut.Config.values.mvvmPath);
-            var parts = parsed.name.split('-');
-            var fileName = parts[0] + parts[1].charAt(0).toUpperCase() + parts[1].substring(1);
-            var htmlSource = parsed.root + 'templates/' + fileName + '.html';
-            Peanut.PeanutLoader.loadHtml(htmlSource, successFunction);
+            if (me.alreadyLoaded(name, 'template')) {
+                successFunction(null);
+            }
+            else {
+                Peanut.PeanutLoader.checkConfig();
+                var parsed = me.parseFileName(name, Peanut.Config.values.mvvmPath);
+                var parts = parsed.name.split('-');
+                var fileName = parts[0] + parts[1].charAt(0).toUpperCase() + parts[1].substring(1);
+                var htmlSource = parsed.root + 'templates/' + fileName + '.html';
+                Peanut.PeanutLoader.loadHtml(htmlSource, successFunction);
+                me.loadList.templates.push(name);
+            }
         };
         KnockoutHelper.prototype.getViewModelInstance = function (componentPath, vmObject, returnFunction) {
             if (vmObject instanceof Function) {
@@ -404,7 +471,6 @@ var Peanut;
             }
             return '';
         };
-        KnockoutHelper.componentsRegistered = [];
         return KnockoutHelper;
     }());
     Peanut.KnockoutHelper = KnockoutHelper;

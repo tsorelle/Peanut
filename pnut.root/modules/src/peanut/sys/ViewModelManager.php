@@ -207,7 +207,8 @@ class ViewModelManager
         $tabs = '  ';
         foreach(self::$info as $vmInfo) {
             $tabs .= '  ';
-            $invoke = $tabs."Peanut.PeanutLoader.startApplication('$vmInfo->vmName'";
+            $method = $i == 1 ? 'startApplication' : 'loadViewModel';
+            $invoke = $tabs."Peanut.PeanutLoader.$method('$vmInfo->vmName'";
             if ($i < $count) {
                 $invoke .= ', function() {';
             }

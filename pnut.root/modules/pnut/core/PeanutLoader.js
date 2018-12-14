@@ -40,6 +40,15 @@ var Peanut;
                 });
             }
         };
+        PeanutLoader.loadViewModel = function (name, final) {
+            if (final === void 0) { final = null; }
+            if (PeanutLoader.application) {
+                PeanutLoader.application.startVM(name, final);
+            }
+            else {
+                console.error('Application was not initialized');
+            }
+        };
         PeanutLoader.loadUiHelper = function (final) {
             if (Peanut.ui.helper) {
                 final();

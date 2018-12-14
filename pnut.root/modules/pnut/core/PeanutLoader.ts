@@ -32,20 +32,29 @@ namespace Peanut {
                 PeanutLoader.application.startVM(name, final);
             }
             else {
-            PeanutLoader.getConfig((config: IPeanutConfig) => {
-                PeanutLoader.load(config.dependencies,() => {
-                    if (PeanutLoader.application == null) {
-                        PeanutLoader.application = new window['Peanut']['Application'];
-                        PeanutLoader.application.initialize(() => {
+                PeanutLoader.getConfig((config: IPeanutConfig) => {
+                    PeanutLoader.load(config.dependencies, () => {
+                        if (PeanutLoader.application == null) {
+                            PeanutLoader.application = new window['Peanut']['Application'];
+                            PeanutLoader.application.initialize(() => {
+                                PeanutLoader.application.startVM(name, final);
+                            });
+                        }
+                        else {
                             PeanutLoader.application.startVM(name, final);
-                        });
-                    }
-                    else {
-                        PeanutLoader.application.startVM(name, final);
-                    }
+                        }
+                    });
                 });
-            });
+            }
         }
+
+        public static loadViewModel(name: string, final: (result: any) => void = null) {
+            if (PeanutLoader.application) {
+                PeanutLoader.application.startVM(name, final);
+            }
+            else {
+                console.error('Application was not initialized');
+            }
         }
 
 

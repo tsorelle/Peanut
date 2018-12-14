@@ -36,14 +36,13 @@ var Peanut;
                     }
                 });
             };
-            this.getHtmlTemplate = function (name, successFunction) {
-                _this.koHelper.getHtmlTemplate(name, successFunction);
-            };
             this.loadWaitMessageTemplate = function (templateName, successFunction) {
                 var ext = Peanut.Config.values.uiExtension;
                 templateName = '@pnut/extensions/' + ext + '/' + templateName;
                 _this.koHelper.getHtmlTemplate(templateName, function (htmlSource) {
-                    Peanut.WaitMessage.addTemplate(templateName, htmlSource);
+                    if (htmlSource !== null) {
+                        Peanut.WaitMessage.addTemplate(templateName, htmlSource);
+                    }
                     successFunction();
                 });
             };
@@ -93,7 +92,9 @@ var Peanut;
             this.registerComponent = function (componentName, vmInstance, finalFunction) {
                 if (vmInstance) {
                     _this.koHelper.registerComponentInstance(componentName, vmInstance, function () {
-                        Application.LogMessage('Registered instance of component: ' + componentName);
+                        if (vmInstance !== null) {
+                            Application.LogMessage('Registered instance of component: ' + componentName);
+                        }
                         finalFunction();
                     });
                 }

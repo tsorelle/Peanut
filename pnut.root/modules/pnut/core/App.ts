@@ -24,7 +24,6 @@ namespace Peanut {
         /**********************
          * Initializations
          *********************/
-
         public initialize(successFunction?: () => void) {
             let me = this;
             PeanutLoader.checkConfig();
@@ -107,9 +106,12 @@ namespace Peanut {
          * @param name
          * @param successFunction
          */
+        // todo: confirm this method not used.
+/*
         public getHtmlTemplate = (name: string, successFunction: (htmlSource: string) => void) => {
             this.koHelper.getHtmlTemplate(name, successFunction);
         };
+*/
 
         /**
          * Add an HTML template to wait message
@@ -121,7 +123,9 @@ namespace Peanut {
             let ext = Peanut.Config.values.uiExtension;
             templateName = '@pnut/extensions/' + ext + '/' + templateName;
             this.koHelper.getHtmlTemplate(templateName, function (htmlSource: string) {
-                WaitMessage.addTemplate(templateName, htmlSource);
+                if (htmlSource !== null) {
+                    WaitMessage.addTemplate(templateName, htmlSource);
+                }
                 successFunction();
             });
         };
@@ -397,7 +401,9 @@ namespace Peanut {
         public registerComponent = (componentName: string, vmInstance: any, finalFunction?: () => void) => {
             if (vmInstance) {
                 this.koHelper.registerComponentInstance(componentName,vmInstance, () => {
-                    Application.LogMessage('Registered instance of component: ' + componentName);
+                    if (vmInstance !== null) {
+                        Application.LogMessage('Registered instance of component: ' + componentName);
+                    }
                     finalFunction();
                 });
             }

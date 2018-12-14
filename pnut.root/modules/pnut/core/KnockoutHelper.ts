@@ -5,8 +5,48 @@
 /// <reference path="../../typings/knockout/knockout.d.ts" />
 
 namespace Peanut {
-// todo: test changed made for C5
+// todo: test changes made for C5
     export class KnockoutHelper {
+
+        private loadList = {
+            css: [],
+            templates: [],
+            components: [],
+            scripts: [],
+            bindings: []
+        };
+
+        private alreadyLoaded(name: string, type: string = 'component') {
+            let list = null;
+            let me = this;
+            let loaded = false;
+            switch(type) {
+                case 'css':
+                    loaded = me.loadList.css.indexOf(name) > -1;
+                    break;
+                case 'template' :
+                    loaded =  me.loadList.templates.indexOf(name) > -1;
+                    break;
+                case 'component' :
+                    loaded = me.loadList.components.indexOf(name) > -1;
+                    break;
+                case 'script' :
+                    loaded = me.loadList.scripts.indexOf(name) > -1;
+                    break;
+                case 'binding' :
+                    loaded = me.loadList.bindings.indexOf(name) > -1;
+                    break;
+                default:
+                    console.log('Warning invalid resource type ' +name);
+                    return false;
+            }
+
+            if (loaded &&  Peanut.Config.values.loggingMode == 'verbose') {
+                console.log("Skipped, already loaded " + name);
+            }
+            return loaded;
+        }
+        
 
         private toCamelCase(name: string,seperator = '-', casingType = 'pascal') {
             let names = name.split(seperator);
@@ -165,16 +205,17 @@ namespace Peanut {
                 let params = [];
                 for (let i = 0; i < resourceList.length; i++) {
                     let name = resourceList[i];
-                    if (name) {
+                    if (name && (!me.alreadyLoaded(name,'script'))) {
                         let path = (name.substr(0, 5) == '@lib:') ?
                             me.getLibrary(name, config) :
                             me.expandFileName(name, config.applicationPath);
                         if (path !== false) {
+                            me.loadList.scripts.push(name);
                             params.push(path);
                         }
                     }
                 }
-                PeanutLoader.load(params, successFunction);
+                PeanutLoader.load(params,successFunction);
             });
         }
 
@@ -183,7 +224,12 @@ namespace Peanut {
             PeanutLoader.checkConfig();
             PeanutLoader.getConfig((config: IPeanutConfig) => {
                 for (let i = 0; i < resourceList.length; i++) {
-                    let parts = resourceList[i].split(' media=');
+                    let resourceName = resourceList[i];
+                    if (me.alreadyLoaded(resourceName,'css')) {
+                        continue;
+                    }
+                    me.loadList.css.push(resourceName);
+                    let parts =  resourceName.split(' media=');
                     let path = parts.shift().trim();
                     let media = parts.shift();
                     media = media ? media.trim() : null;
@@ -295,12 +341,18 @@ namespace Peanut {
          */
         public  getHtmlTemplate(name: string, successFunction: (htmlSource: string) => void) {
             let me = this;
-            PeanutLoader.checkConfig();
-            let parsed = me.parseFileName(name, Peanut.Config.values.mvvmPath);
-            let parts = parsed.name.split('-');
-            let fileName = parts[0] + parts[1].charAt(0).toUpperCase() + parts[1].substring(1);
-            let htmlSource = parsed.root + 'templates/' + fileName + '.html';
-            PeanutLoader.loadHtml(htmlSource, successFunction);
+            if (me.alreadyLoaded(name,'template')) {
+                successFunction(null);
+            }
+            else {
+                PeanutLoader.checkConfig();
+                let parsed = me.parseFileName(name, Peanut.Config.values.mvvmPath);
+                let parts = parsed.name.split('-');
+                let fileName = parts[0] + parts[1].charAt(0).toUpperCase() + parts[1].substring(1);
+                let htmlSource = parsed.root + 'templates/' + fileName + '.html';
+                PeanutLoader.loadHtml(htmlSource, successFunction);
+                me.loadList.templates.push(name);
+            }
         }
 
         public getComponentPrototype = (componentPath: IComponentParseResult) => {
@@ -310,7 +362,6 @@ namespace Peanut {
             return null;
         };
 
-        // load component template, register to component name and vm instance
         private  loadComponentTemplate = (componentPath : IComponentParseResult, finalFunction : (template: any) => void ) => {
             let me = this;
             PeanutLoader.getConfig((config: IPeanutConfig) => {
@@ -321,9 +372,9 @@ namespace Peanut {
                         console.error('Template not found at '+htmlPath);
                         template = '';
                     }
-                        if (finalFunction) {
-                            finalFunction(template);
-                        }
+                    if (finalFunction) {
+                        finalFunction(template);
+                    }
                 });
             });
         };
@@ -351,13 +402,21 @@ namespace Peanut {
          * @param finalFunction
          */
         public loadAndRegisterComponentPrototype = (componentName: string, finalFunction? : (componentPath: IComponentParseResult) => void) => {
+            let me = this;
             let componentPath = this.parseComponentName(componentName);
+            if (me.alreadyLoaded(componentName,'component')) {
+                finalFunction(componentPath);
+            }
             this.loadComponentTemplate(componentPath, (template: any) => {
                 this.loadComponentPrototype(componentPath,(vm: any) => {
-                    ko.components.register(componentPath.componentName, {
+                    me.registerKoComponent(componentName,componentPath.componentName,{
                         viewModel : vm,
                         template: template
                     });
+                    // ko.components.register(componentPath.componentName, {
+                    //     viewModel : vm,
+                    //     template: template
+                    // });
                     if (finalFunction) {
                         finalFunction(componentPath);
                     }
@@ -373,17 +432,28 @@ namespace Peanut {
          * @param finalFunction
          */
         public registerComponentPrototype = (componentName: string, finalFunction? : (componentPath: IComponentParseResult) => void) => {
+            let me = this;
             let componentPath = this.parseComponentName(componentName);
+
             this.loadComponentTemplate(componentPath, (template: any) => {
                 let vm = this.getComponentPrototype(componentPath);
-                ko.components.register(componentPath.componentName, {
+                me.registerKoComponent(componentName,componentPath.componentName,{
                     viewModel : vm,
                     template: template
                 });
+                // ko.components.register(componentPath.componentName, {
+                //     viewModel : vm,
+                //     template: template
+                // });
                 if (finalFunction) {
                     finalFunction(componentPath);
                 }
             })
+        };
+
+        private registerKoComponent = (componentAlias: string, componentName: string, parameters: any) => {
+            ko.components.register(componentName, parameters);
+            this.loadList.components.push(componentAlias)
         };
 
         /**
@@ -428,16 +498,26 @@ namespace Peanut {
 
         public registerComponentInstance = (componentName: string, vmInstance: any,
                                             finalFunction? : (componentPath: IComponentParseResult,vm? : any) => void) => {
+            let me = this;
+            if (me.alreadyLoaded(componentName, 'component')) {
+                finalFunction(null, null);
+                return;
+            }
             let componentPath = this.parseComponentName(componentName);
             this.loadComponentTemplate(componentPath, (template: any) => {
                 this.getViewModelInstance(componentPath, vmInstance, (vm: any) => {
-                    ko.components.register(componentPath.componentName, {
-                        viewModel : {instance: vm},
+                    me.registerKoComponent(componentName,componentPath.componentName,{
+                        viewModel: {instance: vm},
                         template: template
                     });
+                    // ko.components.register(componentPath.componentName, {
+                    //     viewModel: {instance: vm},
+                    //     template: template
+                    // });
 
                     if (finalFunction) {
-                        finalFunction(componentPath,vm);
+                        finalFunction(componentPath, vm);
+
                     }
                 })
             })
@@ -451,24 +531,21 @@ namespace Peanut {
          * @param finalFunction
          */
         public registerAndBindComponentInstance = (componentName: string,  vmInstance: any, finalFunction? : () => void) => {
-            this.registerComponentInstance(componentName, vmInstance, (componentPath: IComponentParseResult, vm: any) => {
-                this.bindSection(componentPath.componentName + '-container',vm);
-                if (finalFunction) {
-                    finalFunction();
-                }
-            });
+            if (this.alreadyLoaded(componentName,'component')) {
+                finalFunction();
+            }
+            else {
+                this.registerComponentInstance(componentName, vmInstance, (componentPath: IComponentParseResult, vm: any) => {
+                    if (componentPath !== null) {
+                        this.bindSection(componentPath.componentName + '-container', vm);
+                    }
+                    if (finalFunction) {
+                        finalFunction();
+                    }
+                });
+            }
         };
 
-        private static componentsRegistered = [];
-        // private  componentsRegistered = [];
-        public componentIsRetistered = (name) => {
-            for (var i = 0; i < KnockoutHelper.componentsRegistered.length; i++) {
-                if (KnockoutHelper.componentsRegistered[i] === name) {
-                    return true;
-                }
-            }
-            return false;
-        };
 
         /**
          * Recursively load and register a list of component prototypes.
@@ -478,10 +555,9 @@ namespace Peanut {
         public registerComponents = (componentList : string[], finalFunction: ()=> void) => {
             let componentName = componentList.shift();
             let me = this;
-            if (componentName && !me.componentIsRetistered(componentName)) {
+            if (componentName && !me.alreadyLoaded(componentName,'component')) {
                 me.loadAndRegisterComponentPrototype(componentName, () => {
                     me.registerComponents(componentList,() => {
-                        KnockoutHelper.componentsRegistered.push(componentName);
                         finalFunction();
                     } );
                 });
@@ -500,7 +576,7 @@ namespace Peanut {
         public loadComponentPrototypes = (componentList : string[], finalFunction: ()=> void) => {
             let me = this;
             let componentName = componentList.shift();
-            if (componentName) {
+            if (componentName && !me.alreadyLoaded(componentName,'scripts')) {
                 let componentPath = this.parseComponentName(componentName);
                 let src = componentPath.root + 'components/' + componentPath.className + '.js';
                 PeanutLoader.load(src, function () {
@@ -578,9 +654,12 @@ namespace Peanut {
          * @param context a viewModel
          */
         public bindNode = (containerName: string, context: any) => {
-            let container = this.getContainerNode(containerName);
-            if (container !== null) {
-                ko.applyBindingsToNode(container, null, context);
+            if (!this.alreadyLoaded(containerName,'binding')) {
+                let container = this.getContainerNode(containerName);
+                if (container !== null) {
+                    ko.applyBindingsToNode(container, null, context);
+                }
+                this.loadList.bindings.push(containerName);
             }
         };
 
@@ -592,14 +671,17 @@ namespace Peanut {
          * @param context - a view model
          */
         public bindSection = (containerName: string, context: any) => {
-            let container = this.getContainerNode(containerName);
-            if (container === null) {
-                return;
+            if (!this.alreadyLoaded(containerName,'binding')) {
+                let container = this.getContainerNode(containerName);
+                if (container === null) {
+                    return;
+                }
+                if (Peanut.Config.values.loggingMode == 'verbose') {
+                    console.log('bind section: ' + containerName);
+                }
+                ko.applyBindings(context, container);
+                this.loadList.bindings.push(containerName);
             }
-            if (Peanut.Config.values.loggingMode == 'verbose') {
-                console.log('bind section: ' + containerName);
-            }
-            ko.applyBindings(context, container);
             jQuery("#" + containerName).show();
         };
 
