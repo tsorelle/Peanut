@@ -4,6 +4,8 @@
 ///<reference path="Services.ts"/>
 ///<reference path="Peanut.d.ts"/>
 ///<reference path="../../typings/jquery/jquery.d.ts"/>
+///<reference path="../../typings/knockout/knockout.d.ts"/>
+///<reference path="WaitMessage.ts"/>
 namespace Peanut {
     export class Environment {
         public static getDeviceSize() {

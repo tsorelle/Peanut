@@ -128,11 +128,23 @@ var Peanut;
                     }
                 });
             };
+            this.componentIsRetistered = function (name) {
+                for (var i = 0; i < KnockoutHelper.componentsRegistered.length; i++) {
+                    if (KnockoutHelper.componentsRegistered[i] === name) {
+                        return true;
+                    }
+                }
+                return false;
+            };
             this.registerComponents = function (componentList, finalFunction) {
                 var componentName = componentList.shift();
-                if (componentName) {
-                    _this.loadAndRegisterComponentPrototype(componentName, function () {
-                        _this.registerComponents(componentList, finalFunction);
+                var me = _this;
+                if (componentName && !me.componentIsRetistered(componentName)) {
+                    me.loadAndRegisterComponentPrototype(componentName, function () {
+                        me.registerComponents(componentList, function () {
+                            KnockoutHelper.componentsRegistered.push(componentName);
+                            finalFunction();
+                        });
                     });
                 }
                 else {
@@ -392,6 +404,7 @@ var Peanut;
             }
             return '';
         };
+        KnockoutHelper.componentsRegistered = [];
         return KnockoutHelper;
     }());
     Peanut.KnockoutHelper = KnockoutHelper;

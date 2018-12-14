@@ -12,6 +12,30 @@ use Peanut\sys\ViewModelManager;
 
 class ViewModelManagerTest extends TestCase
 {
+    function testGetStartScript() {
+        $vmName = 'MyVmName';
+        $testinfo = new stdClass();
+        $testinfo->vmName = 'MyVmName';
+
+        ViewModelManager::setVmInfo([$testinfo]);
+        $actual = ViewModelManager::GetStartScript();
+        $this->assertNotEmpty($actual);
+    }
+
+    function testGetStartScriptMultipleVms() {
+        $tests = [];
+        for($i=1;$i<6;$i++) {
+            $testinfo = new stdClass();
+            $testinfo->vmName = 'MyVmName'.$i;
+            $tests[] = $testinfo;
+        }
+
+        ViewModelManager::setVmInfo($tests);
+        $actual = ViewModelManager::GetStartScript();
+        $this->assertNotEmpty($actual);
+    }
+
+
     function testGetViewModelSettings()
     {
         // reinitialize test path, maybe changed by previous test

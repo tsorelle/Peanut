@@ -5,7 +5,7 @@
 /// <reference path="../../typings/knockout/knockout.d.ts" />
 
 namespace Peanut {
-
+// todo: test changed made for C5
     export class KnockoutHelper {
 
         private toCamelCase(name: string,seperator = '-', casingType = 'pascal') {
@@ -459,6 +459,17 @@ namespace Peanut {
             });
         };
 
+        private static componentsRegistered = [];
+        // private  componentsRegistered = [];
+        public componentIsRetistered = (name) => {
+            for (var i = 0; i < KnockoutHelper.componentsRegistered.length; i++) {
+                if (KnockoutHelper.componentsRegistered[i] === name) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
         /**
          * Recursively load and register a list of component prototypes.
          * @param componentList
@@ -466,9 +477,13 @@ namespace Peanut {
          */
         public registerComponents = (componentList : string[], finalFunction: ()=> void) => {
             let componentName = componentList.shift();
-            if (componentName) {
-                this.loadAndRegisterComponentPrototype(componentName, () => {
-                    this.registerComponents(componentList,finalFunction);
+            let me = this;
+            if (componentName && !me.componentIsRetistered(componentName)) {
+                me.loadAndRegisterComponentPrototype(componentName, () => {
+                    me.registerComponents(componentList,() => {
+                        KnockoutHelper.componentsRegistered.push(componentName);
+                        finalFunction();
+                    } );
                 });
             }
             else {

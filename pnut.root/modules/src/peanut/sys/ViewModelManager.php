@@ -5,7 +5,7 @@
  * Date: 7/4/2017
  * Time: 10:37 AM
  */
-
+// todo: test changes made for C5
 namespace Peanut\sys;
 
 
@@ -20,7 +20,7 @@ use Tops\sys\TUser;
 class ViewModelManager
 {
     /**
-     * @var ViewModelInfo
+     * @var ViewModelInfo[]
      */
     private static $info;
     private static $vmSettings;
@@ -150,7 +150,7 @@ class ViewModelManager
             $result->permissions = TStrings::ListToArray(@$item['permissions']);
             $result->roles = TStrings::ListToArray(@$item['roles']);
 
-            self::$info = $result;
+            self::$info[] = $result;
             return $result;
         }
         return false;
@@ -161,6 +161,7 @@ class ViewModelManager
      */
     public static function getViewModelInfo()
     {
+        // todo: not used? confirm
         return isset(self::$info) ? self::$info : false;
     }
 
@@ -177,20 +178,61 @@ class ViewModelManager
         }
 
     }
+
+    // for testing
+    public static function setVmInfo(array $items) {
+        self::$info = $items;
+    }
+
     public static function GetStartScript()
     {
+        /*       if (empty(self::$info)) {
+                   return '';
+               }
+               $vmName = self::$info->vmName;
+               // print "\n<!-- start script for '$vmName' goes here -->\n";
+
+               return
+               "\n<script>\n" .
+                   "   Peanut.PeanutLoader.startApplication('$vmName'); \n"
+                   . "</script>\n";*/
+
         if (empty(self::$info)) {
             return '';
         }
-        $vmName = self::$info->vmName;
+
+        $lines = array();
+        $count = count(self::$info);
+        $i = 1;
+        $tabs = '  ';
+        foreach(self::$info as $vmInfo) {
+            $tabs .= '  ';
+            $invoke = $tabs."Peanut.PeanutLoader.startApplication('$vmInfo->vmName'";
+            if ($i < $count) {
+                $invoke .= ', function() {';
+            }
+            else {
+                $invoke .= ');';
+            }
+            $lines[] = $invoke;
+            $i++;
+        }
+        for ($i = 1; $i < $count; $i++ ) {
+            $tabs = substr($tabs,0,strlen($tabs) - 2);
+            $lines[] = $tabs.'});';
+        }
+
+
         // print "\n<!-- start script for '$vmName' goes here -->\n";
+        $c=count($lines);
 
         return
-        "\n<script>\n" .
-            "   Peanut.PeanutLoader.startApplication('$vmName'); \n"
-            . "</script>\n";
+            "\n<script>\n" .
+            implode("\n",$lines)
+            . "\n</script>\n";
 
     }
+
 
     /**
      * See if this request is related to a ViewModel.

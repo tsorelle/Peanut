@@ -20,19 +20,25 @@ var Peanut;
         function PeanutLoader() {
         }
         PeanutLoader.startApplication = function (name, final) {
-            PeanutLoader.getConfig(function (config) {
-                PeanutLoader.load(config.dependencies, function () {
-                    if (PeanutLoader.application == null) {
-                        PeanutLoader.application = new window['Peanut']['Application'];
-                        PeanutLoader.application.initialize(function () {
+            if (final === void 0) { final = null; }
+            if (PeanutLoader.application) {
+                PeanutLoader.application.startVM(name, final);
+            }
+            else {
+                PeanutLoader.getConfig(function (config) {
+                    PeanutLoader.load(config.dependencies, function () {
+                        if (PeanutLoader.application == null) {
+                            PeanutLoader.application = new window['Peanut']['Application'];
+                            PeanutLoader.application.initialize(function () {
+                                PeanutLoader.application.startVM(name, final);
+                            });
+                        }
+                        else {
                             PeanutLoader.application.startVM(name, final);
-                        });
-                    }
-                    else {
-                        PeanutLoader.application.startVM(name, final);
-                    }
+                        }
+                    });
                 });
-            });
+            }
         };
         PeanutLoader.loadUiHelper = function (final) {
             if (Peanut.ui.helper) {

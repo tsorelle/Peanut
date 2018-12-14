@@ -8,7 +8,7 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path='Peanut.d.ts' />
 namespace Peanut {
-
+// todo: test changes made for C5
     const peanutVersionNumber = '0.2';
     const configPath =  '/peanut/settings';
 
@@ -27,7 +27,11 @@ namespace Peanut {
         private static loaded = [];
         private static application : IPeanutClient;
 
-        public static startApplication(name: string, final: (result: any) => void) {
+        public static startApplication(name: string, final: (result: any) => void = null) {
+            if (PeanutLoader.application) {
+                PeanutLoader.application.startVM(name, final);
+            }
+            else {
             PeanutLoader.getConfig((config: IPeanutConfig) => {
                 PeanutLoader.load(config.dependencies,() => {
                     if (PeanutLoader.application == null) {
@@ -41,6 +45,7 @@ namespace Peanut {
                     }
                 });
             });
+        }
         }
 
 
