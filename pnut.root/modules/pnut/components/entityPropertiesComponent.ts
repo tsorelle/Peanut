@@ -61,7 +61,6 @@ namespace Peanut {
             this.setAssociatedValues(this.defaults);
         };
 
-        // todo: update peanut core
         getValue = (key: string) => {
             let item = this.controls[key];
             let value = item.selected();

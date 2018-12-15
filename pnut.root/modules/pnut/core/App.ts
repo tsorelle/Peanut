@@ -48,7 +48,6 @@ namespace Peanut {
         }
 
         public startVM = (vmName: string, final?: (viewModel: IViewModel) => void) => {
-            this.koHelper = new KnockoutHelper();
             PeanutLoader.getConfig((IPeanutConfig) => {
                 this.koHelper.loadViewModel(vmName, (viewModel: IViewModel) => {
                     viewModel.start(this, () => {

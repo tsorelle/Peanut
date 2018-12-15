@@ -10,7 +10,6 @@ var Peanut;
         function Application() {
             var _this = this;
             this.startVM = function (vmName, final) {
-                _this.koHelper = new Peanut.KnockoutHelper();
                 Peanut.PeanutLoader.getConfig(function (IPeanutConfig) {
                     _this.koHelper.loadViewModel(vmName, function (viewModel) {
                         viewModel.start(_this, function () {
