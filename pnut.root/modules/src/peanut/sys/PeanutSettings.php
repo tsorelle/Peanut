@@ -42,7 +42,7 @@ class PeanutSettings
         return $peanutRoot;
     }
     public static function GetMvvmPath   (){
-        $mvvmPath = TConfiguration::getValue('mvvmPath','peanut','application/mvvm');
+        $mvvmPath = TConfiguration::getValue('mvvmPath','peanut','application/peanut');
         return $mvvmPath;
     }
     public static function GetCorePath   (){

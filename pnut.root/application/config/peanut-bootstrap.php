@@ -58,7 +58,9 @@ class Bootstrap
 
         $settings = self::getSettings();
         $topsRoot = $settings->topsLocation;
+        $appSrcRoot = $settings->mvvmPath.'src';
         $loader = Autoloader::getInstance();
+        $loader->addPsr4('Peanut\Application',$fileRoot.$appSrcRoot);
         $loader->addPsr4('Tops',$fileRoot.$topsRoot);
         $loader->addPsr4('Peanut',$fileRoot.$settings->peanutSrcLocation);
         $packages = ViewModelManager::getPackageList();
@@ -73,7 +75,7 @@ class Bootstrap
 
         foreach ($settings->autoloadItems as $namespace => $srcRoot) {
             $srcRoot = str_replace('[pnut-src]',$settings->srcLocation,$srcRoot);
-            $srcRoot = str_replace('[app-src]',$fileRoot.'application/src',$srcRoot);
+            // $srcRoot = str_replace('[app-src]',$fileRoot.'application/peanut/src',$srcRoot);
             $srcRoot = str_replace('\\',DIRECTORY_SEPARATOR,$srcRoot);
             $loader->addPsr4($namespace . '\\', $fileRoot.$srcRoot);
         }
@@ -132,7 +134,7 @@ class Bootstrap
         $modulePath = (empty($settings['modulePath']) ? 'modules' : $settings['modulePath']);
         $peanutRoot = (empty($settings['peanutRootPath']) ? "$modulePath/pnut" : $settings['peanutRootPath']);
         $peanutPath = $root . $peanutRoot;
-        $mvvmPath = $root . (empty($settings['mvvmPath']) ? 'application/mvvm' : $settings['mvvmPath']);
+        $mvvmPath = $root . (empty($settings['mvvmPath']) ? 'application/peanut' : $settings['mvvmPath']);
         $corePath = $root . (empty($settings['corePath']) ? $peanutRoot . '/core' : $settings['corePath']);
         $packagePath = $root . (empty($settings['packagePath']) ? $peanutRoot . "/packages" : $settings['packagePath']);
         $srcLocation = empty($ini['locations']['src']) ? "$modulePath/src" : $ini['locations']['src'];

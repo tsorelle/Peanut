@@ -6,7 +6,7 @@
  * Time: 7:46 AM
  */
 
-namespace Bookstore\services;
+namespace Peanut\Application\Bookstore\services;
 
 use Tops\services\TServiceCommand;
 

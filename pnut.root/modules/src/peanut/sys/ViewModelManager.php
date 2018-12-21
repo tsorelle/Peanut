@@ -115,7 +115,7 @@ class ViewModelManager
 
             $view = empty($item['view']) ? $vmName . '.html' : $item['view'];
             if (empty($item['package'])) {
-                $root = TConfiguration::getValue('mvvmPath', 'peanut', 'application/mvvm');
+                $root = TConfiguration::getValue('mvvmPath', 'peanut', 'application/peanut');
             }
             else {
                 $root =  ViewModelManager::getPackagePath()."/".$item['package'];

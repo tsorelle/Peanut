@@ -44,7 +44,7 @@ class ViewModelManagerTest extends TestCase
 
         $actual = ViewModelManager::getViewModelSettings('testpage');
         $this->assertNotEmpty($actual);
-        $expected = 'application/mvvm/view/TestPage.html';
+        $expected = 'application/peanut/view/TestPage.html';
         $this->assertEquals($expected,$actual->view);
 
         $actual = ViewModelManager::getViewModelSettings('qnut/test');
@@ -62,7 +62,7 @@ class ViewModelManagerTest extends TestCase
 
         $actual = ViewModelManager::getViewModelSettings('subdir/testpage');
         $this->assertNotEmpty($actual);
-        $expected = 'application/mvvm/subdir/view/TestPage.html';
+        $expected = 'application/peanut/subdir/view/TestPage.html';
         $this->assertEquals($expected,$actual->view);
 
     }
