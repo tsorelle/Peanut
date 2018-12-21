@@ -290,7 +290,8 @@ namespace Peanut {
             let key = name.substr(5);
 
             if (key.substr(0,6) == 'local/') { // deprecated convention but kept for backward compatibility
-                return config.libraryPath + key.substr(6);
+                return config.applicationPath + '/assets/js/' + key.substr(6);
+                // return config.libraryPath + key.substr(6);
             }
             if (key in config.libraries) {
                 let path = config.libraries[key];
