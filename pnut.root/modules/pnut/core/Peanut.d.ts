@@ -170,7 +170,7 @@ declare namespace Peanut {
     export interface IViewModel {
 
         init(successFunction?: () => void);
-        setVmName(name: string);
+        setVmName(name: string, context?: any);
         start(application : IPeanutClient, successFunction?: (viewModel: any) => void);
     }
 

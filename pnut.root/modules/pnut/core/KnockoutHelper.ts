@@ -312,7 +312,17 @@ namespace Peanut {
         public loadViewModel = (vmName : string, final : (viewModel: IViewModel) => void) => {
             PeanutLoader.checkConfig();
             let me = this;
-            let parts = vmName.split('/');
+            if (vmName === null) {
+                console.error('No vm name provided in loadViewModel');
+                return;
+            }
+            let context = null;
+            let parts = vmName.split('#');
+            if (parts.length > 1) {
+                context = parts.pop();
+            }
+            vmName = parts.shift();
+            parts = vmName.split('/');
             let prefix = '@app';
             if (vmName.substr(0,1) === '@') {
                 prefix = parts.shift();
@@ -328,7 +338,7 @@ namespace Peanut {
                     console.log("Loading " + namespace + '.' + vmClassName);
                 }
                 let vm = <IViewModel>(new window[namespace][vmClassName]);
-                vm.setVmName(vmName);
+                vm.setVmName(vmName,context);
                 final(vm);
             });
         };

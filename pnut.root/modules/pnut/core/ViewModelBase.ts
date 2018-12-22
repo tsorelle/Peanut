@@ -56,11 +56,17 @@ namespace Peanut {
         };
 
         private vmName : string = null;
+        private vmContext: any = null;
         private language : string = 'en-us';
-        public setVmName = (name: string) => {
+        public setVmName = (name: string, context: any = null) => {
             this.vmName = name;
+            this.vmContext = context;
         };
 
+
+        protected getVmContext = () => {
+            return this.vmContext;
+        };
 
         protected getVmName = () => {
             return this.vmName;

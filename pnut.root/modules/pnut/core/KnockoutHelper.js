@@ -30,7 +30,17 @@ var Peanut;
             this.loadViewModel = function (vmName, final) {
                 Peanut.PeanutLoader.checkConfig();
                 var me = _this;
-                var parts = vmName.split('/');
+                if (vmName === null) {
+                    console.error('No vm name provided in loadViewModel');
+                    return;
+                }
+                var context = null;
+                var parts = vmName.split('#');
+                if (parts.length > 1) {
+                    context = parts.pop();
+                }
+                vmName = parts.shift();
+                parts = vmName.split('/');
                 var prefix = '@app';
                 if (vmName.substr(0, 1) === '@') {
                     prefix = parts.shift();
@@ -46,7 +56,7 @@ var Peanut;
                         console.log("Loading " + namespace + '.' + vmClassName);
                     }
                     var vm = (new window[namespace][vmClassName]);
-                    vm.setVmName(vmName);
+                    vm.setVmName(vmName, context);
                     final(vm);
                 });
             };

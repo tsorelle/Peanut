@@ -47,9 +47,15 @@ var Peanut;
                 });
             };
             this.vmName = null;
+            this.vmContext = null;
             this.language = 'en-us';
-            this.setVmName = function (name) {
+            this.setVmName = function (name, context) {
+                if (context === void 0) { context = null; }
                 _this.vmName = name;
+                _this.vmContext = context;
+            };
+            this.getVmContext = function () {
+                return _this.vmContext;
             };
             this.getVmName = function () {
                 return _this.vmName;

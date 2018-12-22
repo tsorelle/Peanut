@@ -83,7 +83,7 @@ class ViewModelManager
      * @param $pathAlias
      * @return bool|ViewModelInfo
      */
-    public static function getViewModelSettings($pathAlias)
+    public static function getViewModelSettings($pathAlias, $context=null)
     {
         if (!isset(self::$vmSettings)) {
             $path = TPath::getConfigPath();
@@ -150,6 +150,10 @@ class ViewModelManager
             $result->permissions = TStrings::ListToArray(@$item['permissions']);
             $result->roles = TStrings::ListToArray(@$item['roles']);
 
+            if ($context) {
+                $result->context = $context;
+            }
+
             self::$info[] = $result;
             return $result;
         }
@@ -208,7 +212,11 @@ class ViewModelManager
         foreach(self::$info as $vmInfo) {
             $tabs .= '  ';
             $method = $i == 1 ? 'startApplication' : 'loadViewModel';
-            $invoke = $tabs."Peanut.PeanutLoader.$method('$vmInfo->vmName'";
+            $vmName = $vmInfo->vmName;
+            if ($vmInfo->context) {
+                $vmName .= '#'.$vmInfo->context;
+            }
+            $invoke = $tabs."Peanut.PeanutLoader.$method('$vmName'";
             if ($i < $count) {
                 $invoke .= ', function() {';
             }

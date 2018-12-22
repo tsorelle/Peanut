@@ -21,4 +21,5 @@ class ViewModelInfo
     public $permissions;
     public $pageTitle;
     public $heading;
+    public $context;
 }
