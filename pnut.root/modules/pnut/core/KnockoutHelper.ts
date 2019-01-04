@@ -5,7 +5,6 @@
 /// <reference path="../../typings/knockout/knockout.d.ts" />
 
 namespace Peanut {
-// todo: test changes made for C5
     export class KnockoutHelper {
 
         private loadList = {

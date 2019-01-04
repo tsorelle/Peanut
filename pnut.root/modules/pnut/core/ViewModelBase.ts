@@ -64,7 +64,7 @@ namespace Peanut {
         };
 
 
-        protected getVmContext = () => {
+        public getVmContext = () => {
             return this.vmContext;
         };
 

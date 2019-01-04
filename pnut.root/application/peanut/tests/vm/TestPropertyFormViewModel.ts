@@ -1,7 +1,7 @@
 /// <reference path='../../../../modules/pnut/core/ViewModelBase.ts' />
 /// <reference path='../../../../modules/typings/knockout/knockout.d.ts' />
 /// <reference path='../../../../modules/pnut/core/peanut.d.ts' />
-/// <reference path='../../../../modules/pnut/components/entityPropertiesComponent' />
+/// <reference path='../../../../modules/pnut/components/entityPropertiesComponent.ts' />
 
 namespace Peanut {
 

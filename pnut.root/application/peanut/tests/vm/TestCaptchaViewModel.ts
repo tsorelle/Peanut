@@ -6,7 +6,7 @@
 /// <reference path='../../../../modules/pnut/core/WaitMessage.ts'/>
 /// <reference path='../components/messageConstructorComponent.ts'/>
 /// <reference path='../../../../modules/typings/lodash/index.d.ts'/>
-/// <reference path='../../../../application/assets/js/libraries/TestLib.ts'/>
+/// <reference path='../../../../application/assets/js//TestLib.ts'/>
 namespace Peanut {
 
     export class TestCaptchaViewModel extends Peanut.ViewModelBase {
