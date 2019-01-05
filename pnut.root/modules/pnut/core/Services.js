@@ -14,6 +14,18 @@ var Peanut;
         function ServiceBroker(clientApp) {
             var _this = this;
             this.clientApp = clientApp;
+            this.handleServiceFailure = function (debugInfo) {
+                var msg = 'Service Failure: ';
+                if (debugInfo.message) {
+                    msg += debugInfo.message;
+                }
+                console.log(msg);
+            };
+            this.showExceptionMessage = function (errorResult) {
+                var errorMessage = _this.parseErrorResult(errorResult);
+                _this.clientApp.showError(errorMessage);
+                return errorMessage;
+            };
             this.securityToken = '';
             this.errorInfo = '';
             this.errorMessage = '';
@@ -29,11 +41,6 @@ var Peanut;
             this.handleServiceResponse = function (serviceResponse) {
                 _this.showServiceMessages(serviceResponse);
                 return true;
-            };
-            this.showExceptionMessage = function (errorResult) {
-                var errorMessage = _this.parseErrorResult(errorResult);
-                _this.clientApp.showError(errorMessage);
-                return errorMessage;
             };
             this.executeRPC = function (requestMethod, serviceName, parameters, successFunction, errorFunction) {
                 if (parameters === void 0) { parameters = ""; }
@@ -62,6 +69,9 @@ var Peanut;
                     url: url
                 })
                     .done(function (serviceResponse) {
+                    if (serviceResponse.debugInfo) {
+                        me.handleServiceFailure(serviceResponse.debugInfo);
+                    }
                     me.showServiceMessages(serviceResponse);
                     if (successFunction) {
                         successFunction(serviceResponse);

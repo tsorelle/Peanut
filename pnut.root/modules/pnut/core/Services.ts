@@ -20,6 +20,22 @@ namespace Peanut {
 
 
     export class ServiceBroker {
+
+        // Note: handleServiceFailure and showExceptionMessage at top to facilitate in-browser debugging
+        handleServiceFailure = (debugInfo: any) => {
+            let msg = 'Service Failure: ';
+            if (debugInfo.message) {
+              msg += debugInfo.message;
+            }
+            console.log(msg);
+        };
+
+        showExceptionMessage = (errorResult: any): string => {
+            let errorMessage = this.parseErrorResult(errorResult);
+            this.clientApp.showError(errorMessage);
+            return errorMessage;
+        };
+
         private static instance: ServiceBroker = null;
         public static create(client: IServiceClient) {
             return new ServiceBroker(client);
@@ -144,11 +160,6 @@ namespace Peanut {
             return true;
         };
 
-        showExceptionMessage = (errorResult: any): string => {
-            let errorMessage = this.parseErrorResult(errorResult);
-            this.clientApp.showError(errorMessage);
-            return errorMessage;
-        };
 
 
         getSecurityToken(successFunction?: (serviceResponse: IServiceResponse) => void) : JQueryPromise<any> {
@@ -205,6 +216,9 @@ namespace Peanut {
                 })
                     .done(
                         function(serviceResponse) {
+                            if (serviceResponse.debugInfo) {
+                                me.handleServiceFailure(serviceResponse.debugInfo);
+                            }
                             me.showServiceMessages(serviceResponse);
                             if (successFunction) {
                                 successFunction(serviceResponse);
