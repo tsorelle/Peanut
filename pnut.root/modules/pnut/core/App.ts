@@ -172,11 +172,26 @@ namespace Peanut {
          * Service messages
          *********************************************/
 
+            // todo: configure message timer
+        messageTimer : any;
         showServiceMessages(messages: IServiceMessage[]): void {
+            let me = this;
+            if (me.messageTimer) {
+                clearInterval(me.messageTimer);
+            }
             MessageManager.instance.setServiceMessages(messages);
+            me.messageTimer = window.setInterval(function () {
+                MessageManager.instance.clearMessages();
+                clearInterval(me.messageTimer);
+            }, 15000);
         }
 
         hideServiceMessages(): void {
+            let me = this;
+            if (me.messageTimer) {
+                clearInterval(me.messageTimer);
+                me.messageTimer = null;
+            }
             MessageManager.instance.clearMessages();
         }
 

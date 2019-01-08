@@ -176,9 +176,22 @@ var Peanut;
             Peanut.WaitMessage.setProgress(count);
         };
         Application.prototype.showServiceMessages = function (messages) {
+            var me = this;
+            if (me.messageTimer) {
+                clearInterval(me.messageTimer);
+            }
             MessageManager.instance.setServiceMessages(messages);
+            me.messageTimer = window.setInterval(function () {
+                MessageManager.instance.clearMessages();
+                clearInterval(me.messageTimer);
+            }, 15000);
         };
         Application.prototype.hideServiceMessages = function () {
+            var me = this;
+            if (me.messageTimer) {
+                clearInterval(me.messageTimer);
+                me.messageTimer = null;
+            }
             MessageManager.instance.clearMessages();
         };
         Application.prototype.showError = function (errorMessage) {
