@@ -10,6 +10,7 @@ var PeanutRiddler;
             this.showInputs = ko.observable(false);
             this.showCancel = ko.observable(false);
             this.showButton = ko.observable(false);
+            this.buttonClass = ko.observable('btn btn-primary');
             this.riddlerHeader = ko.observable('Help us control spam by answering this question:');
             this.guessLimitMessage = ko.observable('Sorry, too many guesses.');
             this.sysError1 = ko.observable('A system error occurred. Please try again later or contact the administrator.');
@@ -113,7 +114,7 @@ var PeanutRiddler;
             };
             this.selectFirstQuestion = function () {
                 var me = _this;
-                var i = Math.floor((Math.random() * me.questions.length));
+                var i = 0;
                 me.currentQuestionIndex = i;
                 me.questionText(me.questions[i].question);
                 me.retries = me.questions.length + 2;
@@ -185,6 +186,9 @@ var PeanutRiddler;
                 else {
                     me.spinnericon(params.spinner);
                 }
+            }
+            if (params.buttonClass) {
+                me.buttonClass(params.buttonClass);
             }
             me.getQuestions();
         }

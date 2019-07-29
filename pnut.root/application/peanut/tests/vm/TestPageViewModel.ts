@@ -274,7 +274,7 @@ namespace Peanut {
                 function (serviceResponse: Peanut.IServiceResponse) {
                     if (serviceResponse.Result == Peanut.serviceResultSuccess) {
                         let response = serviceResponse.Value;
-                        // alert(response.message);
+                        alert('hello ' + response.message);
                         me.addTranslations(response.translations);
                         me.languageA(me.translate('hello','Hello'));
                         me.languageB(me.translate('world'));

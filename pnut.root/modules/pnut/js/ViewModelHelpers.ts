@@ -35,6 +35,19 @@ namespace Peanut {
             return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
         }
 
+        public static ValidateCredential(value, minlength = 10, requireLower = false)  {
+            if (value.length < minlength) {
+                return false;
+            }
+            if (value.replace(' ','') !== value) {
+                return false;
+            }
+            if (requireLower) {
+                return (value.toLowerCase() === value);
+            }
+            return true;
+        };
+
         public static validatePositiveWholeNumber(text: string,maxValue = null, emptyOk: boolean = true) {
             return Helper.validateWholeNumber(text,maxValue,0,emptyOk);
         }
@@ -137,6 +150,13 @@ namespace Peanut {
                 return element[0].files;
             }
             return null;
+        }
+
+        public static getHostUrl() {
+            let protocol = location.protocol;
+            let slashes = protocol.concat("//");
+            let host = slashes.concat(window.location.hostname);
+            return host;
         }
 
     }

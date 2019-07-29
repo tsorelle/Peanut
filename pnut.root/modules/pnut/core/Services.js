@@ -110,7 +110,7 @@ var Peanut;
                     cache: false,
                     url: Peanut.Config.values.serviceUrl,
                     contentType: false,
-                    processData: false
+                    processData: false,
                 })
                     .done(function (serviceResponse) {
                     me.showServiceMessages(serviceResponse);

@@ -172,7 +172,6 @@ namespace Peanut {
          * Service messages
          *********************************************/
 
-            // todo: configure message timer
         messageTimer : any;
         showServiceMessages(messages: IServiceMessage[]): void {
             let me = this;
@@ -180,10 +179,18 @@ namespace Peanut {
                 clearInterval(me.messageTimer);
             }
             MessageManager.instance.setServiceMessages(messages);
+            let intervalValue = 2500;
+            for(let i= 0;i<messages.length;i++) {
+                if (messages[0].MessageType != Peanut.infoMessageType) {
+                    intervalValue = 15000;
+                    break;
+                }
+            }
+
             me.messageTimer = window.setInterval(function () {
                 MessageManager.instance.clearMessages();
                 clearInterval(me.messageTimer);
-            }, 15000);
+            }, intervalValue);
         }
 
         hideServiceMessages(): void {
@@ -256,9 +263,7 @@ namespace Peanut {
          * Logging
          **********************************/
         public static LogMessage(message: string) {
-            if (Peanut.Config.values.loggingMode === 'verbose') {
-                console.log(message);
-            }
+            Peanut.logger.write(message);
         }
 
         /***************************************************

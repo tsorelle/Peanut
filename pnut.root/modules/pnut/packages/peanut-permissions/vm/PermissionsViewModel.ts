@@ -45,7 +45,7 @@ namespace PeanutPermissions {
 
         init(successFunction?: () => void) {
             let me = this;
-            console.log('VM Init');
+            Peanut.logger.write('VM Init');
             me.application.loadResources([
                 '@lib:lodash'
             ], () => {

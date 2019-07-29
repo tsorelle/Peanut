@@ -41,6 +41,7 @@ var Peanut;
                     me.fontSet(Peanut.ui.helper.getFontSet());
                     me.application.registerComponents('@pnut/translate', function () {
                         me.init(function () {
+                            Peanut.logger.write('Loaded view model: ' + me.vmName);
                             successFunction(me);
                         });
                     });
@@ -48,11 +49,17 @@ var Peanut;
             };
             this.vmName = null;
             this.vmContext = null;
+            this.vmContextId = null;
             this.language = 'en-us';
             this.setVmName = function (name, context) {
                 if (context === void 0) { context = null; }
                 _this.vmName = name;
-                _this.vmContext = context;
+                _this.vmContextId = context;
+                var sharedContext = jQuery('#peanut-vm-context').val();
+                _this.vmContext = (sharedContext) ? context + '&' + sharedContext : context;
+            };
+            this.getVmContextId = function () {
+                return _this.vmContextId;
             };
             this.getVmContext = function () {
                 return _this.vmContext;
@@ -112,6 +119,18 @@ var Peanut;
                 text = _this.changeCase(text, textCase);
                 _this.pageTitle = text;
                 document.title = text;
+            };
+            this.showWaitMessage = function (message, waiter) {
+                if (message === void 0) { message = 'wait-action-loading'; }
+                if (waiter === void 0) { waiter = 'banner-waiter'; }
+                var me = _this;
+                message = me.translate(message) + '...';
+                if (waiter == 'banner-waiter') {
+                    _this.application.showBannerWaiter(message);
+                }
+                else {
+                    Peanut.WaitMessage.show(message, waiter);
+                }
             };
             this.showLoadWaiter = function (message) {
                 if (message === void 0) { message = 'wait-action-loading'; }
@@ -199,7 +218,7 @@ var Peanut;
                     return '';
                 }
                 if (format !== 'us') {
-                    console.log('Warning: Simple date formatting for ' + format + 'is not supported. Using ISO.');
+                    Peanut.logger.write('Warning: Simple date formatting for ' + format + 'is not supported. Using ISO.');
                     return dateString;
                 }
                 var parts = dateString.split('-');
@@ -220,6 +239,23 @@ var Peanut;
             };
             this.hideServiceMessages = function () {
                 _this.application.hideServiceMessages();
+            };
+            this.getUserDetails = function (finalFunction) {
+                var me = _this;
+                if (me.userDetails) {
+                    finalFunction(me.userDetails);
+                    return;
+                }
+                me.services.executeService('Peanut::GetUserDetails', null, function (serviceResponse) {
+                    if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+                        me.application.hideWaiter();
+                        me.userDetails = serviceResponse.Value;
+                        finalFunction(me.userDetails);
+                    }
+                }).fail(function () {
+                    var trace = me.services.getErrorInformation();
+                    me.application.hideWaiter();
+                });
             };
         }
         ViewModelBase.prototype.changeCase = function (text, textCase) {
@@ -244,6 +280,13 @@ var Peanut;
                 return userLang.toLowerCase();
             }
             return 'en-us';
+        };
+        ViewModelBase.prototype.setFocus = function (id, formId) {
+            if (formId === void 0) { formId = ''; }
+            if (formId) {
+                document.location.hash = '#' + formId;
+            }
+            document.getElementById(id).focus();
         };
         ViewModelBase.prototype.shortDateToIso = function (dateString) {
             if (!dateString) {

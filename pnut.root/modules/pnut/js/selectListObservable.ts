@@ -24,6 +24,15 @@ namespace Peanut {
             me.setValue(defaultValue);
         }
 
+        public hasOption(value: any) {
+            let me = this;
+            let options = me.options();
+            let option = _.find(options, function (item: INameValuePair) {
+                return item.Value == value;
+            });
+            return (!!option);
+        }
+
         public setValue(value: any) {
             let me = this;
             let options = me.options();
@@ -31,6 +40,16 @@ namespace Peanut {
                 return item.Value == value;
             });
             me.selected(option);
+        }
+
+        public getOptions() {
+            let me = this;
+            return me.options();
+        }
+
+        public setDefaultValue() {
+            let me = this;
+            me.setValue(me.defaultValue);
         }
 
         public getValue(defaultValue: any = '') {

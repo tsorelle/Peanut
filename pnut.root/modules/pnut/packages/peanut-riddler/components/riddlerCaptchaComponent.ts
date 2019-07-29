@@ -29,6 +29,7 @@ namespace PeanutRiddler {
         public showInputs = ko.observable(false);
         public showCancel = ko.observable(false);
         public showButton = ko.observable(false);
+        public buttonClass = ko.observable('btn btn-primary');
 
         // translatable text
         riddlerHeader= ko.observable('Help us control spam by answering this question:');
@@ -102,6 +103,9 @@ namespace PeanutRiddler {
                 else {
                     me.spinnericon(params.spinner);
                 }
+            }
+            if (params.buttonClass) {
+                me.buttonClass(params.buttonClass);
             }
             me.getQuestions();
         }
@@ -202,7 +206,8 @@ namespace PeanutRiddler {
 
         private selectFirstQuestion = () => {
             let me = this;
-            let i = Math.floor((Math.random() * me.questions.length));
+            // let i = Math.floor((Math.random() * me.questions.length));
+            let i = 0; // no randomizing
             me.currentQuestionIndex = i;
             me.questionText(me.questions[i].question);
             me.retries = me.questions.length + 2;

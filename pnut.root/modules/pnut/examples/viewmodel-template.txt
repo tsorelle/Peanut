@@ -9,7 +9,7 @@ namespace PackageName {
 
         init(successFunction?: () => void) {
             let me = this;
-            console.log('VmName Init');
+            Peanut.logger.write('VmName Init');
 
 			me.bindDefaultSection();
             successFunction();

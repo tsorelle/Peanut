@@ -9,6 +9,7 @@
 namespace Peanut\cms;
 
 use Tops\sys\IUser;
+use Tops\sys\IUserAccountManager;
 
 class UserFactory implements \Tops\sys\IUserFactory
 {
@@ -18,5 +19,13 @@ class UserFactory implements \Tops\sys\IUserFactory
     public function createUser()
     {
         return new CmsUser();
+    }
+
+    /**
+     * @return IUserAccountManager
+     */
+    public function createAccountManager()
+    {
+        // TODO: Implement createAccountManager() method.
     }
 }

@@ -21,7 +21,10 @@ Documentation for modal-confirm component
   init(applicationPath: string, successFunction?: () => void) {
      me.application.initialize(applicationPath,
          function() {
-             me.application.loadComponent('modal-confirm', successFunction);
+            me.application.registerComponent('@pnut/modal-confirm', () => {
+                ...
+            });
+
          }
      );
   }

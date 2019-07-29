@@ -181,10 +181,17 @@ var Peanut;
                 clearInterval(me.messageTimer);
             }
             MessageManager.instance.setServiceMessages(messages);
+            var intervalValue = 2500;
+            for (var i = 0; i < messages.length; i++) {
+                if (messages[0].MessageType != Peanut.infoMessageType) {
+                    intervalValue = 15000;
+                    break;
+                }
+            }
             me.messageTimer = window.setInterval(function () {
                 MessageManager.instance.clearMessages();
                 clearInterval(me.messageTimer);
-            }, 15000);
+            }, intervalValue);
         };
         Application.prototype.hideServiceMessages = function () {
             var me = this;
@@ -243,9 +250,7 @@ var Peanut;
             }
         };
         Application.LogMessage = function (message) {
-            if (Peanut.Config.values.loggingMode === 'verbose') {
-                console.log(message);
-            }
+            Peanut.logger.write(message);
         };
         return Application;
     }());

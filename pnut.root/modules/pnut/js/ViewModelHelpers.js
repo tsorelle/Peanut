@@ -24,6 +24,21 @@ var Peanut;
             }
             return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
         };
+        Helper.ValidateCredential = function (value, minlength, requireLower) {
+            if (minlength === void 0) { minlength = 10; }
+            if (requireLower === void 0) { requireLower = false; }
+            if (value.length < minlength) {
+                return false;
+            }
+            if (value.replace(' ', '') !== value) {
+                return false;
+            }
+            if (requireLower) {
+                return (value.toLowerCase() === value);
+            }
+            return true;
+        };
+        ;
         Helper.validatePositiveWholeNumber = function (text, maxValue, emptyOk) {
             if (maxValue === void 0) { maxValue = null; }
             if (emptyOk === void 0) { emptyOk = true; }
@@ -40,7 +55,7 @@ var Peanut;
             var result = {
                 errorMessage: '',
                 text: numberText.trim(),
-                value: 0
+                value: 0,
             };
             var parts = result.text.split('.');
             if (parts.length > 1) {
@@ -123,6 +138,12 @@ var Peanut;
                 return element[0].files;
             }
             return null;
+        };
+        Helper.getHostUrl = function () {
+            var protocol = location.protocol;
+            var slashes = protocol.concat("//");
+            var host = slashes.concat(window.location.hostname);
+            return host;
         };
         return Helper;
     }());

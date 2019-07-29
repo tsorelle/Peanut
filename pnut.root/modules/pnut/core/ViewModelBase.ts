@@ -11,14 +11,18 @@ namespace Peanut {
         public static getDeviceSize() {
             let width = window.screen.width;
             if (width >= 1200) {
+                // bootstrap lg
                 return 4;
             }
             if (width >= 992) {
+                // bootstrap md
                 return 3;
             }
             if (width >= 768) {
+                // bootstrap sm
                 return 2;
             }
+            // bootstrap xs
             return 1;
         }
 
@@ -31,6 +35,7 @@ namespace Peanut {
         public fontSet = ko.observable('');
 
         public deviceSize = ko.observable(4);
+        private userDetails: IUserDetails;
 
         abstract init(successFunction?: () => void);
         public start = (application : IPeanutClient, successFunction?: (viewModel: IViewModel) => void)  => {
@@ -49,6 +54,7 @@ namespace Peanut {
                 me.fontSet(Peanut.ui.helper.getFontSet());
                 me.application.registerComponents('@pnut/translate', () => {
                     me.init(() => {
+                        Peanut.logger.write('Loaded view model: '+ me.vmName);
                         successFunction(me);
                     });
                 });
@@ -57,12 +63,19 @@ namespace Peanut {
 
         private vmName : string = null;
         private vmContext: any = null;
+        private vmContextId : any = null;
         private language : string = 'en-us';
         public setVmName = (name: string, context: any = null) => {
             this.vmName = name;
-            this.vmContext = context;
+            this.vmContextId = context;
+            let sharedContext = jQuery('#peanut-vm-context').val();
+            this.vmContext = (sharedContext) ? context + '&' + sharedContext : context;
         };
 
+
+        public getVmContextId = () => {
+            return this.vmContextId;
+        };
 
         public getVmContext = () => {
             return this.vmContext;
@@ -160,6 +173,17 @@ namespace Peanut {
             document.title = text;
         };
 
+        public showWaitMessage = (message = 'wait-action-loading',waiter: string = 'banner-waiter') => {
+            let me = this;
+            message = me.translate(message)+ '...';
+            if (waiter == 'banner-waiter') {
+                this.application.showBannerWaiter(message);
+            }
+            else {
+                Peanut.WaitMessage.show(message,waiter);
+            }
+        };
+
         public showLoadWaiter =(message = 'wait-action-loading') => {
             let me = this;
             message = me.translate('wait-action-loading')+ ', ' + me.translate('wait-please')+'...';
@@ -228,6 +252,13 @@ namespace Peanut {
             return 'en-us';
         }
 
+        public setFocus(id: string,formId:string = '') {
+            if (formId) {
+                document.location.hash = '#'+formId;
+            }
+            document.getElementById(id).focus();
+        }
+
         public getTodayString = (language :string = null) => {
             if (!language) {
                 language = this.getLanguage();
@@ -260,7 +291,7 @@ namespace Peanut {
                 return '';
             }
             if (format !== 'us') {
-                console.log('Warning: Simple date formatting for ' + format + 'is not supported. Using ISO.');
+                Peanut.logger.write('Warning: Simple date formatting for ' + format + 'is not supported. Using ISO.');
                 return dateString;
             }
             let parts = dateString.split('-');
@@ -310,6 +341,27 @@ namespace Peanut {
 
         public hideServiceMessages = () => {
             this.application.hideServiceMessages();
+        };
+
+        public getUserDetails = (finalFunction : (userDetails : IUserDetails) => void) => {
+            let me = this;
+            if (me.userDetails) {
+                finalFunction(me.userDetails);
+                return;
+            }
+            me.services.executeService('Peanut::GetUserDetails',null,
+                function(serviceResponse: Peanut.IServiceResponse) {
+                    if (serviceResponse.Result == Peanut.serviceResultSuccess) {
+                        me.application.hideWaiter();
+                        me.userDetails = <IUserDetails>serviceResponse.Value;
+                        finalFunction(me.userDetails);
+                    }
+                }
+            ).fail(function () {
+                let trace = me.services.getErrorInformation();
+                me.application.hideWaiter();
+            });
+
         }
 
     }
@@ -399,6 +451,7 @@ namespace Peanut {
             let result = HttpRequestVars.instance.getValue(key);
             return (result === null) ? defaultValue : result;
         }
+
 
     }
 

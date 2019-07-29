@@ -70,7 +70,9 @@ class ViewModelManager
         if (!empty($settings)) {
             foreach ($settings as $name => $section) {
                 if (array_key_exists('vm',$section) && $section['vm'] === $vmName) {
-                    $subpath = PeanutSettings::GetPeanutUrl();
+                    $subpath = empty($section['location']) ?
+                        PeanutSettings::GetPeanutUrl():
+                        $section['location'];
                     return empty($subpath) ? '/'.$name : '/' .$subpath.'/'.$name;
                 }
             }

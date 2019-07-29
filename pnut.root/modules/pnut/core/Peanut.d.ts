@@ -31,6 +31,15 @@ declare namespace Peanut {
         details : string;
     }
 
+    export interface IUserDetails {
+        fullname: string;
+        username: string;
+        email: string;
+        accountId: any;
+        isAuthenticated: boolean;
+        isAdmin: boolean;
+    }
+
     /*******
      * Previously used IPeanutClient members:
      * -----------------------------------------
@@ -94,9 +103,10 @@ declare namespace Peanut {
         serviceUrl:               string;
         dependencies:             string;
         vmNamespace:        string;
-        loggingMode:    string;
+        loggingMode:    any;
         uiExtension : string;
         libraries : string[];
+        cssOverrides : string[];
     }
 
     export interface IServiceMessage {
@@ -168,7 +178,6 @@ declare namespace Peanut {
         getUserLanguage()
     }
     export interface IViewModel {
-
         init(successFunction?: () => void);
         setVmName(name: string, context?: any);
         start(application : IPeanutClient, successFunction?: (viewModel: any) => void);

@@ -40,8 +40,8 @@ namespace Peanut {
                     return false;
             }
 
-            if (loaded &&  Peanut.Config.values.loggingMode == 'verbose') {
-                console.log("Skipped, already loaded " + name);
+            if (loaded) {
+                Peanut.logger.write("Skipped, already loaded " + name);
             }
             return loaded;
         }
@@ -237,6 +237,9 @@ namespace Peanut {
                         me.loadCss(path,media);
                         return;
                     }
+                    else if (path.substr(0, 6) == '@pnut:') {
+                        path = me.getPeanutCss(path,config);
+                    }
                     else if (path.substr(0, 5) == '@lib:') {
                         path = me.getLibrary(path, config);
                     }
@@ -280,10 +283,17 @@ namespace Peanut {
                     console.error('Failed to load stylesheet ' + path);
                 }
                 document.getElementsByTagName("head")[0].appendChild(fileref);
-                console.log('Loaded stylesheet: ' + path);
+                Peanut.logger.write('Loaded stylesheet: ' + path);
             }
         };
 
+        private getPeanutCss(path: string, config: IPeanutConfig) {
+            let name = path.substr(6);
+            if (config.cssOverrides.indexOf(name) === -1) {
+                return config.peanutRootPath + 'styles/' + name;
+            }
+            return config.applicationPath + 'assets/styles/pnut/' + name;
+        }
 
         private getLibrary (name: string, config: IPeanutConfig) {
             let key = name.substr(5);
@@ -333,9 +343,7 @@ namespace Peanut {
             let vmPath = parseResult.root + parseResult.name + '.js';
             let namespace = parseResult.namespace;
             PeanutLoader.loadScript(vmPath,() => {
-                if (Peanut.Config.values.loggingMode == 'verbose') {
-                    console.log("Loading " + namespace + '.' + vmClassName);
-                }
+                Peanut.logger.write("Loading " + namespace + '.' + vmClassName);
                 let vm = <IViewModel>(new window[namespace][vmClassName]);
                 vm.setVmName(vmName,context);
                 final(vm);
@@ -627,9 +635,8 @@ namespace Peanut {
                             viewModel : vm,
                             template: template
                         });
-                        if (Peanut.Config.values.loggingMode === 'verbose') {
-                            console.log('Component ' + path.componentName + ' registered.');
-                        }
+                        Peanut.logger.write('Component ' + path.componentName + ' registered.');
+
                     });
                 }
                 else {
@@ -686,9 +693,7 @@ namespace Peanut {
                 if (container === null) {
                     return;
                 }
-                if (Peanut.Config.values.loggingMode == 'verbose') {
-                    console.log('bind section: ' + containerName);
-                }
+                Peanut.logger.write('bind section: ' + containerName);
                 ko.applyBindings(context, container);
                 this.loadList.bindings.push(containerName);
             }

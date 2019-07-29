@@ -10,6 +10,39 @@ var Peanut;
         return Config;
     }());
     Peanut.Config = Config;
+    var logger = (function () {
+        function logger() {
+        }
+        logger.getLoggingLevel = function (mode) {
+            switch (mode) {
+                case 'verbose':
+                    return 1;
+                case 'info':
+                    return 2;
+                case 'warnings':
+                    return 3;
+                case 'errors':
+                    return 4;
+                case 'fatal':
+                    return 5;
+                default:
+                    var n = Number(mode);
+                    if (n > 0 && n < 6) {
+                        return n;
+                    }
+                    console.error('Invalid logging mode: ' + mode);
+                    return 1;
+            }
+        };
+        logger.write = function (message, mode) {
+            if (mode === void 0) { mode = 5; }
+            if (mode === true || Peanut.Config.values.loggingMode === 1 || Peanut.Config.values.loggingMode >= Peanut.logger.getLoggingLevel(mode)) {
+                console.log(message);
+            }
+        };
+        return logger;
+    }());
+    Peanut.logger = logger;
     var ui = (function () {
         function ui() {
         }
@@ -97,9 +130,8 @@ var Peanut;
             }
             else {
                 jQuery.getJSON(configPath, function (data) {
-                    if (data.loggingMode == 'verbose') {
-                        console.log("retrieved config");
-                    }
+                    Peanut.Config.values.loggingMode = Peanut.logger.getLoggingLevel(data.loggingMode);
+                    Peanut.logger.write("retrieved config");
                     Peanut.Config.loaded = true;
                     Peanut.Config.values.applicationVersionNumber = peanutVersionNumber + '.' + data.applicationVersionNumber;
                     Peanut.Config.values.commonRootPath = data.commonRootPath;
@@ -110,15 +142,13 @@ var Peanut;
                     Peanut.Config.values.serviceUrl = data.serviceUrl;
                     Peanut.Config.values.dependencies = data.dependencies;
                     Peanut.Config.values.vmNamespace = data.vmNamespace;
-                    Peanut.Config.values.loggingMode = data.loggingMode;
                     Peanut.Config.values.uiExtension = data.uiExtension;
                     Peanut.Config.values.libraries = data.libraries;
                     Peanut.Config.values.applicationPath = data.applicationPath;
                     Peanut.Config.values.libraryPath = data.libraryPath;
                     Peanut.Config.values.stylesPath = data.stylesPath;
-                    if (data.loggingMode == 'verbose') {
-                        console.log('Namespace ' + Peanut.Config.values.vmNamespace);
-                    }
+                    Peanut.Config.values.cssOverrides = data.cssOverrides;
+                    Peanut.logger.write('Namespace ' + Peanut.Config.values.vmNamespace);
                     final(Peanut.Config.values);
                 });
             }
@@ -130,17 +160,13 @@ var Peanut;
             var filetype = script.split('.').pop().toLowerCase();
             if (PeanutLoader.loaded.indexOf(script) == -1) {
                 head.load(script + '?v=' + Peanut.Config.values.applicationVersionNumber, function () {
-                    if (Peanut.Config.values.loggingMode == 'verbose') {
-                        console.log("Loaded " + script);
-                    }
+                    Peanut.logger.write("Loaded " + script);
                     PeanutLoader.loaded.push(script);
                     final();
                 });
             }
             else {
-                if (Peanut.Config.values.loggingMode == 'verbose') {
-                    console.log("Skipped " + script);
-                }
+                Peanut.logger.write("Skipped " + script);
                 final();
             }
         };
@@ -155,9 +181,7 @@ var Peanut;
                 if (PeanutLoader.loaded.indexOf(script) == -1) {
                     if (script.split('.').pop().toLowerCase() == 'js') {
                         PeanutLoader.loaded.push(script);
-                        if (Peanut.Config.values.loggingMode == 'verbose') {
-                            console.log("Loaded " + script);
-                        }
+                        Peanut.logger.write("Loaded " + script);
                         script += '?v=' + Peanut.Config.values.applicationVersionNumber;
                     }
                     items.unshift(script);

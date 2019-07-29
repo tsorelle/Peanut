@@ -24,7 +24,7 @@ var Peanut;
                         console.error('Failed to load stylesheet ' + path);
                     }
                     document.getElementsByTagName("head")[0].appendChild(fileref);
-                    console.log('Loaded stylesheet: ' + path);
+                    Peanut.logger.write('Loaded stylesheet: ' + path);
                 }
             };
             this.loadViewModel = function (vmName, final) {
@@ -52,9 +52,7 @@ var Peanut;
                 var vmPath = parseResult.root + parseResult.name + '.js';
                 var namespace = parseResult.namespace;
                 Peanut.PeanutLoader.loadScript(vmPath, function () {
-                    if (Peanut.Config.values.loggingMode == 'verbose') {
-                        console.log("Loading " + namespace + '.' + vmClassName);
-                    }
+                    Peanut.logger.write("Loading " + namespace + '.' + vmClassName);
                     var vm = (new window[namespace][vmClassName]);
                     vm.setVmName(vmName, context);
                     final(vm);
@@ -209,9 +207,7 @@ var Peanut;
                     if (container === null) {
                         return;
                     }
-                    if (Peanut.Config.values.loggingMode == 'verbose') {
-                        console.log('bind section: ' + containerName);
-                    }
+                    Peanut.logger.write('bind section: ' + containerName);
                     ko.applyBindings(context, container);
                     _this.loadList.bindings.push(containerName);
                 }
@@ -243,8 +239,8 @@ var Peanut;
                     console.log('Warning invalid resource type ' + name);
                     return false;
             }
-            if (loaded && Peanut.Config.values.loggingMode == 'verbose') {
-                console.log("Skipped, already loaded " + name);
+            if (loaded) {
+                Peanut.logger.write("Skipped, already loaded " + name);
             }
             return loaded;
         };
@@ -393,6 +389,9 @@ var Peanut;
                         me.loadCss(path, media);
                         return;
                     }
+                    else if (path.substr(0, 6) == '@pnut:') {
+                        path = me.getPeanutCss(path, config);
+                    }
                     else if (path.substr(0, 5) == '@lib:') {
                         path = me.getLibrary(path, config);
                     }
@@ -418,6 +417,13 @@ var Peanut;
                     }
                 }
             });
+        };
+        KnockoutHelper.prototype.getPeanutCss = function (path, config) {
+            var name = path.substr(6);
+            if (config.cssOverrides.indexOf(name) === -1) {
+                return config.peanutRootPath + 'styles/' + name;
+            }
+            return config.applicationPath + 'assets/styles/pnut/' + name;
         };
         KnockoutHelper.prototype.getLibrary = function (name, config) {
             var key = name.substr(5);

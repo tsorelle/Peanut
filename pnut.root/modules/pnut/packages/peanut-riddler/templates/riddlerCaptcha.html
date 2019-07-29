@@ -11,7 +11,7 @@
     <span style="margin-right: 10px" data-bind="visible:spinnericon,css:spinnericon"></span><span data-bind="text: waitmessage"></span>. . .
 </div>
 <div data-bind="visible:showButton">
-    <button type="button" class="btn btn-primary" data-bind="click: onConfirmClick">
+    <button type="button" data-bind="click: onConfirmClick,attr: { class: buttonClass}">
         <span data-bind="text:buttonLabel"></span>
         <span  style="margin-left: 10px" data-bind="css: buttonicon,visible:buttonicon"></span>
     </button>
